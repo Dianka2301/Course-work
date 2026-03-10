@@ -1,0 +1,32 @@
+{
+  "name": "flavoria",
+  "version": "1.0.0",
+  "description": "Flavoria — курсова веб-робота з різними цікавими рецептами та фічами.  \r Проєкт побудований як кулінарна книга з фронтендом і бекендом, з використанням JavaScript та простих технологій.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dianka2301/Course-work.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Dianka2301/Course-work/issues"
+  },
+  "homepage": "https://github.com/Dianka2301/Course-work#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^5.1.4",
+    "vite": "^7.3.1"
+  }
+}
