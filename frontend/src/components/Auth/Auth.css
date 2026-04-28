@@ -286,3 +286,133 @@ h1, h2, h3 {
 .modal-close:hover {
   opacity: 1;
 }
+
+/* ================= RESPONSIVE ================= */
+/* ================= RESPONSIVE ================= */
+
+/* TABLET */
+@media (max-width: 768px) {
+  .auth-header {
+    padding: 15px 20px;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .nav-tabs {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .modal {
+    width: 92%;
+    max-width: 420px;
+
+    padding: 20px;
+    max-height: 90vh;
+    overflow-y: auto;
+
+    border-radius: 18px;
+
+    /* ВАЖЛИВО: центрування */
+    margin: auto;
+  }
+
+  .auth-switch-wrapper {
+    min-height: auto;
+    align-items: stretch;
+  }
+}
+
+/* PHONES */
+@media (max-width: 480px) {
+
+  .auth-header {
+    padding: 12px 15px;
+  }
+
+  .nav-tabs button {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .login-btn {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+
+  /* 🔥 FIX: правильне центрування overlay */
+  .modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+  /* 🔥 FIX: модалка НЕ виходить за екран */
+  .modal {
+    width: 100%;
+    max-width: 420px;
+
+    max-height: calc(100vh - 24px);
+    overflow-y: auto;
+
+    border-radius: 18px;
+
+    padding: 18px 16px;
+    box-sizing: border-box;
+
+    animation: modalPop 0.25s ease;
+  }
+
+  .auth-title {
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+
+  .auth-tabs {
+    gap: 4px;
+  }
+
+  .auth-tabs button {
+    flex: 1;
+    text-align: center;
+    font-size: 13px;
+    padding: 8px;
+  }
+
+  .auth-form {
+    width: 100%;
+    gap: 10px;
+  }
+
+  .auth-form input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 9px;
+    font-size: 14px;
+  }
+
+  .auth-btn {
+    width: 100%;
+    padding: 12px;
+  }
+
+  .modal-close {
+    top: 10px;
+    right: 12px;
+    font-size: 20px;
+  }
+}
+
+/* animation (уніфікована, НЕ bottom-sheet щоб не ламати layout) */
+@keyframes modalPop {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

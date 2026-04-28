@@ -1,20 +1,17 @@
 const Database = require("better-sqlite3");
 const db = new Database("database.db");
 
-db.prepare(
-  `
+db.prepare(`
   CREATE TABLE IF NOT EXISTS users (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  email TEXT UNIQUE NOT NULL,
-  password TEXT NOT NULL,
-  first_name TEXT,
-  last_name TEXT
-)
-`,
-).run();
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    first_name TEXT,
+    last_name TEXT
+  )
+`).run();
 
 const columns = db.prepare("PRAGMA table_info(users)").all();
-
 const hasAvatar = columns.some((c) => c.name === "avatar");
 
 if (!hasAvatar) {
@@ -35,16 +32,45 @@ db.prepare(`
 `).run();
 
 
-db.prepare(
-  `
+const recipeColumns = db.prepare("PRAGMA table_info(recipes)").all();
+const hasPrivate = recipeColumns.some((c) => c.name === "is_private");
+
+if (!hasPrivate) {
+  db.prepare(`ALTER TABLE recipes ADD COLUMN is_private INTEGER DEFAULT 1`).run();
+}
+
+db.prepare(`
   CREATE TABLE IF NOT EXISTS favorites (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
     recipe_id INTEGER NOT NULL
   )
-`,
-).run();
+`).run();
 
+db.prepare(`
+  CREATE TABLE IF NOT EXISTS ratings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    recipe_id INTEGER,
+    rating INTEGER CHECK(rating >= 1 AND rating <= 5),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  )
+`).run();
+
+db.prepare(`
+  CREATE TABLE IF NOT EXISTS comments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    recipe_id INTEGER NOT NULL,
+    text TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  )
+`).run();
+
+db.prepare(`
+  CREATE UNIQUE INDEX IF NOT EXISTS unique_user_recipe_rating
+  ON ratings(user_id, recipe_id)
+`).run();
 
 const count = db.prepare("SELECT COUNT(*) as count FROM recipes").get().count;
 

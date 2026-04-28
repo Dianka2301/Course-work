@@ -67,7 +67,12 @@ export default function App() {
       {showAuthModal && (
         <div className="modal-overlay">
           <div className="modal">
-            <button onClick={() => setShowAuthModal(false)}>✖</button>
+            <button
+              className="modal-close"
+              onClick={() => setShowAuthModal(false)}
+            >
+              ✖
+            </button>
 
             <AuthPage
               isModal

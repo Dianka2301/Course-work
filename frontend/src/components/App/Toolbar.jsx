@@ -1,4 +1,10 @@
-export default function Toolbar({ user, onToggleSidebar, setPage, onLogout }) {
+export default function Toolbar({
+  user,
+  onToggleSidebar,
+  setPage,
+  onLogout,
+  onBack,
+}) {
   return (
     <div className="toolbar">
       <div className="toolbar-left">
@@ -13,7 +19,7 @@ export default function Toolbar({ user, onToggleSidebar, setPage, onLogout }) {
           <button onClick={() => setPage("favorites")}>Обране</button>
           <button onClick={() => setPage("ai")}>AI</button>
           <button onClick={() => setPage("profile")}>Профіль</button>
-          <button onClick={() => setPage("myRecipes")}>Мої</button>
+          <button onClick={() => setPage("myRecipes")}>Мої рецепти</button>
         </div>
       </div>
 

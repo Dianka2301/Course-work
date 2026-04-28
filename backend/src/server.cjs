@@ -71,6 +71,8 @@ app.get("/api/recipes", (req, res) => {
   }
 });
 
+
+
 /* ------------------ AI ------------------ */
 app.post("/api/ai-recipe", async (req, res) => {
   try {
@@ -107,6 +109,39 @@ app.post("/api/ai-recipe", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err.message });
+  }
+});
+
+
+
+app.post("/api/recipes/:id/rating", (req, res) => {
+  try {
+    const { rating } = req.body;
+    const { id } = req.params;
+
+    db.prepare("UPDATE recipes SET rating = ? WHERE id = ?").run(rating, id);
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Rating error" });
+  }
+});
+
+
+app.post("/api/recipes/:id/comments", (req, res) => {
+  try {
+    const { text } = req.body;
+    const { id } = req.params;
+
+    db.prepare(
+      "INSERT INTO comments (recipe_id, text) VALUES (?, ?)"
+    ).run(id, text);
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Comment error" });
   }
 });
 

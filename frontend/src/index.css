@@ -43,13 +43,13 @@ h1, h2, h3 {
 /* 🔹 ОСНОВНИЙ LAYOUT */
 .app-layout {
   display: flex;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 /* 🔹 SIDEBAR */
 .sidebar {
   width: 250px;
-  background: #181818;
+  background: #a27645;
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -80,7 +80,7 @@ h1, h2, h3 {
 }
 
 .sidebar button:hover {
-  background: #2a2a2a;
+  background: #c1a585;
   transform: translateX(5px);
 }
 
@@ -95,11 +95,12 @@ h1, h2, h3 {
   flex: 1;
   display: flex;
   flex-direction: column;
+  overflow: visible;
 }
 
 /* 🔹 TOPBAR */
 .toolbar {
-  height: 60px;
+  height: 100px;
   background: #a27645;
   display: flex;
   justify-content: space-between;
@@ -298,6 +299,7 @@ h1, h2, h3 {
   border-radius: 10px;
   border: none;
   cursor: pointer;
+  background: #c1a585;
 }
 
 .fav-btn {
@@ -313,64 +315,6 @@ h1, h2, h3 {
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
-
-.profile-wrapper {
-  display: flex;
-  gap: 30px;
-  padding: 30px;
-  align-items: flex-start;
-}
-
-/* LEFT CARD */
-.profile-card {
-  width: 260px;
-  background: white;
-  border-radius: 16px;
-  padding: 20px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-  text-align: center;
-}
-
-/* AVATAR */
-.avatar-box {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
-  margin-top: 15px;
-}
-
-.avatar-img {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid #f0f0f0;
-}
-
-/* UPLOAD BUTTON */
-.upload-btn {
-  background: #a27645;
-  color: white;
-  padding: 8px 14px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 13px;
-  transition: 0.2s;
-}
-
-.upload-btn:hover {
-  background: #8a6238;
-}
-
-/* RIGHT CARD */
-.profile-form-card {
-  flex: 1;
-  background: white;
-  border-radius: 16px;
-  padding: 25px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-}
 
 /* FORM */
 .form-group {
@@ -402,19 +346,6 @@ h1, h2, h3 {
   margin-top: 20px;
 }
 
-.save-btn {
-  background: #a27645;
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.save-btn:hover {
-  background: #8a6238;
-}
 
 /* ================= PROFILE (SAAS STYLE) ================= */
 
@@ -441,6 +372,7 @@ h1, h2, h3 {
   flex-direction: column;
   align-items: center;
   gap: 15px;
+  margin-top: 15px;
 }
 
 .avatar-img {
@@ -459,6 +391,11 @@ h1, h2, h3 {
   border-radius: 10px;
   cursor: pointer;
   font-size: 13px;
+  transition: 0.2s;
+}
+
+.upload-btn:hover {
+  background: #8a6238;
 }
 
 /* RIGHT CARD */
@@ -498,6 +435,69 @@ h1, h2, h3 {
 
 .save-btn:hover {
   background: #8a5e33;
+}
+
+
+/* ================= RESPONSIVE ================= */
+
+/* TABLET + SMALL LAPTOPS */
+@media (max-width: 768px) {
+  .profile-wrapper {
+    flex-direction: column;
+    padding: 20px;
+    gap: 20px;
+  }
+
+  .profile-card {
+    width: 100%;
+  }
+
+  .profile-form-card {
+    width: 100%;
+    padding: 20px;
+  }
+
+  .avatar-img {
+    width: 120px;
+    height: 120px;
+  }
+}
+
+/* PHONES */
+@media (max-width: 480px) {
+  .profile-wrapper {
+    padding: 15px;
+    gap: 15px;
+  }
+
+  .profile-card {
+    padding: 15px;
+    border-radius: 14px;
+  }
+
+  .profile-form-card {
+    padding: 15px;
+    border-radius: 14px;
+  }
+
+  .avatar-img {
+    width: 100px;
+    height: 100px;
+  }
+
+  .upload-btn {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+
+  .save-btn {
+    width: 100%;
+    padding: 12px;
+  }
+
+  .profile-form-card input {
+    padding: 10px;
+  }
 }
 
 .cropper-overlay {
@@ -580,8 +580,8 @@ h1, h2, h3 {
 .nav-links button {
   background: none;
   border: none;
-  color: #ccc;
-  font-weight: 500;
+  color: white;
+  font-weight: 800;
   padding: 6px 10px;
   border-radius: 12px;
   /*transition: all 0.2s ease;*/
@@ -684,13 +684,154 @@ h1, h2, h3 {
 }
 
 /* VIEW */
-.recipe-view {
-  padding: 20px;
-}
 
 .recipe-view-img {
   width: 350px;
   border-radius: 12px;
+}
+
+
+/* PAGE */
+.recipe-view {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+/* TITLE */
+.recipe-title {
+  margin-bottom: 20px;
+}
+
+/* LAYOUT */
+.recipe-layout {
+  display: flex;
+  gap: 30px;
+}
+
+/* LEFT */
+.recipe-left {
+  flex: 1;
+}
+
+/* RIGHT */
+.recipe-right {
+  flex: 1;
+}
+
+/* IMAGE */
+.recipe-view-img {
+  width: 100%;
+  max-width: 420px;
+  border-radius: 16px;
+  object-fit: cover;
+}
+
+/* BACK BUTTON */
+.back-btn {
+  margin-bottom: 15px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+/* ⭐ RATING BOX */
+.rating-box {
+  margin-top: 15px;
+  padding: 12px;
+  background: #f6f6f6;
+  border-radius: 12px;
+  width: fit-content;
+}
+
+.stars {
+  font-size: 26px;
+  cursor: pointer;
+}
+
+.star {
+  margin-right: 5px;
+  transition: 0.2s;
+}
+
+.star:hover {
+  transform: scale(1.2);
+}
+
+/* SECTIONS */
+.section {
+  margin-bottom: 20px;
+}
+
+/* COMMENTS */
+.comments {
+  margin-top: 30px;
+}
+
+.comment-list {
+  margin-bottom: 10px;
+}
+
+.comment {
+  background: #222;
+  color: white;
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 10px;
+}
+
+/* INPUT BOX */
+.comment-box {
+  display: flex;
+  gap: 10px;
+}
+
+.comment-box input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+}
+
+.comment-box button {
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  background: #c1a585;
+  color: white;
+  transition: 0.2s;
+}
+
+.comment-box button:hover {
+  transform: scale(1.05);
+}
+
+/* 📱 MOBILE */
+@media (max-width: 768px) {
+  .recipe-layout {
+    flex-direction: column;
+  }
+
+  .recipe-view-img {
+    max-width: 100%;
+  }
+}
+
+
+
+@media (max-width: 1024px) {
+  .recipes-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .recipes-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* COMMENTS */
@@ -713,4 +854,71 @@ h1, h2, h3 {
 .comment-box input {
   flex: 1;
   padding: 8px;
+}
+
+
+
+.my-recipes {
+  padding: 20px;
+}
+
+.my-recipes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.add-btn {
+  background: #c1a585;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  color: white;
+  transition: 0.25s;
+}
+
+.add-btn:hover {
+  transform: scale(1.05);
+}
+
+.recipe-form {
+  background: #1e1e1e;
+  padding: 20px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.recipe-form input,
+.recipe-form textarea {
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.form-actions button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.card-actions {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.empty {
+  opacity: 0.7;
 }

@@ -15,28 +15,34 @@ router.post("/register", async (req, res) => {
   const { email, password, firstName, lastName } = req.body;
 
   if (!email || !password || !firstName || !lastName) {
-    return res
-      .status(400)
-      .json({ error: "Всі поля обов'язкові (ім’я, прізвище, email, пароль)" });
+    return res.status(400).json({ error: "All fields required" });
   }
 
   try {
     const hashed = await bcrypt.hash(password, 10);
 
-    db.prepare(
-      `
+    const result = db
+      .prepare(
+        `
       INSERT INTO users (email, password, first_name, last_name)
       VALUES (?, ?, ?, ?)
     `,
-    ).run(email, hashed, firstName, lastName);
+      )
+      .run(email, hashed, firstName, lastName);
 
-    const user = { email, firstName, lastName };
+    const user = {
+      id: result.lastInsertRowid, // ✅ ТЕПЕР ПРАВИЛЬНО
+      email,
+      firstName,
+      lastName,
+    };
 
     const token = jwt.sign(user, JWT_SECRET, { expiresIn: "1h" });
 
     res.json({ user, token });
   } catch (err) {
-    res.status(500).json({ error: "Користувач вже існує або помилка бази" });
+    console.error(err);
+    res.status(500).json({ error: "User already exists or DB error" });
   }
 });
 
@@ -62,6 +68,7 @@ router.post("/login", async (req, res) => {
     }
 
     const user = {
+      id: row.id,
       email: row.email,
       firstName: row.first_name,
       lastName: row.last_name,
@@ -195,7 +202,7 @@ router.get("/verify", (req, res) => {
       },
     });
   } catch (err) {
-    res.status(401).json({ error: "Invalid token" });
+    return res.status(401).json({ error: "Invalid token" });
   }
 });
 

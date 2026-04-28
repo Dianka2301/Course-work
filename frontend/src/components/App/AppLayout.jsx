@@ -18,17 +18,14 @@ export default function AppLayout({ user, setUser, recipes, onLogout }) {
     setFromPage(from);
   };
 
+  const goBack = () => {
+    setSelectedRecipe(null);
+    setPage(fromPage);
+  };
+
   const renderPage = () => {
     if (selectedRecipe) {
-      return (
-        <RecipeView
-          recipe={selectedRecipe}
-          onBack={() => {
-            setSelectedRecipe(null);
-            setPage(fromPage);
-          }}
-        />
-      );
+      return <RecipeView recipe={selectedRecipe} onBack={goBack} />;
     }
 
     switch (page) {
@@ -69,7 +66,6 @@ export default function AppLayout({ user, setUser, recipes, onLogout }) {
 
   return (
     <div className="app-layout">
-      {/* Overlay (mobile) */}
       {sidebarOpen && (
         <div className="overlay" onClick={() => setSidebarOpen(false)} />
       )}
@@ -77,18 +73,14 @@ export default function AppLayout({ user, setUser, recipes, onLogout }) {
       <aside className={`sidebar ${sidebarOpen ? "open" : ""}`}>
         <h2>Flavoria</h2>
 
-        <button onClick={() => setPage("catalog")}>📚 Каталог</button>
-        <button onClick={() => setPage("favorites")}>⭐ Обране</button>
-        <button onClick={() => setPage("ai")}>🤖 AI рецепти</button>
+        <button onClick={() => setPage("catalog")}>Каталог рецептів</button>
+        <button onClick={() => setPage("favorites")}>Обране</button>
+        <button onClick={() => setPage("ai")}>AI рецепти</button>
+        <button onClick={() => setPage("profile")}>Профіль</button>
+        <button onClick={() => setPage("myRecipes")}>Мої рецепти</button>
 
-        <hr />
 
-        <button onClick={() => setPage("profile")}>👤 Профіль</button>
-        <button onClick={() => setPage("myRecipes")}>📓 Мої рецепти</button>
-
-        <hr />
-
-        <button onClick={onLogout}>🚪 Вийти</button>
+        <button onClick={onLogout}>Вийти</button>
       </aside>
 
       <main className="main-content">
@@ -97,7 +89,9 @@ export default function AppLayout({ user, setUser, recipes, onLogout }) {
           setPage={setPage}
           onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
           onLogout={onLogout}
+          onBack={selectedRecipe ? goBack : null}
         />
+
         {renderPage()}
       </main>
     </div>
