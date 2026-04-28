@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { fetchFavorites } from "../../api/favorites.js";
+import { fetchFavorites, toggleFavorite } from "../../api/favorites.js";
 
-export default function Favorites() {
+export default function Favorites({ onOpenRecipe }) {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadFavorites() {
       try {
-        const favRecipes = await fetchFavorites(); // сервер повертає масив рецептів
+        const favRecipes = await fetchFavorites();
         setRecipes(favRecipes);
       } catch (err) {
         console.error(err);
@@ -19,6 +19,20 @@ export default function Favorites() {
 
     loadFavorites();
   }, []);
+
+  // ❤️ REMOVE FROM FAVORITES
+  const handleToggle = async (recipeId) => {
+    try {
+      const res = await toggleFavorite(recipeId);
+
+      // якщо liked = false → прибираємо з UI
+      if (!res.liked) {
+        setRecipes((prev) => prev.filter((r) => r.id !== recipeId));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   if (loading)
     return <p style={{ padding: "20px" }}>Завантаження обраних рецептів...</p>;
@@ -42,6 +56,7 @@ export default function Favorites() {
       {recipes.map((recipe) => (
         <div
           key={recipe.id}
+          onClick={() => onOpenRecipe(recipe)}
           style={{
             width: "200px",
             border: "1px solid #ccc",
@@ -49,8 +64,30 @@ export default function Favorites() {
             overflow: "hidden",
             textAlign: "center",
             boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
+            cursor: "pointer",
+            position: "relative",
           }}
         >
+          {/* ❤️ REMOVE BUTTON */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleToggle(recipe.id);
+            }}
+            style={{
+              position: "absolute",
+              top: 8,
+              right: 8,
+              background: "white",
+              border: "none",
+              borderRadius: "50%",
+              cursor: "pointer",
+              fontSize: "18px",
+            }}
+          >
+            ❤️
+          </button>
+
           {recipe.image && (
             <img
               src={`http://localhost:4000/images/${recipe.image}`}
@@ -58,6 +95,7 @@ export default function Favorites() {
               style={{ width: "100%", height: "120px", objectFit: "cover" }}
             />
           )}
+
           <div style={{ padding: "10px" }}>
             <h4 style={{ margin: "5px 0", color: "#a27645" }}>
               {recipe.title}

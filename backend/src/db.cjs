@@ -1,18 +1,26 @@
 const Database = require("better-sqlite3");
 const db = new Database("database.db");
 
-// Таблиця користувачів
 db.prepare(
   `
   CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    email TEXT UNIQUE NOT NULL,
-    password TEXT NOT NULL
-  )
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  email TEXT UNIQUE NOT NULL,
+  password TEXT NOT NULL,
+  first_name TEXT,
+  last_name TEXT
+)
 `,
 ).run();
 
-// Створення таблиці рецептів (як у тебе)
+const columns = db.prepare("PRAGMA table_info(users)").all();
+
+const hasAvatar = columns.some((c) => c.name === "avatar");
+
+if (!hasAvatar) {
+  db.prepare(`ALTER TABLE users ADD COLUMN avatar TEXT`).run();
+}
+
 db.prepare(`
   CREATE TABLE IF NOT EXISTS recipes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -46,7 +54,6 @@ if (count === 0) {
     VALUES (?, ?, ?, ?, ?)
   `);
 
-  //   Базові рецепти  
   insert.run(
     "Запечена курка з овочами",
     "1 ціла курка (~1.5 кг), 4 ст. л. оливкової олії, 1 лимон, 1 червоний перець, Сіль, перець, розмарин за смаком",

@@ -1,9 +1,10 @@
-// frontend/src/components/Auth/AuthForm.jsx
-
 import { useState } from "react";
 import { login, register } from "../../api/auth.js";
 
 export default function AuthForm({ mode, onLogin }) {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -18,8 +19,12 @@ export default function AuthForm({ mode, onLogin }) {
       return "Email має закінчуватися на @gmail.com";
     }
 
-    if (!isLogin && password.length < 4) {
-      return "Пароль має містити мінімум 4 символи.";
+    if (!isLogin) {
+      if (!firstName.trim()) return "Введіть ім’я";
+      if (!lastName.trim()) return "Введіть прізвище";
+      if (password.length < 4) {
+        return "Пароль має містити мінімум 4 символи.";
+      }
     }
 
     return null;
@@ -40,7 +45,7 @@ export default function AuthForm({ mode, onLogin }) {
     try {
       const result = isLogin
         ? await login(email, password)
-        : await register(email, password);
+        : await register(email, password, firstName, lastName);
 
       onLogin(result.user, result.token);
     } catch (err) {
@@ -52,10 +57,33 @@ export default function AuthForm({ mode, onLogin }) {
 
   return (
     <form className="auth-form" onSubmit={handleSubmit}>
-      {/* Повідомлення про помилку */}
+      {/* ❗ ERROR */}
       {error && <div className="auth-error">{error}</div>}
 
-      {/* EMAIL */}
+      {/* 🆕 ІМ’Я + ПРІЗВИЩЕ */}
+      {!isLogin && (
+        <>
+          <label>Ім’я</label>
+          <input
+            type="text"
+            placeholder="Введіть ім’я"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            required
+          />
+
+          <label>Прізвище</label>
+          <input
+            type="text"
+            placeholder="Введіть прізвище"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            required
+          />
+        </>
+      )}
+
+      {/* 📧 EMAIL */}
       <label>Email</label>
       <input
         type="email"
@@ -67,7 +95,7 @@ export default function AuthForm({ mode, onLogin }) {
       />
       <div className="auth-hint">Використовуйте тільки адресу @gmail.com</div>
 
-      {/* ПАРОЛЬ */}
+      {/* 🔑 PASSWORD */}
       <label>Пароль</label>
 
       <div className="password-wrapper">
@@ -80,7 +108,6 @@ export default function AuthForm({ mode, onLogin }) {
           required
         />
 
-        {/* 👁 Показати пароль */}
         <button
           type="button"
           className="toggle-password"
@@ -98,6 +125,7 @@ export default function AuthForm({ mode, onLogin }) {
         <div className="auth-hint">Пароль має містити мінімум 4 символи</div>
       )}
 
+      {/* 🔘 SUBMIT */}
       <button className="auth-btn" disabled={loading}>
         {loading ? "Зачекайте..." : isLogin ? "Увійти" : "Зареєструватися"}
       </button>

@@ -1,32 +1,32 @@
-// RecipeWorkspace.jsx
-import React, { useEffect, useState } from "react";
-import { fetchRecipes } from "../../api/recipes.js";
+import React, { useState, useEffect } from "react";
 import { fetchFavorites, toggleFavorite } from "../../api/favorites.js";
+import searchIcon from "../../images/glass.png";
 
-export default function RecipeWorkspace({ showFavorites }) {
-  const [recipes, setRecipes] = useState([]);
+export default function RecipeWorkspace({ recipes = [], showFavorites, onOpenRecipe }) {
   const [favorites, setFavorites] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("Усі");
   const [selectedRecipe, setSelectedRecipe] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  // 🔍 SEARCH
+  const [searchInput, setSearchInput] = useState("");
+  const [searchActive, setSearchActive] = useState(false);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     async function loadData() {
       try {
-        setLoading(true);
-        const data = await fetchRecipes();
-        setRecipes(data);
-
-        // Отримуємо унікальні категорії
-        const cats = Array.from(
-          new Set(data.map((r) => r.category || "Інші рецепти")),
-        );
-        setCategories(cats);
-        setSelectedCategory(cats[0] || "");
-
         const favs = await fetchFavorites();
-        setFavorites(favs);
+
+        // ✅ FIX: підтримка різних форматів API
+        setFavorites(favs.map((f) => f.recipe_id || f.id));
+
+        const cats = Array.from(
+          new Set(recipes.map((r) => r.category || "Інші рецепти")),
+        );
+
+        setCategories(["Усі", ...cats]);
       } catch (err) {
         console.error(err);
       } finally {
@@ -35,226 +35,149 @@ export default function RecipeWorkspace({ showFavorites }) {
     }
 
     loadData();
-  }, []);
+  }, [recipes]);
 
-  const filteredRecipes = recipes.filter((r) => {
-    if (showFavorites) return favorites.includes(r.id);
-    return r.category === selectedCategory;
-  });
-
+  // ❤️ TOGGLE FAVORITE
   const handleToggleFavorite = async (recipeId) => {
-    try {
-      const { liked } = await toggleFavorite(recipeId);
-      setFavorites((prev) =>
-        liked ? [...prev, recipeId] : prev.filter((id) => id !== recipeId),
-      );
-    } catch (err) {
-      console.error(err);
-    }
+    const { liked } = await toggleFavorite(recipeId);
+
+    setFavorites((prev) =>
+      liked ? [...prev, recipeId] : prev.filter((id) => id !== recipeId),
+    );
   };
 
-  if (loading) return <p>Завантаження рецептів...</p>;
+  // 🔥 FILTER LOGIC
+  const filteredRecipes = recipes.filter((r) => {
+    const matchesSearch = searchActive
+      ? r.title.toLowerCase().includes(search) ||
+        r.ingredients.toLowerCase().includes(search)
+      : true;
 
-  // --- Детальний перегляд рецепта ---
+    const matchesCategory =
+      selectedCategory === "Усі" || r.category === selectedCategory;
+
+    const matchesFavorites = showFavorites ? favorites.includes(r.id) : true;
+
+    return matchesSearch && matchesCategory && matchesFavorites;
+  });
+
+  const handleSearch = () => {
+    setSearch(searchInput.toLowerCase());
+    setSearchActive(true);
+  };
+
+  const resetSearch = () => {
+    setSearchInput("");
+    setSearch("");
+    setSearchActive(false);
+  };
+
+  if (loading) return <p>Завантаження...</p>;
+
+  // 📖 DETAIL VIEW
   if (selectedRecipe) {
-    const isLiked = favorites.includes(selectedRecipe.id);
-
     return (
       <div style={{ padding: "20px" }}>
-        <button
-          onClick={() => setSelectedRecipe(null)}
-          style={{
-            marginBottom: "20px",
-            padding: "8px 16px",
-            backgroundColor: "#a27645",
-            color: "white",
-            border: "none",
-            borderRadius: "8px",
-            cursor: "pointer",
-            fontWeight: "bold",
-            fontSize: "14px",
-          }}
-        >
-          ← Повернутись
+        <button className="back-btn" onClick={() => setSelectedRecipe(null)}>
+          ← Назад
         </button>
 
         <h2>{selectedRecipe.title}</h2>
 
-        <div style={{ display: "flex", gap: "20px", marginTop: "20px" }}>
-          {/* --- Ліва частина: картинка --- */}
-          {selectedRecipe.image && (
-            <div style={{ position: "relative" }}>
-              <img
-                src={`http://localhost:4000/images/${selectedRecipe.image}`}
-                alt={selectedRecipe.title}
-                style={{
-                  width: "400px",
-                  height: "300px",
-                  objectFit: "cover",
-                  borderRadius: "8px",
-                }}
-              />
-              {/* ❤️/♡ кнопка під картинкою */}
-              <button
-                onClick={() => handleToggleFavorite(selectedRecipe.id)}
-                style={{
-                  position: "absolute",
-                  bottom: "-15px",
-                  left: "50%",
-                  transform: "translateX(-50%)",
-                  border: "none",
-                  background: "white",
-                  borderRadius: "50%",
-                  width: "40px",
-                  height: "40px",
-                  cursor: "pointer",
-                  fontSize: "20px",
-                  color: isLiked ? "red" : "gray",
-                }}
-              >
-                {isLiked ? "❤️" : "♡"}
-              </button>
-            </div>
-          )}
+        <img
+          src={`http://localhost:4000/images/${selectedRecipe.image}`}
+          style={{ width: 300, borderRadius: 12 }}
+        />
 
-          {/* --- Права частина: текст --- */}
-          <div
-            style={{
-              flex: 1,
-              display: "flex",
-              flexDirection: "column",
-              gap: "20px",
-            }}
-          >
-            <div>
-              <h3>Інгредієнти:</h3>
-              <ul>
-                {selectedRecipe.ingredients.split("\n").map((ing, i) => (
-                  <li key={i}>{ing}</li>
-                ))}
-              </ul>
-            </div>
+        <h4>Інгредієнти</h4>
+        <p className="pill">{selectedRecipe.ingredients}</p>
 
-            <div>
-              <h3>Приготування:</h3>
-              <p style={{ whiteSpace: "pre-wrap" }}>{selectedRecipe.steps}</p>
-            </div>
-          </div>
-        </div>
+        <h4>Приготування</h4>
+        <p style={{ whiteSpace: "pre-line" }}>{selectedRecipe.steps}</p>
       </div>
     );
   }
 
-  // --- Головний перегляд: всі рецепти ---
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        padding: "20px",
-        gap: "10px",
-      }}
-    >
-      {!showFavorites && (
-        <div
-          style={{
-            display: "flex",
-            gap: "10px",
-            marginBottom: "10px",
-            flexWrap: "wrap",
-          }}
-        >
-          {categories.map((cat) => (
+    <div style={{ padding: "20px" }}>
+      {/* 🔍 SEARCH BAR */}
+      <div className="search-bar">
+        <input
+          type="text"
+          placeholder="Пошук рецептів..."
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+        />
+
+        <button className="search-btn" onClick={handleSearch}>
+          <img
+            src={searchIcon}
+            alt="search"
+            style={{ width: 18, height: 18 }}
+          />
+        </button>
+
+        {searchActive && (
+          <button className="clear-btn" onClick={resetSearch}>
+            ✖
+          </button>
+        )}
+      </div>
+
+      {/* 📂 CATEGORIES */}
+      <div className="category-row">
+        {!searchActive &&
+          categories.map((cat) => (
             <button
               key={cat}
+              className={`chip ${
+                selectedCategory === cat ? "active-chip" : ""
+              }`}
               onClick={() => setSelectedCategory(cat)}
-              style={{
-                padding: "8px 16px",
-                borderRadius: "20px",
-                border: "1px solid #a27645",
-                backgroundColor: cat === selectedCategory ? "#a27645" : "white",
-                color: cat === selectedCategory ? "white" : "#a27645",
-                cursor: "pointer",
-              }}
             >
               {cat}
             </button>
           ))}
-        </div>
-      )}
+      </div>
 
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "20px",
-          overflowY: "auto",
-          flex: 1,
-        }}
-      >
-        {filteredRecipes.map((recipe) => {
-          const isLiked = favorites.includes(recipe.id);
-          return (
-            <div
-              key={recipe.id}
-              style={{
-                width: "200px",
-                border: "1px solid #ccc",
-                borderRadius: "8px",
-                overflow: "hidden",
-                textAlign: "center",
-                position: "relative",
-                cursor: "pointer",
-              }}
-              onClick={() => setSelectedRecipe(recipe)}
-            >
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleToggleFavorite(recipe.id);
-                }}
-                style={{
-                  position: "absolute",
-                  right: "10px",
-                  top: "10px",
-                  border: "none",
-                  background: "white",
-                  borderRadius: "50%",
-                  width: "30px",
-                  height: "30px",
-                  cursor: "pointer",
-                  fontSize: "18px",
-                  color: isLiked ? "red" : "gray",
-                }}
-              >
-                {isLiked ? "❤️" : "♡"}
-              </button>
+      {/* 🍽 CARDS */}
+      <div className="recipes-grid">
+        {filteredRecipes.map((recipe) => (
+          <div
+            key={recipe.id}
+            className="recipe-card"
+            onClick={() => onOpenRecipe(recipe)}
+          >
+            <img
+              src={`http://localhost:4000/images/${recipe.image}`}
+              className="recipe-img"
+            />
 
-              {recipe.image && (
-                <img
-                  src={`http://localhost:4000/images/${recipe.image}`}
-                  alt={recipe.title}
-                  style={{ width: "100%", height: "120px", objectFit: "cover" }}
-                />
-              )}
+            <div className="card-content">
+              <h3>{recipe.title}</h3>
 
-              <div style={{ padding: "10px" }}>
-                <h4 style={{ margin: "5px 0", color: "#a27645" }}>
-                  {recipe.title}
-                </h4>
-                <p
-                  style={{
-                    fontSize: "12px",
-                    height: "40px",
-                    overflow: "hidden",
-                  }}
-                >
-                  {recipe.steps.substring(0, 60)}...
-                </p>
+              <p className="ingredients">
+                {recipe.ingredients.slice(0, 60)}...
+              </p>
+
+              <div className="meta">
+                <span>⭐ {recipe.rating || 0}</span>
+                <span>{recipe.category}</span>
               </div>
             </div>
-          );
-        })}
+
+            {/* ❤️ */}
+            <button
+              className="fav-btn"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleToggleFavorite(recipe.id);
+              }}
+            >
+              {favorites.includes(recipe.id) ? "❤️" : "🤍"}
+            </button>
+          </div>
+        ))}
       </div>
     </div>
   );

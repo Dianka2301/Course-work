@@ -1,6 +1,716 @@
-/* frontend/src/index.css */
+.poppins-light {
+  font-family: "Poppins", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.poppins-regular {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.poppins-semibold {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.poppins-black {
+  font-family: "Poppins", sans-serif;
+  font-weight: 900;
+  font-style: normal;
+}
+
+
+
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: 'Lexend', sans-serif;;
   background-color: #f7f7f7;
+}
+
+h1, h2, h3 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+}
+
+/* 🔹 ГЛОБАЛЬНІ */
+* {
+  box-sizing: border-box;
+}
+
+/* 🔹 ОСНОВНИЙ LAYOUT */
+.app-layout {
+  display: flex;
+  height: 100vh;
+}
+
+/* 🔹 SIDEBAR */
+.sidebar {
+  width: 250px;
+  background: #181818;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: transform 0.3s ease;
+}
+
+.sidebar h2 {
+  margin-bottom: 20px;
+}
+
+.sidebar .logo {
+  font-size: 20px;
+  font-weight: bold;
+  color: #a27645;
+  margin-bottom: 20px;
+}
+
+/* 🔹 КНОПКИ МЕНЮ */
+.sidebar button {
+  background: none;
+  border: none;
+  color: #fff;
+  text-align: left;
+  padding: 10px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.sidebar button:hover {
+  background: #2a2a2a;
+  transform: translateX(5px);
+}
+
+/* 🔹 ВИЙТИ */
+.sidebar .logout {
+  margin-top: auto;
+  color: red;
+}
+
+/* 🔹 КОНТЕНТ */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 🔹 TOPBAR */
+.toolbar {
+  height: 60px;
+  background: #a27645;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+
+  box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1; 
+  color: white;
+}
+
+.toolbar .user {
+  opacity: 0.8;
+}
+
+
+/* BURGER */
+.burger {
+  display: none;
+  font-size: 22px;
+  margin-right: 10px;
+  background: none;
+  border: none;
+  color: white;
+}
+
+/* OVERLAY */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 5;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    z-index: 10;
+    transform: translateX(-100%);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .burger {
+    display: block;
+  }
+}
+
+/* 🔹 ОСНОВНА ОБЛАСТЬ */
+.main-content > div:not(.toolbar) {
+  padding: 20px;
+  overflow-y: auto;
+}
+
+/* 🔹 ЦЕНТР (для loading) */
+.center {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+}
+
+.toolbar-left {
+  font-size: 16px;
+  display: flex;
+  align-items: center; /* 🔥 вирівнює лого + меню */
+  gap: 20px;
+}
+
+.toolbar-right {
+  font-size: 14px;
+  color: #555;
+}
+
+/* 🔥 SEARCH BAR */
+.search-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.search-bar input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  outline: none;
+}
+
+.search-btn,
+.clear-btn {
+  border: none;
+  padding: 10px 15px;
+  border-radius: 20px;
+  cursor: pointer;
+  background: #a27645;
+  color: white;
+}
+
+/* 🔥 CATEGORIES */
+.category-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  background: white;
+  cursor: pointer;
+}
+
+.active-chip {
+  background: #a27645;
+  color: white;
+  border: none;
+}
+
+/* 🔥 GRID */
+.recipes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+/* 🔥 CARD */
+
+.recipe-card {
+  background: #a27645;
+  border-radius: 16px;
+  padding: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: 0.3s;
+  position: relative;
+}
+
+
+.recipe-card:hover {
+  transform: scale(1.03);
+}
+
+.recipe-img {
+  width: 100%;
+  height: 210px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+/* 🔥 PILL STYLE (ОВАЛИ) */
+.pill {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 20px;
+  background: #f1f1f1;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.title-pill {
+  font-weight: bold;
+  background: #ffe8d1;
+}
+
+.small-pill {
+  font-size: 11px;
+  opacity: 0.8;
+}
+
+/* 🔥 CATEGORY TAG */
+.category-tag {
+  margin-top: 5px;
+  font-size: 11px;
+  color: #777;
+}
+
+/* 🔥 BACK BUTTON */
+.back-btn {
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.fav-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  background: white;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+
+.profile-wrapper {
+  display: flex;
+  gap: 30px;
+  padding: 30px;
+  align-items: flex-start;
+}
+
+/* LEFT CARD */
+.profile-card {
+  width: 260px;
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  text-align: center;
+}
+
+/* AVATAR */
+.avatar-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.avatar-img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #f0f0f0;
+}
+
+/* UPLOAD BUTTON */
+.upload-btn {
+  background: #a27645;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: 0.2s;
+}
+
+.upload-btn:hover {
+  background: #8a6238;
+}
+
+/* RIGHT CARD */
+.profile-form-card {
+  flex: 1;
+  background: white;
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+}
+
+/* FORM */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  font-size: 13px;
+  color: #777;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  outline: none;
+  transition: 0.2s;
+}
+
+.form-group input:focus {
+  border-color: #a27645;
+}
+
+/* SAVE BUTTON */
+.profile-actions {
+  margin-top: 20px;
+}
+
+.save-btn {
+  background: #a27645;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.save-btn:hover {
+  background: #8a6238;
+}
+
+/* ================= PROFILE (SAAS STYLE) ================= */
+
+.profile-wrapper {
+  display: flex;
+  gap: 40px;
+  padding: 40px;
+  align-items: flex-start;
+}
+
+/* LEFT CARD */
+.profile-card {
+  width: 280px;
+  background: white;
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  text-align: center;
+}
+
+/* AVATAR */
+.avatar-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.avatar-img {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #a27645;
+}
+
+/* UPLOAD BUTTON */
+.upload-btn {
+  background: #a27645;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+/* RIGHT CARD */
+.profile-form-card {
+  flex: 1;
+  background: white;
+  border-radius: 18px;
+  padding: 30px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+/* FORM */
+.profile-form-card input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  outline: none;
+}
+
+.profile-form-card input:focus {
+  border-color: #a27645;
+}
+
+/* SAVE BUTTON */
+.save-btn {
+  background: #a27645;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: 0.2s;
+}
+
+.save-btn:hover {
+  background: #8a5e33;
+}
+
+.cropper-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.cropper-container {
+  width: 400px;
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.cropper-area {
+  position: relative;
+  width: 100%;
+  height: 300px;
+}
+
+.cropper-controls {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cropper-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.cropper-buttons button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.cropper-buttons button:first-child {
+  background: #eee;
+}
+
+.cropper-buttons button:last-child {
+  background: #a27645;
+  color: white;
+}
+
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #a27645;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+/* NAV LINKS (DESKTOP) */
+.nav-links {
+  display: none;
+  gap: 15px;
+  margin-left: 30px;
+  align-items: center;
+}
+
+.nav-links button {
+  background: none;
+  border: none;
+  color: #ccc;
+  font-weight: 500;
+  padding: 6px 10px;
+  border-radius: 12px;
+  /*transition: all 0.2s ease;*/
+  line-height: 1;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.nav-links button:hover {
+  color: #fff;
+  background: #c1a585;
+  transform: scale(1.1);
+  /*transform: translateY(-2px);*/
+}
+
+.logout-btn {
+  background: #c1a585;
+  border: none;
+  color: #111;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.logout-btn:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+/* DESKTOP MODE */
+@media (min-width: 769px) {
+  .sidebar {
+    display: none;
+  }
+
+  .burger {
+    display: none;
+  }
+
+  .nav-links {
+    display: flex;
+  }
+}
+
+
+/* FEATURES GRID */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+/* CARD */
+.feature-card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: 0.25s;
+}
+
+.feature-card:hover {
+  transform: scale(1.05);
+  background: #c1a585;
+  color: white;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+
+
+.card-content {
+  padding: 12px;
+  color: white;
+}
+
+.card-content h3 {
+  margin: 0;
+}
+
+.ingredients {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-size: 12px;
+  color: #efeeee;
+}
+
+/* VIEW */
+.recipe-view {
+  padding: 20px;
+}
+
+.recipe-view-img {
+  width: 350px;
+  border-radius: 12px;
+}
+
+/* COMMENTS */
+.comments {
+  margin-top: 30px;
+}
+
+.comment {
+  background: #222;
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+}
+
+.comment-box {
+  display: flex;
+  gap: 10px;
+}
+
+.comment-box input {
+  flex: 1;
+  padding: 8px;
 }

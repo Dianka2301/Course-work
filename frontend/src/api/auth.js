@@ -1,44 +1,33 @@
-/* frontend/src/api/auth.js */
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000/api";
-
-export async function register(email, password) {
-  const res = await fetch(`${API_URL}/auth/register`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password }),
-  });
-
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || "Помилка реєстрації.");
-
-  return { user: data.user, token: data.token };
-}
+const API = "http://localhost:4000/api/auth";
 
 export async function login(email, password) {
-  const res = await fetch(`${API_URL}/auth/login`, {
+  const res = await fetch(`${API}/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
   });
 
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || "Невірний email або пароль.");
+  if (!res.ok) throw new Error("Login error");
+  return res.json();
+}
 
-  return { user: data.user, token: data.token };
+export async function register(email, password, firstName, lastName) {
+  const res = await fetch(`${API}/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password, firstName, lastName }),
+  });
+
+  if (!res.ok) throw new Error("Register error");
+  return res.json();
 }
 
 export async function verifyToken(token) {
-  if (!token) return null;
-
-  const res = await fetch(`${API_URL}/health`, {
-    headers: { Authorization: `Bearer ${token}` },
+  const res = await fetch("http://localhost:4000/api/auth/verify", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   });
 
-  if (!res.ok) return null;
-
-  try {
-    return await res.json();
-  } catch {
-    return null;
-  }
+  return res.json();
 }
