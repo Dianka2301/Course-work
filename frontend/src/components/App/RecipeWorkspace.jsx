@@ -2,11 +2,15 @@ import React, { useState, useEffect } from "react";
 import { fetchFavorites, toggleFavorite } from "../../api/favorites.js";
 import searchIcon from "../../images/glass.png";
 
-export default function RecipeWorkspace({ recipes = [], showFavorites, onOpenRecipe }) {
+export default function RecipeWorkspace({
+  recipes = [],
+  showFavorites,
+  onOpenRecipe,
+  refreshRecipes, // 🔥 важливо
+}) {
   const [favorites, setFavorites] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("Усі");
-  const [selectedRecipe, setSelectedRecipe] = useState(null);
   const [loading, setLoading] = useState(true);
 
   // 🔍 SEARCH
@@ -18,8 +22,6 @@ export default function RecipeWorkspace({ recipes = [], showFavorites, onOpenRec
     async function loadData() {
       try {
         const favs = await fetchFavorites();
-
-        // ✅ FIX: підтримка різних форматів API
         setFavorites(favs.map((f) => f.recipe_id || f.id));
 
         const cats = Array.from(
@@ -37,7 +39,7 @@ export default function RecipeWorkspace({ recipes = [], showFavorites, onOpenRec
     loadData();
   }, [recipes]);
 
-  // ❤️ TOGGLE FAVORITE
+  // ❤️ FAVORITES
   const handleToggleFavorite = async (recipeId) => {
     const { liked } = await toggleFavorite(recipeId);
 
@@ -46,7 +48,19 @@ export default function RecipeWorkspace({ recipes = [], showFavorites, onOpenRec
     );
   };
 
-  // 🔥 FILTER LOGIC
+  // 🔥 SEARCH
+  const handleSearch = () => {
+    setSearch(searchInput.toLowerCase());
+    setSearchActive(true);
+  };
+
+  const resetSearch = () => {
+    setSearchInput("");
+    setSearch("");
+    setSearchActive(false);
+  };
+
+  // 🔥 FILTER
   const filteredRecipes = recipes.filter((r) => {
     const matchesSearch = searchActive
       ? r.title.toLowerCase().includes(search) ||
@@ -61,42 +75,7 @@ export default function RecipeWorkspace({ recipes = [], showFavorites, onOpenRec
     return matchesSearch && matchesCategory && matchesFavorites;
   });
 
-  const handleSearch = () => {
-    setSearch(searchInput.toLowerCase());
-    setSearchActive(true);
-  };
-
-  const resetSearch = () => {
-    setSearchInput("");
-    setSearch("");
-    setSearchActive(false);
-  };
-
   if (loading) return <p>Завантаження...</p>;
-
-  // 📖 DETAIL VIEW
-  if (selectedRecipe) {
-    return (
-      <div style={{ padding: "20px" }}>
-        <button className="back-btn" onClick={() => setSelectedRecipe(null)}>
-          ← Назад
-        </button>
-
-        <h2>{selectedRecipe.title}</h2>
-
-        <img
-          src={`http://localhost:4000/images/${selectedRecipe.image}`}
-          style={{ width: 300, borderRadius: 12 }}
-        />
-
-        <h4>Інгредієнти</h4>
-        <p className="pill">{selectedRecipe.ingredients}</p>
-
-        <h4>Приготування</h4>
-        <p style={{ whiteSpace: "pre-line" }}>{selectedRecipe.steps}</p>
-      </div>
-    );
-  }
 
   return (
     <div style={{ padding: "20px" }}>
@@ -110,11 +89,7 @@ export default function RecipeWorkspace({ recipes = [], showFavorites, onOpenRec
         />
 
         <button className="search-btn" onClick={handleSearch}>
-          <img
-            src={searchIcon}
-            alt="search"
-            style={{ width: 18, height: 18 }}
-          />
+          <img src={searchIcon} alt="search" style={{ width: 18 }} />
         </button>
 
         {searchActive && (
@@ -156,9 +131,16 @@ export default function RecipeWorkspace({ recipes = [], showFavorites, onOpenRec
             <div className="card-content">
               <h3>{recipe.title}</h3>
 
-              <p className="ingredients">
-                {recipe.ingredients.slice(0, 60)}...
-              </p>
+              <div className="ingredients-wrapper">
+                {recipe.ingredients
+                  ?.split(",")
+                  .slice(0, 6)
+                  .map((item, index) => (
+                    <span key={index} className="ingredient-tag">
+                      {item.trim()}
+                    </span>
+                  ))}
+              </div>
 
               <div className="meta">
                 <span>⭐ {recipe.rating || 0}</span>

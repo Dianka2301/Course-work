@@ -13,9 +13,17 @@ export default function AppLayout({ user, setUser, recipes, onLogout }) {
   const [fromPage, setFromPage] = useState("catalog");
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  // 🔥 універсальна навігація
+  const changePage = (newPage) => {
+    setPage(newPage);
+    setSelectedRecipe(null); // щоб не залишався відкритий рецепт
+    setSidebarOpen(false); // закриваємо sidebar
+  };
+
   const openRecipe = (recipe, from) => {
     setSelectedRecipe(recipe);
     setFromPage(from);
+    setSidebarOpen(false); // 🔥 закриваємо sidebar
   };
 
   const goBack = () => {
@@ -71,14 +79,17 @@ export default function AppLayout({ user, setUser, recipes, onLogout }) {
       )}
 
       <aside className={`sidebar ${sidebarOpen ? "open" : ""}`}>
-        <h2>Flavoria</h2>
+        <h2>Food Recipe App</h2>
 
-        <button onClick={() => setPage("catalog")}>Каталог рецептів</button>
-        <button onClick={() => setPage("favorites")}>Обране</button>
-        <button onClick={() => setPage("ai")}>AI рецепти</button>
-        <button onClick={() => setPage("profile")}>Профіль</button>
-        <button onClick={() => setPage("myRecipes")}>Мої рецепти</button>
+        <button onClick={() => changePage("catalog")}>Каталог рецептів</button>
 
+        <button onClick={() => changePage("favorites")}>Обране</button>
+
+        <button onClick={() => changePage("ai")}>AI рецепти</button>
+
+        <button onClick={() => changePage("profile")}>Профіль</button>
+
+        <button onClick={() => changePage("myRecipes")}>Мої рецепти</button>
 
         <button onClick={onLogout}>Вийти</button>
       </aside>
@@ -86,7 +97,7 @@ export default function AppLayout({ user, setUser, recipes, onLogout }) {
       <main className="main-content">
         <Toolbar
           user={user}
-          setPage={setPage}
+          setPage={changePage} // 🔥 теж через правильну функцію
           onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
           onLogout={onLogout}
           onBack={selectedRecipe ? goBack : null}

@@ -124,7 +124,14 @@ export default function AuthForm({ mode, onLogin }) {
       {!isLogin && (
         <div className="auth-hint">Пароль має містити мінімум 4 символи</div>
       )}
-
+      
+      {isLogin && (
+        <div className="auth-links">
+          <a href="/forgot-password" className="forgot-link">
+            Забули пароль?
+          </a>
+        </div>
+      )}
       {/* 🔘 SUBMIT */}
       <button className="auth-btn" disabled={loading}>
         {loading ? "Зачекайте..." : isLogin ? "Увійти" : "Зареєструватися"}

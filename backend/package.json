@@ -1,7 +1,7 @@
 {
   "name": "flavoria-backend",
   "version": "1.0.0",
-  "description": "Flavoria recipe server",
+  "description": "Food Recipe App server",
   "main": "server.js",
   "type": "commonjs",
   "scripts": {
@@ -15,6 +15,7 @@
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
     "multer": "^2.1.1",
+    "nodemailer": "^8.0.7",
     "openai": "^6.27.0",
     "sqlite3": "^5.1.7"
   }

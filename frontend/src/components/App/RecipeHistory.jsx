@@ -5,6 +5,9 @@ import {
   updateRecipe,
   deleteRecipe,
 } from "../../api/recipes";
+import editIcon from "../../images/edit.png";
+import deleteIcon from "../../images/delete.png";
+import plusIcon from "../../images/plus.png";
 
 export default function RecipeHistory() {
   const [recipes, setRecipes] = useState([]);
@@ -38,7 +41,7 @@ export default function RecipeHistory() {
     setLoading(true);
 
     fetchMyRecipes(page, limit)
-      .then(setRecipes)
+      .then((data) => setRecipes(data.data || []))
       .catch(() => showToast("Помилка завантаження"))
       .finally(() => setLoading(false));
   }, [page]);
@@ -83,7 +86,7 @@ export default function RecipeHistory() {
       await createRecipe(payload);
     }
 
-    fetchMyRecipes(page, limit).then(setRecipes);
+    fetchMyRecipes(page, limit).then((data) => setRecipes(data.data || []));
 
     setForm({
       title: "",
@@ -128,7 +131,7 @@ export default function RecipeHistory() {
       {toast && <div className="toast">{toast}</div>}
 
       <div className="my-recipes-header">
-        <h2>📓 Мій записник рецептів</h2>
+        <h2> Мої рецепти</h2>
 
         <button
           className="add-btn"
@@ -146,7 +149,8 @@ export default function RecipeHistory() {
             setImageFile(null);
           }}
         >
-          ➕ Додати рецепт
+          <img src={plusIcon} alt="plus" className="icon" />
+          Додати рецепт
         </button>
       </div>
 
@@ -170,19 +174,22 @@ export default function RecipeHistory() {
             onChange={(e) => setForm({ ...form, steps: e.target.value })}
           />
 
-          <input type="file" onChange={(e) => handleImage(e.target.files[0])} />
+          <div className="upload-box">
+            <input
+              type="file"
+              onChange={(e) => handleImage(e.target.files[0])}
+            />
 
-          {preview && (
-            <img src={preview} style={{ width: 120, borderRadius: 8 }} />
-          )}
+            {preview && <img src={preview} className="preview-img" />}
+          </div>
 
-          <label>
+          <label className="checkbox">
             <input
               type="checkbox"
-              checked={!form.is_private}
+              checked={form.is_private === 1}
               onChange={togglePrivate}
             />
-            Public recipe
+            Приватний рецепт (тільки мій записник)
           </label>
 
           <div className="form-actions">
@@ -201,29 +208,47 @@ export default function RecipeHistory() {
       ) : (
         <div className="recipes-grid">
           {recipes.map((r) => (
-            <div key={r.id} className="recipe-card">
-              {r.image && <img src={r.image} className="card-img" />}
+            <div key={r.id} className="recipe-card new">
+              {/* IMAGE */}
+              <div className="image-wrap">
+                <img
+                  src={r.image || "/images/placeholder.jpg"}
+                  className="recipe-img"
+                />
 
-              <h3>{r.title}</h3>
+                {/* ACTION BUTTONS */}
+                <div className="card-actions">
+                  <button onClick={() => handleEdit(r)} className="icon-btn">
+                    <img src={editIcon} alt="edit" />
+                  </button>
 
-              <p>{r.ingredients?.slice(0, 60)}...</p>
+                  <button
+                    onClick={() => handleDelete(r.id)}
+                    className="icon-btn"
+                  >
+                    <img src={deleteIcon} alt="delete" />
+                  </button>
+                </div>
+              </div>
 
-              <div className="card-actions">
-                <button onClick={() => handleEdit(r)}>✏️</button>
-                <button onClick={() => handleDelete(r.id)}>🗑</button>
+              {/* TITLE */}
+              <h3 className="recipe-title">{r.title}</h3>
+
+              {/* INGREDIENT CHIPS */}
+              <div className="chips">
+                {r.ingredients
+                  ?.split(",")
+                  .slice(0, 5)
+                  .map((ing, i) => (
+                    <span key={i} className="chip">
+                      {ing.trim()}
+                    </span>
+                  ))}
               </div>
             </div>
           ))}
         </div>
       )}
-
-      <div className="pagination">
-        <button disabled={page === 1} onClick={() => setPage(page - 1)}>
-          ←
-        </button>
-        <span>Page {page}</span>
-        <button onClick={() => setPage(page + 1)}>→</button>
-      </div>
     </div>
   );
 }

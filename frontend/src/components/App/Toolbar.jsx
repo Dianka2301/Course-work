@@ -12,7 +12,7 @@ export default function Toolbar({
           ☰
         </button>
 
-        <span className="logo">Flavoria</span>
+        <span className="logo">Food Recipe App</span>
 
         <div className="nav-links">
           <button onClick={() => setPage("catalog")}>Каталог</button>

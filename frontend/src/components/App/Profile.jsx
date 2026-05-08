@@ -15,14 +15,11 @@ export default function Profile({ user, setUser }) {
 
   const token = localStorage.getItem("token");
 
-  /* ---------------- TOAST AUTO HIDE ---------------- */
+  /* ---------------- TOAST ---------------- */
   useEffect(() => {
     if (!toast) return;
 
-    const t = setTimeout(() => {
-      setToast(null);
-    }, 5000);
-
+    const t = setTimeout(() => setToast(null), 4000);
     return () => clearTimeout(t);
   }, [toast]);
 
@@ -38,13 +35,11 @@ export default function Profile({ user, setUser }) {
       return;
     }
 
-    const url = URL.createObjectURL(file);
-    setCropImage(url);
-
+    setCropImage(URL.createObjectURL(file));
     e.target.value = "";
   };
 
-  /* ---------------- SAVE PROFILE ---------------- */
+  /* ---------------- SAVE ---------------- */
   const handleSave = async () => {
     const formData = new FormData();
 
@@ -59,7 +54,7 @@ export default function Profile({ user, setUser }) {
     try {
       const res = await updateProfile(formData, token);
 
-      /* 🔥 IMPORTANT: повністю замінюємо user */
+      // 🔥 backend вже повертає FULL user
       setUser(res.user);
 
       localStorage.setItem("token", res.token);
@@ -74,12 +69,8 @@ export default function Profile({ user, setUser }) {
     }
   };
 
-  /* ---------------- AVATAR URL ---------------- */
-  const avatarSrc = preview
-    ? preview
-    : user.avatar
-      ? `http://localhost:4000/uploads/${user.avatar}?v=${Date.now()}`
-      : "/images/default-avatar.png";
+  /* ---------------- AVATAR (FIXED LOGIC) ---------------- */
+  const avatarSrc = preview || user.avatar || "/images/default-avatar.png";
 
   return (
     <div className="profile-wrapper">
@@ -114,7 +105,9 @@ export default function Profile({ user, setUser }) {
           value={firstName}
           onChange={(e) => setFirstName(e.target.value)}
         />
+
         <input value={lastName} onChange={(e) => setLastName(e.target.value)} />
+
         <input value={email} onChange={(e) => setEmail(e.target.value)} />
 
         <button className="save-btn" onClick={handleSave}>

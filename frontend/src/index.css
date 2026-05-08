@@ -23,12 +23,24 @@
 }
 
 
-
 body {
   margin: 0;
-  font-family: 'Lexend', sans-serif;;
-  background-color: #f7f7f7;
+  font-family: 'Lexend', sans-serif;
+  min-height: 100vh;
+  color: #333;
+
+  background-color: #fdfbf9; 
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(162, 118, 69, 0.15) 0px, transparent 50%), 
+    radial-gradient(at 100% 0%, rgba(193, 165, 133, 0.12) 0px, transparent 50%), 
+    radial-gradient(at 100% 100%, rgba(162, 118, 69, 0.08) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(255, 255, 255, 1) 0px, transparent 50%);
+
+  background-attachment: fixed;
+  
 }
+
+
 
 h1, h2, h3 {
   font-family: 'Montserrat', sans-serif;
@@ -48,10 +60,10 @@ h1, h2, h3 {
 
 /* 🔹 SIDEBAR */
 .sidebar {
+  display: none;
   width: 250px;
   background: #a27645;
   padding: 20px;
-  display: flex;
   flex-direction: column;
   gap: 10px;
   transition: transform 0.3s ease;
@@ -100,21 +112,33 @@ h1, h2, h3 {
 
 /* 🔹 TOPBAR */
 .toolbar {
-  height: 100px;
-  background: #a27645;
+  position: sticky;
+  top: 15px;
+  left: 15px;
+  right: 15px;
+  height: 80px;
+  margin: 15px;
+  background: rgba(162, 118, 69, 0.8); /* Напівпрозорий основний колір */
+  backdrop-filter: blur(12px); /* Ефект розмиття фону */
+  -webkit-backdrop-filter: blur(12px);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px;
-
-  box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+  padding: 0 40px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 
+              inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  z-index: 100;
 }
 
 .logo {
+  font-family: "Montserrat", sans-serif;
   font-weight: 700;
-  font-size: 20px;
-  line-height: 1; 
-  color: white;
+  font-size: 28px;
+  letter-spacing: -0.5px;
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 .toolbar .user {
@@ -141,7 +165,7 @@ h1, h2, h3 {
 }
 
 /* RESPONSIVE */
-@media (max-width: 768px) {
+/*@media (max-width: 768px) {
   .sidebar {
     position: fixed;
     top: 0;
@@ -158,7 +182,7 @@ h1, h2, h3 {
   .burger {
     display: block;
   }
-}
+}*/
 
 /* 🔹 ОСНОВНА ОБЛАСТЬ */
 .main-content > div:not(.toolbar) {
@@ -208,7 +232,7 @@ h1, h2, h3 {
   padding: 10px 15px;
   border-radius: 20px;
   cursor: pointer;
-  background: #a27645;
+  background: rgba(162, 118, 69, 0.8); 
   color: white;
 }
 
@@ -229,7 +253,7 @@ h1, h2, h3 {
 }
 
 .active-chip {
-  background: #a27645;
+  background: rgba(162, 118, 69, 0.8);
   color: white;
   border: none;
 }
@@ -244,7 +268,7 @@ h1, h2, h3 {
 /* 🔥 CARD */
 
 .recipe-card {
-  background: #a27645;
+  background: rgba(162, 118, 69, 0.8);;
   border-radius: 16px;
   padding: 10px;
   overflow: hidden;
@@ -293,14 +317,14 @@ h1, h2, h3 {
 }
 
 /* 🔥 BACK BUTTON */
-.back-btn {
+/*.back-btn {
   margin-bottom: 10px;
   padding: 8px 12px;
   border-radius: 10px;
   border: none;
   cursor: pointer;
   background: #c1a585;
-}
+}*/
 
 .fav-btn {
   position: absolute;
@@ -378,14 +402,14 @@ h1, h2, h3 {
 .avatar-img {
   width: 140px;
   height: 140px;
-  border-radius: 50%;
+  /*border-radius: 50%;*/
   object-fit: cover;
-  border: 3px solid #a27645;
+  /*border: 3px solid rgba(162, 118, 69, 0.8);*/
 }
 
 /* UPLOAD BUTTON */
 .upload-btn {
-  background: #a27645;
+  background: rgba(162, 118, 69, 0.8); 
   color: white;
   padding: 8px 14px;
   border-radius: 10px;
@@ -395,7 +419,7 @@ h1, h2, h3 {
 }
 
 .upload-btn:hover {
-  background: #8a6238;
+  background: rgba(156, 99, 35, 0.8); 
 }
 
 /* RIGHT CARD */
@@ -423,7 +447,7 @@ h1, h2, h3 {
 
 /* SAVE BUTTON */
 .save-btn {
-  background: #a27645;
+  background: rgba(162, 118, 69, 0.8); 
   color: white;
   border: none;
   padding: 12px 20px;
@@ -434,14 +458,14 @@ h1, h2, h3 {
 }
 
 .save-btn:hover {
-  background: #8a5e33;
+  background: rgba(156, 99, 35, 0.8); 
 }
 
 
 /* ================= RESPONSIVE ================= */
 
 /* TABLET + SMALL LAPTOPS */
-@media (max-width: 768px) {
+/*@media (max-width: 768px) {
   .profile-wrapper {
     flex-direction: column;
     padding: 20px;
@@ -462,9 +486,9 @@ h1, h2, h3 {
     height: 120px;
   }
 }
-
+*/
 /* PHONES */
-@media (max-width: 480px) {
+/*@media (max-width: 480px) {
   .profile-wrapper {
     padding: 15px;
     gap: 15px;
@@ -497,6 +521,70 @@ h1, h2, h3 {
 
   .profile-form-card input {
     padding: 10px;
+  }
+}*/
+
+
+/* 📱 TABLET */
+@media (max-width: 768px) {
+  .profile-wrapper {
+    flex-direction: column;
+    padding: 20px;
+    gap: 20px;
+  }
+
+  .profile-card {
+    width: 100%;
+  }
+
+  .profile-form-card {
+    width: 100%;
+    padding: 20px;
+  }
+
+  .avatar-img {
+    width: 120px;
+    height: 120px;
+  }
+}
+
+/* 📱 PHONES */
+@media (max-width: 480px) {
+  .profile-wrapper {
+    padding: 15px;
+    gap: 15px;
+  }
+
+  .profile-card {
+    padding: 15px;
+    border-radius: 14px;
+  }
+
+  .profile-form-card {
+    padding: 15px;
+    border-radius: 14px;
+  }
+
+  .avatar-img {
+    width: 95px;
+    height: 95px;
+  }
+
+  .upload-btn {
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  .save-btn {
+    width: 100%;
+    padding: 12px;
+  }
+
+  .profile-form-card input {
+    padding: 10px;
+    font-size: 14px;
   }
 }
 
@@ -570,62 +658,65 @@ h1, h2, h3 {
 
 
 /* NAV LINKS (DESKTOP) */
+/* Навігація в тулбарі */
 .nav-links {
-  display: none;
-  gap: 15px;
-  margin-left: 30px;
+  display: flex;
+  gap: 30px;
   align-items: center;
+  margin-left: 90px;
 }
 
 .nav-links button {
   background: none;
   border: none;
-  color: white;
-  font-weight: 800;
-  padding: 6px 10px;
-  border-radius: 12px;
-  /*transition: all 0.2s ease;*/
-  line-height: 1;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 15px;
   cursor: pointer;
-  transition: 0.25s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
 }
 
 .nav-links button:hover {
   color: #fff;
-  background: #c1a585;
-  transform: scale(1.1);
-  /*transform: translateY(-2px);*/
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-3px);
+}
+
+/* Активний пункт (підкреслення як на фото) */
+.nav-links button.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 20%;
+  right: 20%;
+  height: 2px;
+  background: #fff;
+  box-shadow: 0 0 8px rgba(255,255,255,0.8);
+  border-radius: 2px;
 }
 
 .logout-btn {
-  background: #c1a585;
-  border: none;
-  color: #111;
+  background: linear-gradient(135deg, #c1a585 0%, #8a6238 100%);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: white;
   font-weight: 600;
-  padding: 6px 14px;
-  border-radius: 12px;
+  padding: 10px 24px;
+  border-radius: 15px;
   cursor: pointer;
-  transition: 0.25s;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .logout-btn:hover {
   transform: scale(1.05);
-  opacity: 0.9;
-}
-
-/* DESKTOP MODE */
-@media (min-width: 769px) {
-  .sidebar {
-    display: none;
-  }
-
-  .burger {
-    display: none;
-  }
-
-  .nav-links {
-    display: flex;
-  }
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  filter: brightness(1.1);
 }
 
 
@@ -652,11 +743,11 @@ h1, h2, h3 {
 }
 
 /* MOBILE */
-@media (max-width: 768px) {
+/*@media (max-width: 768px) {
   .features-grid {
     grid-template-columns: 1fr;
   }
-}
+}*/
 
 
 
@@ -670,9 +761,29 @@ h1, h2, h3 {
   margin: 0;
 }
 
-.ingredients {
+/* Контейнер для інгредієнтів */
+.ingredients-wrapper {
+  display: flex;
+  flex-wrap: wrap; /* Дозволяє переносити теги на новий рядок */
+  gap: 8px;        /* Відстань між овалами */
+  margin-top: 10px;
+}
+
+/* Стиль самого овального інгредієнта */
+.ingredient-tag {
+  background: rgba(255, 255, 255, 0.2); /* Напівпрозорий білий (під стиль glassmorphism) */
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px; /* Робить прямокутник овальним */
   font-size: 12px;
-  opacity: 0.7;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  white-space: nowrap; /* Щоб назва не розривалася всередині овалу */
+  transition: 0.2s;
+}
+
+.ingredient-tag:hover {
+  background: rgba(255, 255, 255, 0.4);
+  transform: translateY(-1px);
 }
 
 .meta {
@@ -683,62 +794,58 @@ h1, h2, h3 {
   color: #efeeee;
 }
 
-/* VIEW */
-
-.recipe-view-img {
-  width: 350px;
-  border-radius: 12px;
-}
-
-
 /* PAGE */
+/*
 .recipe-view {
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
   padding: 24px;
-}
+}*/
 
 /* TITLE */
-.recipe-title {
+/*.recipe-title {
   margin-bottom: 20px;
 }
 
 /* LAYOUT */
-.recipe-layout {
+/*.recipe-layout {
   display: flex;
   gap: 30px;
 }
+*/
 
 /* LEFT */
-.recipe-left {
+/*.recipe-left {
   flex: 1;
-}
+}*/
 
 /* RIGHT */
-.recipe-right {
+/*.recipe-right {
   flex: 1;
-}
+}*/
 
 /* IMAGE */
-.recipe-view-img {
+/*.recipe-view-img {
   width: 100%;
+  height: 300px;
   max-width: 420px;
   border-radius: 16px;
   object-fit: cover;
 }
+*/
 
 /* BACK BUTTON */
-.back-btn {
+/*.back-btn {
   margin-bottom: 15px;
   padding: 8px 12px;
   border-radius: 10px;
   border: none;
   cursor: pointer;
-}
+}*/
 
 /* ⭐ RATING BOX */
-.rating-box {
+/*.rating-box {
   margin-top: 15px;
   padding: 12px;
   background: #f6f6f6;
@@ -761,12 +868,12 @@ h1, h2, h3 {
 }
 
 /* SECTIONS */
-.section {
+/*.section {
   margin-bottom: 20px;
-}
+}*/
 
 /* COMMENTS */
-.comments {
+/*.comments {
   margin-top: 30px;
 }
 
@@ -783,7 +890,7 @@ h1, h2, h3 {
 }
 
 /* INPUT BOX */
-.comment-box {
+/*.comment-box {
   display: flex;
   gap: 10px;
 }
@@ -807,10 +914,242 @@ h1, h2, h3 {
 
 .comment-box button:hover {
   transform: scale(1.05);
+}*/
+.recipe-view {
+  padding: 30px 60px;
+  background: #f7f3ef;
+  min-height: 100vh;
+  font-family: "Segoe UI", sans-serif;
 }
 
+/* 🔙 кнопка */
+.back-btn {
+  background: #e6d3bd;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: 0.3s;
+}
+
+.back-btn:hover {
+  background: #d8bfa3;
+}
+
+/* 📦 layout */
+.recipe-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+
+/* 🖼 LEFT */
+.recipe-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* фото */
+.recipe-view-img {
+  width: 100%;
+  max-width: 520px;
+  height: 350px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  transition: transform 0.4s;
+  margin-top: 10px;   /* вниз */
+  margin-left: -10px; /* лівіше */
+}
+
+.recipe-view-img:hover {
+  transform: scale(1.03);
+}
+
+/* назва */
+.recipe-title {
+  margin-top: 15px;
+  font-size: 26px;
+  font-weight: 600;
+}
+
+/* ⭐ рейтинг */
+.rating-box {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.star {
+  display: f;
+  font-size: 26px;
+  cursor: pointer;
+  transition: 0.2s;
+  color: #f5a623;
+}
+
+.star:hover {
+  transform: scale(1.2);
+}
+
+.avg-rating {
+  margin-top: 2px;
+  font-size: 17px;
+  color: #555;
+}
+
+/* 📄 RIGHT */
+.recipe-right {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* 📦 секції (оці "бежеві рамки") */
+.section {
+  background: #f3e5d7;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  transition: 0.3s;
+}
+
+.section:hover {
+  transform: translateY(-3px);
+}
+
+/* заголовки */
+.section h4 {
+  margin-bottom: 10px;
+}
+
+/* інгредієнти */
+.ingredients-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ingredient-item {
+  background: rgba(255,255,255,0.5);
+  padding: 6px 10px;
+  border-radius: 10px;
+  margin-top: 7px;
+}
+
+/* 💬 COMMENTS */
+.comments {
+  margin-top: 40px;
+  background: #f3e5d7;
+  padding: 20px;
+  border-radius: 16px;
+}
+
+/* список */
+.comment-list {
+  margin-bottom: 15px;
+}
+
+.comment {
+  background: white;
+  padding: 12px 14px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+
+.comment:hover {
+  transform: translateY(-1px);
+  transition: 0.2s;
+}
+.comment-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.comment-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #ddd;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.comment-date {
+  font-size: 11px;
+  color: gray;
+}
+
+.comment-stars {
+  display: flex;
+  gap: 2px;
+  font-size: 14px;
+  color: #f5a623; /* золото */
+  margin-bottom: 6px;
+}
+
+.comment-text {
+  font-size: 14px;
+  line-height: 1.4;
+  color: #333;
+  word-break: break-word;
+}
+
+.comment-info {
+  flex: 1;
+}
+
+
+/* поле вводу */
+.comment-box {
+  display: flex;
+  gap: 10px;
+}
+
+.comment-box input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+}
+
+.comment-box button {
+  background: #d8bfa3;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.comment-box button:hover {
+  background: #c9a989;
+}
+
+.section {
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+} 
 /* 📱 MOBILE */
-@media (max-width: 768px) {
+/*@media (max-width: 768px) {
   .recipe-layout {
     flex-direction: column;
   }
@@ -818,24 +1157,24 @@ h1, h2, h3 {
   .recipe-view-img {
     max-width: 100%;
   }
-}
+}*/
 
 
 
-@media (max-width: 1024px) {
+/*@media (max-width: 1024px) {
   .recipes-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-}
+}*/
 
-@media (max-width: 600px) {
+/*@media (max-width: 600px) {
   .recipes-grid {
     grid-template-columns: 1fr;
   }
-}
+}*/
 
 /* COMMENTS */
-.comments {
+/*.comments {
   margin-top: 30px;
 }
 
@@ -854,7 +1193,7 @@ h1, h2, h3 {
 .comment-box input {
   flex: 1;
   padding: 8px;
-}
+}*/
 
 
 
@@ -870,13 +1209,25 @@ h1, h2, h3 {
 }
 
 .add-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   background: #c1a585;
   border: none;
   padding: 10px 16px;
-  border-radius: 12px;
+  border-radius: 15px;
   cursor: pointer;
   color: white;
   transition: 0.25s;
+  font-size: 14px;
+}
+
+.add-btn img {
+  width: 18px;
+  height: 18px;
+  opacity: 0.8;
+  transition: 0.2s;
+  margin: 0 5px -3px 0;
 }
 
 .add-btn:hover {
@@ -884,7 +1235,7 @@ h1, h2, h3 {
 }
 
 .recipe-form {
-  background: #1e1e1e;
+  background: rgba(162, 118, 69, 0.8);
   padding: 20px;
   border-radius: 16px;
   margin-bottom: 20px;
@@ -895,10 +1246,25 @@ h1, h2, h3 {
 
 .recipe-form input,
 .recipe-form textarea {
+  width: 50%;
   padding: 10px;
   border-radius: 10px;
-  border: none;
-  outline: none;
+  border: 1px solid #ddd;
+
+  font-size: 14px;
+}
+
+.upload-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.preview-img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 10px;
 }
 
 .form-actions {
@@ -913,6 +1279,7 @@ h1, h2, h3 {
   cursor: pointer;
 }
 
+
 .card-actions {
   display: flex;
   justify-content: space-between;
@@ -922,3 +1289,261 @@ h1, h2, h3 {
 .empty {
   opacity: 0.7;
 }
+
+
+/* GRID */
+.recipes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+/* CARD */
+.recipe-card.new {
+  background: #c89d6d;
+  border-radius: 18px;
+  padding: 12px;
+  transition: 0.3s;
+}
+
+.recipe-card.new:hover {
+  transform: scale(1.03);
+}
+
+/* IMAGE WRAP */
+.image-wrap {
+  position: relative;
+}
+
+/* IMAGE */
+.recipe-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 14px;
+}
+
+/* ACTIONS */
+.card-actions {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  gap: 6px;
+}
+
+.card-actions img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  cursor: pointer;
+}
+
+.card-actions button {
+  background: white;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 6px;
+  cursor: pointer;
+}
+
+/* TITLE */
+.recipe-title {
+  color: rgb(8, 8, 8);
+  margin-top: 10px;
+  font-size: 16px;
+}
+
+/* CHIPS */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.chip {
+  background: #e7c9a9;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-size: 15px;
+}
+
+.chip:hover {
+  background: #c1a585;
+  color: white;
+}
+
+
+
+
+/* ================= RECIPE VIEW RESPONSIVE ================= */
+/* ============================================================
+   RESPONSIVE DESIGN (ADAPTIVE)
+   ============================================================ */
+
+/* 🔹 ПЛАНШЕТИ (До 1024px) */
+@media (max-width: 1024px) {
+  .recipes-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 картки в ряд */
+  }
+
+  .recipe-view {
+    padding: 20px 30px;
+  }
+
+  .recipe-layout {
+    gap: 20px;
+  }
+
+  .nav-links {
+    gap: 15px;
+    margin-left: 40px;
+  }
+}
+
+/* 🔹 МОБІЛЬНІ ПРИСТРОЇ (До 768px) */
+@media (max-width: 768px) {
+  /* Sidebar */
+  .sidebar {
+    display: flex; /* тепер з’являється тільки тут */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100%;
+    background: rgba(162, 118, 69, 0.8);
+    z-index: 1000;
+
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  /* Toolbar */
+  .toolbar {
+    padding: 0 20px;
+    height: 70px;
+  }
+
+  .burger {
+    display: block;
+    cursor: pointer;
+  }
+
+  .nav-links,
+  .logout-btn {
+    display: none;
+  }
+
+  /* Grid */
+  .recipes-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+
+  /* Сторінка Рецепта (Перехід в одну колонку) */
+  .recipe-layout {
+    grid-template-columns: 1fr; /* Фото зверху, текст знизу */
+  }
+
+  .recipe-left {
+    align-items: center;
+  }
+
+    .recipe-view-img {
+    max-width: 100%;
+    height: 250px;
+  }
+
+  /* Профіль */
+  .profile-wrapper {
+    flex-direction: column;
+    padding: 20px;
+    gap: 20px;
+  }
+
+  .profile-card, .profile-form-card {
+    width: 100%;
+  }
+
+  /* Features */
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* 🔹 МАЛЕНЬКІ СМАРТФОНИ (До 480px) */
+@media (max-width: 480px) {
+  .toolbar {
+    margin: 10px;
+    height: 60px;
+    padding: 0 15px;
+  }
+
+  .logo {
+    font-size: 20px;
+  }
+
+  .recipes-grid {
+    grid-template-columns: 1fr; /* 1 картка на весь екран */
+  }
+
+  .recipe-view {
+    padding: 15px;
+  }
+
+  .recipe-title {
+    font-size: 20px;
+    text-align: center;
+  }
+
+  .recipe-view-img {
+    max-width: 100%;
+    height: 250px;
+  }
+
+  .section {
+    padding: 15px;
+  }
+
+  .comment-box {
+    flex-direction: column;
+  }
+
+  .comment-box button {
+    width: 100%;
+  }
+
+  .avatar-img {
+    width: 100px;
+    height: 100px;
+  }
+
+  .category-row {
+    justify-content: center;
+  }
+
+  .chip {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+}
+
+/* 🔹 ВИПРАВЛЕННЯ ДЛЯ ПЕЙДЖІНГУ ТА ФОРМ (Z-INDEX) */
+.cropper-overlay {
+  z-index: 2000;
+}
+
+.toast {
+  z-index: 3000;
+  width: auto;
+  left: 20px;
+  right: 20px;
+  text-align: center;
+}
+
+

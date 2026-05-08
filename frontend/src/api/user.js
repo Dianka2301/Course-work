@@ -1,5 +1,5 @@
 export async function updateProfile(formData, token) {
-  const res = await fetch("http://localhost:4000/api/auth/profile", {
+  const res = await fetch("http://localhost:4000/api/profile", {
     method: "PUT",
     headers: {
       Authorization: `Bearer ${token}`,

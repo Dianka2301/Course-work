@@ -10,11 +10,16 @@ router.get("/", (req, res) => {
     const rows = db
       .prepare(
         `
-        SELECT r.*
-        FROM favorites f
-        JOIN recipes r ON r.id = f.recipe_id
-        WHERE f.user_id = ?
-        ORDER BY r.created_at DESC
+      SELECT 
+      r.*,
+      ROUND(AVG(rt.rating), 1) as rating,
+      COUNT(rt.rating) as rating_count
+      FROM favorites f
+      JOIN recipes r ON r.id = f.recipe_id
+      LEFT JOIN ratings rt ON r.id = rt.recipe_id
+      WHERE f.user_id = ?
+      GROUP BY r.id
+      ORDER BY r.created_at DESC
       `,
       )
       .all(userId);

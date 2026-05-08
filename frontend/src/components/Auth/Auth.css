@@ -40,52 +40,102 @@ h1, h2, h3 {
   flex-direction: column;
 }
 
-.auth-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 40px;
-  background: rgba(255,255,255,0.9);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+.logo-app {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 28px;
+  letter-spacing: -0.5px;
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  margin: 25px 0;
 }
 
+/* 🔹 ОНОВЛЕНИЙ AUTH-HEADER (Glassmorphism Style) */
+.auth-header {
+  /*position: sticky;*/
+  top: 15px;
+ 
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0 40px;
+  height: 80px;
 
+  
+  /* Той самий стиль, що й у тулбару */
+  background: rgba(162, 118, 69, 0.8); 
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  
+ 
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  background:rgba(0, 0, 0, 0.45),
+}
 
+.hero-text {
+  position: absolute;
+  top: 70%;
+  left: 28%;
+  transform: translate(-50%, -50%);
+
+  
+  text-align: left;
+  color: white;
+}
+
+/* Навігаційні вкладки */
 .nav-tabs {
   display: flex;
-  gap: 12px;
+  gap: 15px;
+  align-items: center;
+  margin: 25px 0;
 }
 
 .nav-tabs button {
-  background: #c1a585;
+  background: none;
   border: none;
-  border-radius: 12px;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+  font-size: 16px;
+  padding: 8px 16px;
+  border-radius: 15px;
   cursor: pointer;
-  font-weight: 600;
-  padding: 8px 14px;
-  transition: 0.25s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .nav-tabs button:hover {
-  background: rgba(162,118,69,0.25);
-  color: #a27645 !important;
-  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  transform: translateY(-2px);
 }
 
+/* Кнопка входу/реєстрації (градієнтна) */
 .login-btn {
-  background: #a27645;
-  border-radius: 12px;
-  padding: 8px 16px;
-  border: none;
+  /*background: linear-gradient(135deg, #c1a585 0%, #8a6238 100%);*/
+  /*border: 1px solid rgba(255, 255, 255, 0.2);*/
+  color: white;
+  font-weight: 600;
+  padding: 10px 24px;
+  border-radius: 15px;
   cursor: pointer;
+  transition: all 0.3s ease;
+  /*box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);*/
 }
 
 .login-btn:hover {
-  background: white !important;
-  transform: scale(1.1);
-  border-radius: 12px;
-  border:2px solid #a27645;
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  filter: brightness(1.1);
+  
+}
+
+/* Якщо кнопка має бути "активною" (наприклад, ви на цій сторінці) */
+.nav-tabs button.active {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  box-shadow: inset 0 0 10px rgba(255,255,255,0.1);
 }
 
 .modal-overlay {
@@ -240,7 +290,7 @@ h1, h2, h3 {
   padding: 12px;
 
   border: none;
-  border-radius: 12px;
+  border-radius: 15px;
 
   background: linear-gradient(135deg, #c1a585, #af7f48);
   color: white;
@@ -415,4 +465,143 @@ h1, h2, h3 {
     transform: scale(1);
     opacity: 1;
   }
+}
+
+.auth-links {
+  margin-top: 10px;
+  text-align: right;
+}
+
+.forgot-link {
+  font-size: 13px;
+  color: #666;
+  text-decoration: none;
+}
+
+.forgot-link:hover {
+  text-decoration: underline;
+}
+
+/* ============================================================
+   AUTH & MODAL RESPONSIVE (ADAPTIVE)
+   ============================================================ */
+
+/* 🔹 ПЛАНШЕТИ (До 768px) */
+@media (max-width: 768px) {
+  .auth-header {
+    padding: 0 20px;
+    height: auto; /* Дозволяємо висоті підлаштовуватися під контент */
+    flex-direction: row;
+    flex-wrap: wrap; /* Елементи переносяться, якщо не влазять */
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+  }
+
+  .logo-app {
+    margin: 15px 0;
+    font-size: 22px;
+  }
+
+  .nav-tabs {
+    margin: 10px 0;
+    order: 3; /* Переносимо навігацію вниз під лого та кнопку */
+    width: 100%;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .hero-text {
+    left: 50%; /* Центруємо текст на мобільних */
+    width: 90%;
+    text-align: center;
+  }
+
+  .modal {
+    width: 90%;
+    padding: 24px;
+  }
+}
+
+/* 🔹 МОБІЛЬНІ ПРИСТРОЇ (До 480px) */
+@media (max-width: 480px) {
+  .auth-header {
+    padding: 5px 15px;
+  }
+
+  .logo-app {
+    font-size: 20px;
+  }
+
+  .nav-tabs button {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+
+  .login-btn {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+
+  /* Покращене відображення модалки */
+  .modal-overlay {
+    align-items: center; /* Центруємо вертикально */
+    padding: 10px;
+  }
+
+  .modal {
+    width: 100%;
+    max-height: 95vh; /* Щоб модалка не вилазила за межі екрану */
+    overflow-y: auto; /* Скрол всередині модалки, якщо контенту багато */
+    padding: 20px 16px;
+    border-radius: 18px;
+  }
+
+  .auth-title {
+    font-size: 18px;
+  }
+
+  .auth-tabs button {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .auth-form input {
+    padding: 12px; /* Більша область для натискання пальцем */
+    font-size: 16px; /* Запобігає автоматичному зуму в iOS при фокусі */
+  }
+
+  .auth-btn {
+    padding: 14px;
+    font-size: 16px;
+  }
+
+  .auth-switch-wrapper {
+    min-height: auto;
+  }
+  
+  .forgot-link {
+    font-size: 12px;
+  }
+}
+
+/* 🔹 ДУЖЕ МАЛЕНЬКІ ЕКРАНИ (До 360px) */
+@media (max-width: 360px) {
+  .nav-tabs {
+    gap: 4px;
+  }
+  
+  .nav-tabs button {
+    font-size: 12px;
+    padding: 5px 8px;
+  }
+
+  .logo-app {
+    font-size: 18px;
+  }
+}
+
+/* Фікс для системних вікон вибору файлів або зуму */
+.modal-overlay {
+  z-index: 1000;
 }

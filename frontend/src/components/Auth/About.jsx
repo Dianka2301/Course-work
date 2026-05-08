@@ -52,14 +52,14 @@ export default function About() {
           </h1>
 
           <p style={{ fontSize: "18px", opacity: 0.9 }}>
-            Flavoria — це місце, де кулінарія стає досвідом, а не просто
+            Food Recipe App — це місце, де кулінарія стає досвідом, а не просто
             процесом.
           </p>
         </div>
       </div>
       {/* 🔥 HERO */}
       <div style={{ textAlign: "center", marginBottom: "80px" }}>
-        <h1 style={{ marginBottom: "20px" }}>Що таке Flavoria?</h1>
+        <h1 style={{ marginBottom: "20px" }}>Що таке Food Recipe App?</h1>
 
         <p
           style={{
@@ -69,8 +69,9 @@ export default function About() {
             lineHeight: "1.6",
           }}
         >
-          Flavoria — це кулінарний простір, де приготування їжі стає не рутиною,
-          а досвідом, що надихає, заспокоює і приносить задоволення щодня.
+          Food Recipe App — це кулінарний простір, де приготування їжі стає не
+          рутиною, а досвідом, що надихає, заспокоює і приносить задоволення
+          щодня.
         </p>
 
         <img
@@ -156,8 +157,9 @@ export default function About() {
         <div>
           <h2 style={{ marginBottom: "15px" }}>Наша обіцянка</h2>
           <p style={{ fontSize: "16px", color: "#555" }}>
-            Flavoria дає більше, ніж рецепти. Ми навчаємо кулінарної культури,
-            ділимось лайфхаками та робимо процес приготування простішим.
+            Food Recipe App дає більше, ніж рецепти. Ми навчаємо кулінарної
+            культури, ділимось лайфхаками та робимо процес приготування
+            простішим.
           </p>
         </div>
 
@@ -208,7 +210,7 @@ export default function About() {
 
       {/* 🔹 МАГІЯ */}
       <div style={{ textAlign: "center" }}>
-        <h2 style={{ marginBottom: "30px" }}>Магія Flavoria</h2>
+        <h2 style={{ marginBottom: "30px" }}>Магія Food Recipe App</h2>
 
         <div style={{ display: "grid", gap: "15px" }}>
           {[

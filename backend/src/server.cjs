@@ -11,7 +11,8 @@ const profileRoutes = require("./profile.cjs"); // 🔥 FIX: ДОДАНО
 
 const db = require("./db.cjs");
 
-dotenv.config({ path: path.join(__dirname, "../.env") });
+//dotenv.config({ path: path.join(__dirname, "../.env") });
+dotenv.config();
 
 //console.log("API KEY LOADED:", !!process.env.OPENAI_API_KEY);
 
@@ -38,7 +39,7 @@ app.use(express.urlencoded({ extended: true }));
 
 /* ------------------ STATIC ------------------ */
 app.use("/images", express.static(path.join(__dirname, "images")));
-app.use("/uploads", express.static(uploadDir));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 /* ------------------ OPENAI ------------------ */
 const openai = new OpenAI({
@@ -50,7 +51,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/favorites", favoritesRoutes);
 
 /* 🔥 PROFILE ROUTE FIX */
-app.use("/api/auth/profile", profileRoutes);
+app.use("/api", profileRoutes);
 
 /* ------------------ HEALTH ------------------ */
 app.get("/api/health", (req, res) => {
@@ -58,10 +59,33 @@ app.get("/api/health", (req, res) => {
 });
 
 /* ------------------ RECIPES ------------------ */
-app.get("/api/recipes", (req, res) => {
+/*app.get("/api/recipes", (req, res) => {
   try {
     const recipes = db
       .prepare("SELECT * FROM recipes ORDER BY created_at DESC")
+      .all();
+
+    res.json(recipes);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Помилка при отриманні рецептів" });
+  }
+});*/
+app.get("/api/recipes", (req, res) => {
+  try {
+    const recipes = db
+      .prepare(
+        `
+        SELECT 
+          r.*,
+          ROUND(AVG(c.rating), 1) as rating,
+          COUNT(c.rating) as rating_count
+        FROM recipes r
+        LEFT JOIN comments c ON r.id = c.recipe_id
+        GROUP BY r.id
+        ORDER BY r.created_at DESC
+      `,
+      )
       .all();
 
     res.json(recipes);
@@ -114,35 +138,211 @@ app.post("/api/ai-recipe", async (req, res) => {
 
 
 
-app.post("/api/recipes/:id/rating", (req, res) => {
+/*app.post("/api/recipes/:id/rating", (req, res) => {
   try {
     const { rating } = req.body;
-    const { id } = req.params;
+    const recipeId = req.params.id;
+    const userId = req.session?.userId || 1; // поки тест
 
-    db.prepare("UPDATE recipes SET rating = ? WHERE id = ?").run(rating, id);
+    if (!rating || rating < 1 || rating > 5) {
+      return res.status(400).json({ error: "Невірний рейтинг" });
+    }
+
+    // якщо вже є рейтинг → update
+    const existing = db
+      .prepare(
+        `
+      SELECT id FROM ratings 
+      WHERE user_id = ? AND recipe_id = ?
+    `,
+      )
+      .get(userId, recipeId);
+
+    if (existing) {
+      db.prepare(
+        `
+        UPDATE ratings 
+        SET rating = ? 
+        WHERE id = ?
+      `,
+      ).run(rating, existing.id);
+    } else {
+      db.prepare(
+        `
+        INSERT INTO ratings (user_id, recipe_id, rating)
+        VALUES (?, ?, ?)
+      `,
+      ).run(userId, recipeId, rating);
+    }
 
     res.json({ success: true });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Rating error" });
   }
-});
+});*/
 
+app.get("/api/recipes/:id/comments", (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const comments = db
+      .prepare(
+        `
+        SELECT 
+          c.*,
+          u.first_name,
+          u.last_name
+        FROM comments c
+        LEFT JOIN users u ON c.user_id = u.id
+        WHERE c.recipe_id = ?
+        ORDER BY c.created_at DESC
+      `,
+      )
+      .all(id);
+
+    res.json(comments);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Помилка отримання коментарів" });
+  }
+});
 
 app.post("/api/recipes/:id/comments", (req, res) => {
   try {
-    const { text } = req.body;
+    const { text, rating, userId } = req.body;
     const { id } = req.params;
 
+    //const userId = req.session?.userId; // 🔥 ось тут
+
+    if (!userId) {
+      return res.status(401).json({ error: "Не авторизований" });
+    }
+
     db.prepare(
-      "INSERT INTO comments (recipe_id, text) VALUES (?, ?)"
-    ).run(id, text);
+      `INSERT INTO comments (user_id, recipe_id, text, rating)
+       VALUES (?, ?, ?, ?)`,
+    ).run(userId, id, text, rating);
 
     res.json({ success: true });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Comment error" });
   }
+});
+
+/* ------------------ MY RECIPES ------------------ */
+app.get("/api/my-recipes", (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 6;
+    const offset = (page - 1) * limit;
+
+    const userId = 1; // 🔥 поки тест (потім під JWT)
+
+    const recipes = db
+      .prepare(
+        `
+        SELECT *
+        FROM recipes
+        WHERE user_id = ?
+        ORDER BY created_at DESC
+        LIMIT ? OFFSET ?
+      `,
+      )
+      .all(userId, limit, offset);
+
+    const total = db
+      .prepare(
+        `
+        SELECT COUNT(*) as count
+        FROM recipes
+        WHERE user_id = ?
+      `,
+      )
+      .get(userId);
+
+    res.json({
+      data: recipes,
+      total: total.count,
+      page,
+      limit,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Помилка при отриманні моїх рецептів" });
+  }
+});
+
+/* ------------------ CREATE MY RECIPE ------------------ */
+app.post("/api/my-recipes", (req, res) => {
+  try {
+    const { title, ingredients, steps, is_private, image } = req.body;
+
+    const userId = 1; // 🔥 поки тест
+
+    if (!title) {
+      return res.status(400).json({ error: "Назва обовʼязкова" });
+    }
+
+    const result = db
+      .prepare(
+        `
+        INSERT INTO recipes (title, ingredients, steps, is_private, image, user_id, created_at)
+        VALUES (?, ?, ?, ?, ?, ?, datetime('now'))
+      `,
+      )
+      .run(title, ingredients, steps, is_private, image, userId);
+
+    res.json({
+      id: result.lastInsertRowid,
+      title,
+      ingredients,
+      steps,
+      is_private,
+      image,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Помилка створення рецепта" });
+  }
+});
+
+app.put("/api/my-recipes/:id", (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, ingredients, steps, is_private, image } = req.body;
+
+    db.prepare(
+      `
+      UPDATE recipes
+      SET title = ?, ingredients = ?, steps = ?, is_private = ?, image = ?
+      WHERE id = ?
+    `,
+    ).run(title, ingredients, steps, is_private, image, id);
+
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: "Помилка оновлення" });
+  }
+});
+
+app.delete("/api/my-recipes/:id", (req, res) => {
+  try {
+    const { id } = req.params;
+
+    db.prepare("DELETE FROM recipes WHERE id = ?").run(id);
+
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: "Помилка видалення" });
+  }
+});
+
+app.post("/api/upload", (req, res) => {
+  res.json({
+    url: "",
+  });
 });
 
 /* ------------------ START ------------------ */

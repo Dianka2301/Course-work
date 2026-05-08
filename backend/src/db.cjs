@@ -32,6 +32,8 @@ db.prepare(`
 `).run();
 
 
+
+
 const recipeColumns = db.prepare("PRAGMA table_info(recipes)").all();
 const hasPrivate = recipeColumns.some((c) => c.name === "is_private");
 
@@ -57,20 +59,42 @@ db.prepare(`
   )
 `).run();
 
+/* унікальний рейтинг користувача */
 db.prepare(`
+  CREATE UNIQUE INDEX IF NOT EXISTS unique_user_recipe_rating
+  ON ratings(user_id, recipe_id)
+`).run();
+
+db.prepare(
+  `
   CREATE TABLE IF NOT EXISTS comments (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER,
     recipe_id INTEGER NOT NULL,
     text TEXT NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    rating INTEGER CHECK(rating >= 1 AND rating <= 5)
   )
-`).run();
+`,
+).run();
 
-db.prepare(`
-  CREATE UNIQUE INDEX IF NOT EXISTS unique_user_recipe_rating
-  ON ratings(user_id, recipe_id)
-`).run();
+
+db.prepare(
+  `
+  CREATE TABLE IF NOT EXISTS password_resets (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT NOT NULL,
+    token TEXT NOT NULL,
+    expires_at INTEGER NOT NULL
+  )
+`,
+).run();
+db.prepare(
+  `
+  DELETE FROM password_resets WHERE expires_at < ?
+`,
+).run(Date.now());
+
 
 const count = db.prepare("SELECT COUNT(*) as count FROM recipes").get().count;
 

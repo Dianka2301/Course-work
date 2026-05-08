@@ -6,9 +6,19 @@ const db = require("./db.cjs");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const crypto = require("crypto");
+const nodemailer = require("nodemailer");
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || "secret_key";
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
 
 // 🔥 РЕЄСТРАЦІЯ
 router.post("/register", async (req, res) => {
@@ -129,48 +139,7 @@ function auth(req, res, next) {
   }
 }
 
-/* ------------------ UPDATE PROFILE ------------------ */
-router.put("/profile", auth, upload.single("avatar"), (req, res) => {
-  try {
-    const { firstName, lastName, email } = req.body;
-    const avatarFile = req.file;
 
-    const currentUser = db
-      .prepare("SELECT * FROM users WHERE email = ?")
-      .get(req.user.email);
-
-    if (!currentUser) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
-    const newAvatar = avatarFile ? avatarFile.filename : currentUser.avatar;
-
-    db.prepare(
-      `
-      UPDATE users
-      SET first_name = ?,
-          last_name = ?,
-          email = ?,
-          avatar = ?
-      WHERE id = ?
-    `,
-    ).run(firstName, lastName, email, newAvatar, currentUser.id);
-
-    const updatedUser = {
-      email,
-      firstName,
-      lastName,
-      avatar: newAvatar,
-    };
-
-    const token = jwt.sign(updatedUser, JWT_SECRET, { expiresIn: "1h" });
-
-    res.json({ user: updatedUser, token });
-  } catch (err) {
-    console.error("PROFILE UPDATE ERROR:", err);
-    res.status(500).json({ error: "Profile update failed" });
-  }
-});
 
 router.get("/verify", (req, res) => {
   try {
@@ -204,6 +173,78 @@ router.get("/verify", (req, res) => {
   } catch (err) {
     return res.status(401).json({ error: "Invalid token" });
   }
+});
+
+// 🔥 FORGOT PASSWORD
+router.post("/forgot-password", async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ error: "Email required" });
+  }
+
+  const user = db.prepare("SELECT * FROM users WHERE email = ?").get(email);
+
+  // ❗ не палимо чи існує користувач
+  if (!user) {
+    return res.json({ message: "If email exists, reset link sent" });
+  }
+
+  const token = crypto.randomBytes(32).toString("hex");
+  const expires = Date.now() + 1000 * 60 * 15; // 15 хв
+
+  db.prepare(`
+    INSERT INTO password_resets (email, token, expires_at)
+    VALUES (?, ?, ?)
+  `).run(email, token, expires);
+
+  const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
+
+  try {
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "Reset password",
+      html: `<p>Click to reset password:</p>
+             <a href="${resetLink}">${resetLink}</a>`,
+    });
+
+    res.json({ message: "If email exists, reset link sent" });
+  } catch (err) {
+    console.error(err);
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// 🔥 RESET PASSWORD
+router.post("/reset-password", async (req, res) => {
+  const { token, password } = req.body;
+
+  if (!token || !password) {
+    return res.status(400).json({ error: "Token and password required" });
+  }
+
+  const record = db.prepare(`
+    SELECT * FROM password_resets WHERE token = ?
+  `).get(token);
+
+  if (!record || record.expires_at < Date.now()) {
+    return res.status(400).json({ error: "Invalid or expired token" });
+  }
+
+  const hashed = await bcrypt.hash(password, 10);
+
+  db.prepare(`
+    UPDATE users SET password = ? WHERE email = ?
+  `).run(hashed, record.email);
+
+  // ❗ видаляємо токен
+  db.prepare(`
+    DELETE FROM password_resets WHERE token = ?
+  `).run(token);
+
+  res.json({ message: "Password updated" });
 });
 
 module.exports = router;

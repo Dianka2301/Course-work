@@ -3,6 +3,9 @@ import AuthPage from "./components/Auth/AuthPage.jsx";
 import { verifyToken } from "./api/auth.js";
 import { fetchRecipes } from "./api/recipes.js";
 import AppLayout from "./components/App/AppLayout.jsx";
+import { Routes, Route } from "react-router-dom";
+import ForgotPassword from "./components/Auth/ForgotPassword.jsx";
+import ResetPassword from "./components/Auth/ResetPassword.jsx";
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -45,50 +48,60 @@ export default function App() {
   }
 
   return (
-    <>
-      {/* 🔥 AUTH PAGE (if not logged in) */}
-      {!user && <AuthPage onOpenAuth={() => setShowAuthModal(true)} />}
+    <Routes>
+      {/* 🔥 MAIN APP (login + dashboard) */}
+      <Route
+        path="/"
+        element={
+          <>
+            {!user && <AuthPage onOpenAuth={() => setShowAuthModal(true)} />}
 
-      {/* 🔥 MAIN APP */}
-      {user && (
-        <AppLayout
-          user={user}
-          setUser={setUser} // ✅ LIVE UPDATE ENABLED
-          recipes={recipes}
-          onLogout={() => {
-            setUser(null);
-            setRecipes([]);
-            localStorage.removeItem("token");
-          }}
-        />
-      )}
+            {user && (
+              <AppLayout
+                user={user}
+                setUser={setUser}
+                recipes={recipes}
+                onLogout={() => {
+                  setUser(null);
+                  setRecipes([]);
+                  localStorage.removeItem("token");
+                }}
+              />
+            )}
 
-      {/* 🔥 MODAL LOGIN/REGISTER */}
-      {showAuthModal && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <button
-              className="modal-close"
-              onClick={() => setShowAuthModal(false)}
-            >
-              ✖
-            </button>
+            {/* modal login */}
+            {showAuthModal && (
+              <div className="modal-overlay">
+                <div className="modal">
+                  <button
+                    className="modal-close"
+                    onClick={() => setShowAuthModal(false)}
+                  >
+                    ✖
+                  </button>
 
-            <AuthPage
-              isModal
-              onLogin={(u, t) => {
-                // 🔥 FIXED LIVE UPDATE (NO BUGS)
-                setUser(u);
+                  <AuthPage
+                    isModal
+                    onLogin={(u, t) => {
+                      setUser(u);
+                      localStorage.setItem("token", t);
+                      localStorage.setItem("user", JSON.stringify(u));
+                      setShowAuthModal(false);
+                      fetchRecipes().then(setRecipes);
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+          </>
+        }
+      />
 
-                localStorage.setItem("token", t);
-                setShowAuthModal(false);
+      {/* 🔥 FORGOT PASSWORD */}
+      <Route path="/forgot-password" element={<ForgotPassword />} />
 
-                fetchRecipes().then(setRecipes);
-              }}
-            />
-          </div>
-        </div>
-      )}
-    </>
+      {/* 🔥 RESET PASSWORD */}
+      <Route path="/reset-password" element={<ResetPassword />} />
+    </Routes>
   );
 }
