@@ -4,6 +4,7 @@ const path = require("path");
 const dotenv = require("dotenv");
 const fs = require("fs");
 const OpenAI = require("openai");
+const multer = require("multer");
 
 const authRoutes = require("./auth.cjs");
 const favoritesRoutes = require("./favorites.cjs");
@@ -37,6 +38,28 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+const jwt = require("jsonwebtoken");
+
+function authMiddleware(req, res, next) {
+  const authHeader = req.headers.authorization;
+
+  console.log("AUTH HEADER:", authHeader);
+
+  if (!authHeader) {
+    return res.status(401).json({ error: "No token" });
+  }
+
+  const token = authHeader.replace("Bearer ", "");
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch (err) {
+    return res.status(401).json({ error: "Invalid token" });
+  }
+}
+
 /* ------------------ STATIC ------------------ */
 app.use("/images", express.static(path.join(__dirname, "images")));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
@@ -51,7 +74,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/favorites", favoritesRoutes);
 
 /* 🔥 PROFILE ROUTE FIX */
-app.use("/api", profileRoutes);
+app.use("/api/profile", profileRoutes);
 
 /* ------------------ HEALTH ------------------ */
 app.get("/api/health", (req, res) => {
@@ -59,18 +82,6 @@ app.get("/api/health", (req, res) => {
 });
 
 /* ------------------ RECIPES ------------------ */
-/*app.get("/api/recipes", (req, res) => {
-  try {
-    const recipes = db
-      .prepare("SELECT * FROM recipes ORDER BY created_at DESC")
-      .all();
-
-    res.json(recipes);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Помилка при отриманні рецептів" });
-  }
-});*/
 app.get("/api/recipes", (req, res) => {
   try {
     const recipes = db
@@ -137,51 +148,6 @@ app.post("/api/ai-recipe", async (req, res) => {
 });
 
 
-
-/*app.post("/api/recipes/:id/rating", (req, res) => {
-  try {
-    const { rating } = req.body;
-    const recipeId = req.params.id;
-    const userId = req.session?.userId || 1; // поки тест
-
-    if (!rating || rating < 1 || rating > 5) {
-      return res.status(400).json({ error: "Невірний рейтинг" });
-    }
-
-    // якщо вже є рейтинг → update
-    const existing = db
-      .prepare(
-        `
-      SELECT id FROM ratings 
-      WHERE user_id = ? AND recipe_id = ?
-    `,
-      )
-      .get(userId, recipeId);
-
-    if (existing) {
-      db.prepare(
-        `
-        UPDATE ratings 
-        SET rating = ? 
-        WHERE id = ?
-      `,
-      ).run(rating, existing.id);
-    } else {
-      db.prepare(
-        `
-        INSERT INTO ratings (user_id, recipe_id, rating)
-        VALUES (?, ?, ?)
-      `,
-      ).run(userId, recipeId, rating);
-    }
-
-    res.json({ success: true });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Rating error" });
-  }
-});*/
-
 app.get("/api/recipes/:id/comments", (req, res) => {
   try {
     const { id } = req.params;
@@ -232,14 +198,16 @@ app.post("/api/recipes/:id/comments", (req, res) => {
 });
 
 /* ------------------ MY RECIPES ------------------ */
-app.get("/api/my-recipes", (req, res) => {
+app.get("/api/my-recipes", authMiddleware, (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 6;
     const offset = (page - 1) * limit;
 
-    const userId = 1; // 🔥 поки тест (потім під JWT)
-
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
     const recipes = db
       .prepare(
         `
@@ -275,11 +243,15 @@ app.get("/api/my-recipes", (req, res) => {
 });
 
 /* ------------------ CREATE MY RECIPE ------------------ */
-app.post("/api/my-recipes", (req, res) => {
+app.post("/api/my-recipes", authMiddleware, (req, res) => {
   try {
     const { title, ingredients, steps, is_private, image } = req.body;
 
-    const userId = 1; // 🔥 поки тест
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return res.status(401).json({ error: "Не авторизований" });
+    }
 
     if (!title) {
       return res.status(400).json({ error: "Назва обовʼязкова" });
@@ -308,7 +280,7 @@ app.post("/api/my-recipes", (req, res) => {
   }
 });
 
-app.put("/api/my-recipes/:id", (req, res) => {
+app.put("/api/my-recipes/:id", authMiddleware, (req, res) => {
   try {
     const { id } = req.params;
     const { title, ingredients, steps, is_private, image } = req.body;
@@ -327,7 +299,7 @@ app.put("/api/my-recipes/:id", (req, res) => {
   }
 });
 
-app.delete("/api/my-recipes/:id", (req, res) => {
+app.delete("/api/my-recipes/:id", authMiddleware, (req, res) => {
   try {
     const { id } = req.params;
 
@@ -339,9 +311,24 @@ app.delete("/api/my-recipes/:id", (req, res) => {
   }
 });
 
-app.post("/api/upload", (req, res) => {
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, "uploads"));
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+
+const upload = multer({ storage });
+
+app.post("/api/upload", upload.single("image"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: "No file" });
+  }
+
   res.json({
-    url: "",
+    url: `http://localhost:4000/uploads/${req.file.filename}`,
   });
 });
 

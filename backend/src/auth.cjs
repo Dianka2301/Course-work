@@ -12,6 +12,8 @@ const nodemailer = require("nodemailer");
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || "secret_key";
 
+const BASE_URL = "http://localhost:4000";
+
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -82,6 +84,7 @@ router.post("/login", async (req, res) => {
       email: row.email,
       firstName: row.first_name,
       lastName: row.last_name,
+      avatar: row.avatar ? `${BASE_URL}/uploads/${row.avatar}` : null,
     };
 
     const token = jwt.sign(user, JWT_SECRET, { expiresIn: "1h" });
@@ -167,7 +170,7 @@ router.get("/verify", (req, res) => {
         email: user.email,
         firstName: user.first_name,
         lastName: user.last_name,
-        avatar: user.avatar,
+        avatar: user.avatar ? `${BASE_URL}/uploads/${user.avatar}` : null,
       },
     });
   } catch (err) {

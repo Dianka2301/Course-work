@@ -6,7 +6,7 @@ export default function RecipeWorkspace({
   recipes = [],
   showFavorites,
   onOpenRecipe,
-  refreshRecipes, // 🔥 важливо
+  refreshRecipes,
 }) {
   const [favorites, setFavorites] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -17,6 +17,21 @@ export default function RecipeWorkspace({
   const [searchInput, setSearchInput] = useState("");
   const [searchActive, setSearchActive] = useState(false);
   const [search, setSearch] = useState("");
+
+  const BASE_URL = "http://localhost:4000";
+
+  // 🖼 СЛОВНИК ІКОНОК
+  // Пропиши тут назви категорій точно так, як вони приходять з бази
+  const categoryIcons = {
+    Усі: `${BASE_URL}/images/category/all.png`,
+    "Базові рецепти": `${BASE_URL}/images/category/base.png`,
+    Салати: `${BASE_URL}/images/category/salads.jpg`,
+    Десерти: `${BASE_URL}/images/category/desserts.png`,
+    Паста: `${BASE_URL}/images/category/pasta.png`,
+    "М'ясо": `${BASE_URL}/images/category/meat.png`,
+    Морепродукти: `${BASE_URL}/images/category/seafood.png`,
+    "Інші рецепти": `${BASE_URL}/images/category/default.png`,
+  };
 
   useEffect(() => {
     async function loadData() {
@@ -42,7 +57,6 @@ export default function RecipeWorkspace({
   // ❤️ FAVORITES
   const handleToggleFavorite = async (recipeId) => {
     const { liked } = await toggleFavorite(recipeId);
-
     setFavorites((prev) =>
       liked ? [...prev, recipeId] : prev.filter((id) => id !== recipeId),
     );
@@ -87,11 +101,9 @@ export default function RecipeWorkspace({
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
         />
-
         <button className="search-btn" onClick={handleSearch}>
           <img src={searchIcon} alt="search" style={{ width: 18 }} />
         </button>
-
         {searchActive && (
           <button className="clear-btn" onClick={resetSearch}>
             ✖
@@ -99,18 +111,28 @@ export default function RecipeWorkspace({
         )}
       </div>
 
-      {/* 📂 CATEGORIES */}
-      <div className="category-row">
+      {/* 📂 CATEGORIES (Круглий стиль як на Фото 1) */}
+      <div className="category-row-new">
         {!searchActive &&
           categories.map((cat) => (
             <button
               key={cat}
-              className={`chip ${
-                selectedCategory === cat ? "active-chip" : ""
-              }`}
+              className={`cat-item ${selectedCategory === cat ? "active" : ""}`}
               onClick={() => setSelectedCategory(cat)}
             >
-              {cat}
+              <div className="cat-circle">
+                <img
+                  src={
+                    categoryIcons[cat] ||
+                    `${BASE_URL}/images/category/default.jpg`
+                  }
+                  alt={cat}
+                  onError={(e) => {
+                    e.target.src = `${BASE_URL}/images/category/default.jpg`;
+                  }}
+                />
+              </div>
+              <span className="cat-name">{cat}</span>
             </button>
           ))}
       </div>
@@ -124,13 +146,12 @@ export default function RecipeWorkspace({
             onClick={() => onOpenRecipe(recipe)}
           >
             <img
-              src={`http://localhost:4000/images/${recipe.image}`}
+              src={`${BASE_URL}/images/${recipe.image}`}
               className="recipe-img"
+              alt={recipe.title}
             />
-
             <div className="card-content">
               <h3>{recipe.title}</h3>
-
               <div className="ingredients-wrapper">
                 {recipe.ingredients
                   ?.split(",")
@@ -141,14 +162,11 @@ export default function RecipeWorkspace({
                     </span>
                   ))}
               </div>
-
               <div className="meta">
                 <span>⭐ {recipe.rating || 0}</span>
                 <span>{recipe.category}</span>
               </div>
             </div>
-
-            {/* ❤️ */}
             <button
               className="fav-btn"
               onClick={(e) => {

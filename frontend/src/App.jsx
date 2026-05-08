@@ -24,19 +24,11 @@ export default function App() {
 
     verifyToken(token)
       .then((data) => {
-        if (!data?.user) {
-          localStorage.removeItem("token");
-          throw new Error("Invalid token");
-        }
+        if (!data?.user) throw new Error("Invalid token");
 
         setUser(data.user);
-        return fetchRecipes();
       })
-      .then((recipesData) => {
-        if (recipesData) setRecipes(recipesData);
-      })
-      .catch((err) => {
-        console.log("Auth error:", err);
+      .catch(() => {
         localStorage.removeItem("token");
         setUser(null);
       })

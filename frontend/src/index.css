@@ -402,9 +402,9 @@ h1, h2, h3 {
 .avatar-img {
   width: 140px;
   height: 140px;
-  /*border-radius: 50%;*/
+  border-radius: 50%;
   object-fit: cover;
-  /*border: 3px solid rgba(162, 118, 69, 0.8);*/
+  border: 3px solid rgba(162, 118, 69, 0.8);
 }
 
 /* UPLOAD BUTTON */
@@ -1374,7 +1374,393 @@ h1, h2, h3 {
   color: white;
 }
 
+.field h3 {
+  font-size: 14px;
+  font-weight: 600;
 
+  color: #5c4632;
+
+  margin: 0 0 6px 2px;
+
+  letter-spacing: 0.3px;
+
+  opacity: 0.95;
+}
+/* Ряд категорій */
+.category-row-new {
+  display: flex;
+  gap: 30px; /* Трохи збільшив відступ */
+  overflow-x: auto;
+  padding: 20px 10px;
+  margin-bottom: 25px;
+  scrollbar-width: none;
+}
+
+.category-row-new::-webkit-scrollbar {
+  display: none;
+}
+
+/* Окремий елемент категорії */
+.cat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  min-width: 90px;
+  transition: all 0.2s ease;
+  
+  /* Прибираємо стандартні рамки, якщо це button */
+  border: none; 
+  background: none;
+  outline: none;
+  padding: 0;
+}
+
+.cat-item:hover {
+  transform: translateY(-3px);
+}
+
+/* Кругла рамка для іконки */
+.cat-circle {
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  
+  /* Світлий димчастий фон як у зразку */
+  background: #f4f4f7; 
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* Важливо для круглої форми */
+  overflow: hidden; 
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Тінь робимо ледь помітною */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+}
+
+.cat-circle img {
+  width: 60%; 
+  height: 60%;
+  object-fit: contain;
+  
+  /* Якщо у картинки є білий фон, цей рядок зробить його прозорим (якщо картинка на білому) */
+  mix-blend-mode: multiply; 
+}
+
+/* Активний стан (Жовте коло) */
+.cat-item.active .cat-circle {
+  background: rgba(219, 159, 91, 0.8); 
+  box-shadow: 0 8px 20px rgba(255, 193, 7, 0.35);
+}
+
+/* Стиль тексту */
+.cat-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #5a5a5a;
+  transition: all 0.2s ease;
+}
+
+.cat-item.active .cat-name {
+  color: #000;
+  font-weight: 700;
+}
+
+/* =========================================================
+   RECIPE FORM (FIXED LAYOUT)
+   ========================================================= */
+
+.recipe-form {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  grid-template-areas:
+    "photo fields"
+    "photo fields"
+    "checkbox checkbox"
+    "actions actions";
+
+  gap: 26px;
+
+  margin-top: 24px;
+  padding: 26px;
+
+  border-radius: 28px;
+
+  background: rgba(255, 248, 240, 0.92);
+  border: 1px solid rgba(196,154,108,0.18);
+
+  box-shadow: 0 12px 40px rgba(0,0,0,0.10);
+}
+
+/* =========================================================
+   LEFT SIDE (PHOTO)
+   ========================================================= */
+
+.upload-box {
+  grid-area: photo;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.upload-box input[type="file"] {
+  display: none;
+}
+
+/* PHOTO FRAME */
+.upload-box::before {
+  content: "Фото";
+
+  width: 180px;
+  height: 180px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 22px;
+
+  background: linear-gradient(145deg, rgba(255,255,255,0.7), rgba(255,255,255,0.45));
+  border: 2px dashed rgba(196,154,108,0.45);
+
+  color: rgba(120,90,60,0.6);
+  font-size: 14px;
+  font-weight: 500;
+
+  box-shadow:
+    inset 0 2px 10px rgba(255,255,255,0.5),
+    0 8px 20px rgba(0,0,0,0.06);
+}
+
+.preview-img {
+  width: 180px;
+  height: 180px;
+
+  object-fit: cover;
+
+  border-radius: 22px;
+
+  margin-top: -194px;
+
+  box-shadow: 0 10px 22px rgba(0,0,0,0.12);
+}
+
+/* upload button */
+.upload-box label,
+.upload-box .upload-btn {
+  width: 180px;
+
+  padding: 12px 14px;
+
+  border-radius: 16px;
+
+  text-align: center;
+
+  background: linear-gradient(135deg, #c49a6c, #a27645);
+  color: white;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.25s;
+
+  box-shadow: 0 8px 18px rgba(162,118,69,0.18);
+}
+
+.upload-box label:hover,
+.upload-box .upload-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.04);
+}
+
+/* =========================================================
+   RIGHT SIDE FIELDS (ORDER FIXED)
+   ========================================================= */
+
+.recipe-form input,
+.recipe-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 15px 16px;
+
+  margin-bottom: 16px;
+
+  border-radius: 16px;
+  border: 1px solid rgba(196,154,108,0.18);
+
+  background: rgba(255,255,255,0.75);
+
+  color: #4a3422;
+
+  font-size: 15px;
+
+  outline: none;
+  transition: 0.25s;
+}
+
+.recipe-form input::placeholder,
+.recipe-form textarea::placeholder {
+  color: rgba(80,60,40,0.45);
+}
+
+.recipe-form input:focus,
+.recipe-form textarea:focus {
+  border-color: rgba(196,154,108,0.7);
+  background: white;
+
+  box-shadow: 0 0 0 4px rgba(196,154,108,0.10);
+}
+
+.recipe-form textarea {
+  min-height: 140px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+/* group fields */
+.form-fields {
+  grid-area: fields;
+  display: flex;
+  flex-direction: column;
+}
+
+/* =========================================================
+   CHECKBOX
+   ========================================================= */
+
+.checkbox {
+  grid-area: checkbox;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  color: #5c4632;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.checkbox input {
+  width: 18px;
+  height: 18px;
+  accent-color: #b5834f;
+}
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.form-actions {
+  grid-area: actions;
+
+  display: flex;
+  gap: 14px;
+
+  margin-top: 10px;
+}
+
+.form-actions button {
+  flex: 1;
+
+  padding: 14px 18px;
+
+  border: none;
+  border-radius: 18px;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.25s;
+}
+
+/* ADD */
+.form-actions button:first-child {
+  background: linear-gradient(135deg, #c49a6c, #a27645);
+  color: white;
+
+  box-shadow: 0 10px 22px rgba(162,118,69,0.18);
+}
+
+.form-actions button:first-child:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.05);
+}
+
+/* CANCEL */
+.form-actions button:last-child {
+  background: rgba(196,154,108,0.10);
+  border: 1px solid rgba(196,154,108,0.18);
+
+  color: #6d523a;
+}
+
+.form-actions button:last-child:hover {
+  background: rgba(196,154,108,0.16);
+}
+
+/* =========================================================
+   MOBILE (STACKED EXACT ORDER)
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+  .recipe-form {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "photo"
+      "fields"
+      "checkbox"
+      "actions";
+
+    padding: 20px;
+    gap: 22px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .upload-box::before,
+  .preview-img,
+  .upload-box label {
+    width: 170px;
+  }
+
+  .upload-box::before,
+  .preview-img {
+    height: 170px;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .recipe-form {
+    padding: 16px;
+    border-radius: 22px;
+  }
+
+  .recipe-form input,
+  .recipe-form textarea {
+    font-size: 14px;
+    padding: 14px;
+  }
+
+  .checkbox {
+    align-items: flex-start;
+    line-height: 1.5;
+  }
+}
 
 
 /* ================= RECIPE VIEW RESPONSIVE ================= */

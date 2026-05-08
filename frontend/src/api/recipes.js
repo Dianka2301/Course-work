@@ -11,14 +11,11 @@ export async function fetchRecipes() {
 export async function fetchMyRecipes(page = 1, limit = 6) {
   const token = localStorage.getItem("token");
 
-  const res = await fetch(
-    `${API_URL}/my-recipes?page=${page}&limit=${limit}`, // ❗ БЕЗ /api
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    },
-  );
+  console.log("TOKEN:", token); // 🔥 ДОДАЙ ДЛЯ ПЕРЕВІРКИ
+
+  const res = await fetch(`${API_URL}/my-recipes?page=${page}&limit=${limit}`, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  });
 
   if (!res.ok) throw new Error("Load my recipes failed");
   return res.json();

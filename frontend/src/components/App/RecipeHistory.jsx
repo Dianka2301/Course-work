@@ -156,29 +156,49 @@ export default function RecipeHistory() {
 
       {showForm && (
         <div className="recipe-form">
-          <input
-            placeholder="Назва"
-            value={form.title}
-            onChange={(e) => setForm({ ...form, title: e.target.value })}
-          />
+          <div className="form-fields">
+            <div className="field">
+              <h3>Назва рецепту</h3>
+              <input
+                placeholder="Введіть назву"
+                value={form.title}
+                onChange={(e) => setForm({ ...form, title: e.target.value })}
+              />
+            </div>
 
-          <textarea
-            placeholder="Інгредієнти"
-            value={form.ingredients}
-            onChange={(e) => setForm({ ...form, ingredients: e.target.value })}
-          />
+            <div className="field">
+              <h3>Інгредієнти</h3>
+              <textarea
+                placeholder="Наприклад: яйця, молоко..."
+                value={form.ingredients}
+                onChange={(e) =>
+                  setForm({ ...form, ingredients: e.target.value })
+                }
+              />
+            </div>
 
-          <textarea
-            placeholder="Приготування"
-            value={form.steps}
-            onChange={(e) => setForm({ ...form, steps: e.target.value })}
-          />
+            <div className="field">
+              <h3>Приготування</h3>
+              <textarea
+                placeholder="Опишіть кроки приготування..."
+                value={form.steps}
+                onChange={(e) => setForm({ ...form, steps: e.target.value })}
+              />
+            </div>
+          </div>
 
           <div className="upload-box">
             <input
+              id="recipe-image"
               type="file"
+              accept="image/*"
               onChange={(e) => handleImage(e.target.files[0])}
+              hidden
             />
+
+            <label htmlFor="recipe-image" className="upload-btn">
+              Завантажити фото
+            </label>
 
             {preview && <img src={preview} className="preview-img" />}
           </div>

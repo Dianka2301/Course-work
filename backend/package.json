@@ -1,5 +1,5 @@
 {
-  "name": "flavoria-backend",
+  "name": "food-recipe-app-backend",
   "version": "1.0.0",
   "description": "Food Recipe App server",
   "main": "server.js",

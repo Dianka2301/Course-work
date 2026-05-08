@@ -13,7 +13,8 @@ export default function Profile({ user, setUser }) {
   const [cropImage, setCropImage] = useState(null);
   const [toast, setToast] = useState(null);
 
-  const token = localStorage.getItem("token");
+  //const token = localStorage.getItem("token");
+  const getToken = () => localStorage.getItem("token");
 
   /* ---------------- TOAST ---------------- */
   useEffect(() => {
@@ -22,6 +23,12 @@ export default function Profile({ user, setUser }) {
     const t = setTimeout(() => setToast(null), 4000);
     return () => clearTimeout(t);
   }, [toast]);
+
+  useEffect(() => {
+    setFirstName(user.firstName || "");
+    setLastName(user.lastName || "");
+    setEmail(user.email || "");
+  }, [user]);
 
   /* ---------------- FILE SELECT ---------------- */
   const handleFile = (e) => {
@@ -52,7 +59,7 @@ export default function Profile({ user, setUser }) {
     }
 
     try {
-      const res = await updateProfile(formData, token);
+      const res = await updateProfile(formData, getToken());
 
       // 🔥 backend вже повертає FULL user
       setUser(res.user);
