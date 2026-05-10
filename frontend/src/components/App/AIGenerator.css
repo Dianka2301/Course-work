@@ -1,0 +1,175 @@
+.ai-container {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  padding: 20px;
+  background-color: #c1a585b3; /* Темно-зелений фон як на фото */
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  justify-content: center;
+}
+
+.ai-generator-card {
+  background: #c1a585; 
+  padding: 25px;
+  border-radius: 20px;
+  width: 350px;
+  height: fit-content;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.ai-title, .results-title {
+  text-align: center;
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+  margin-bottom: 20px;
+}
+
+.ai-title { color: #0f0f0fb3; text-shadow: none; }
+
+.section-header h3 { margin: 0; font-size: 1.2rem; text-align: center;}
+.section-header p { font-size: 0.85rem; color: #666; text-align: center; }
+
+.input-group {
+  display: flex;
+  margin: 15px 0;
+  gap: 5px;
+}
+
+.input-group input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #fff8d6;
+}
+
+.adds-btn {
+  padding: 5px 15px;
+  background: #422e10;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.generate-btn {
+  background: rgba(162, 118, 69, 0.8);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.clear-btn {
+  background: #8e734b;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 100px;
+  background: white;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+}
+
+.tag {
+  background: #eef2e6;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid #ccd5ae;
+}
+
+.tag button {
+  border: none;
+  background: none;
+  color: red;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* Картки результатів */
+.results-section {
+  flex: 1;
+  max-width: 800px;
+}
+
+.recipes-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.recipe-card {
+  background: #fdfae6;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.recipe-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px dashed #ccc;
+  margin-bottom: 10px;
+}
+
+.recipe-desc { font-style: italic; color: #555; font-size: 0.95rem; }
+
+.macros-container {
+  background: #f0ead2;
+  padding: 10px;
+  border-radius: 10px;
+  margin: 15px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.macro-details {
+  display: flex;
+  gap: 15px;
+  font-size: 0.9rem;
+}
+
+.recipe-steps ul {
+  padding-left: 20px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.loader { color: white; text-align: center; padding: 20px; font-size: 1.2rem; }
+
+/* Адаптивність */
+@media (max-width: 900px) {
+  .ai-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  .ai-generator-card {
+    width: 100%;
+    max-width: 400px;
+  }
+}

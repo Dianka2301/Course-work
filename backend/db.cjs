@@ -1,0 +1,184 @@
+const Database = require("better-sqlite3");
+const db = new Database("database.db");
+
+db.prepare(`
+  CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    first_name TEXT,
+    last_name TEXT
+  )
+`).run();
+
+const columns = db.prepare("PRAGMA table_info(users)").all();
+const hasAvatar = columns.some((c) => c.name === "avatar");
+
+if (!hasAvatar) {
+  db.prepare(`ALTER TABLE users ADD COLUMN avatar TEXT`).run();
+}
+
+db.prepare(`
+  CREATE TABLE IF NOT EXISTS recipes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    ingredients TEXT,
+    steps TEXT,
+    image TEXT,
+    category TEXT DEFAULT 'Базові рецепти',
+    user_id INTEGER,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  )
+`).run();
+
+
+
+
+const recipeColumns = db.prepare("PRAGMA table_info(recipes)").all();
+const hasPrivate = recipeColumns.some((c) => c.name === "is_private");
+
+if (!hasPrivate) {
+  db.prepare(`ALTER TABLE recipes ADD COLUMN is_private INTEGER DEFAULT 1`).run();
+}
+
+db.prepare(`
+  CREATE TABLE IF NOT EXISTS favorites (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    recipe_id INTEGER NOT NULL
+  )
+`).run();
+
+db.prepare(`
+  CREATE TABLE IF NOT EXISTS ratings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    recipe_id INTEGER,
+    rating INTEGER CHECK(rating >= 1 AND rating <= 5),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  )
+`).run();
+
+/* унікальний рейтинг користувача */
+db.prepare(`
+  CREATE UNIQUE INDEX IF NOT EXISTS unique_user_recipe_rating
+  ON ratings(user_id, recipe_id)
+`).run();
+
+db.prepare(
+  `
+  CREATE TABLE IF NOT EXISTS comments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    recipe_id INTEGER NOT NULL,
+    text TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    rating INTEGER CHECK(rating >= 1 AND rating <= 5)
+  )
+`,
+).run();
+
+
+db.prepare(
+  `
+  CREATE TABLE IF NOT EXISTS password_resets (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT NOT NULL,
+    token TEXT NOT NULL,
+    expires_at INTEGER NOT NULL
+  )
+`,
+).run();
+db.prepare(
+  `
+  DELETE FROM password_resets WHERE expires_at < ?
+`,
+).run(Date.now());
+
+
+const count = db.prepare("SELECT COUNT(*) as count FROM recipes").get().count;
+
+if (count === 0) {
+  const insert = db.prepare(`
+    INSERT INTO recipes (title, ingredients, steps, image, category)
+    VALUES (?, ?, ?, ?, ?)
+  `);
+
+  insert.run(
+    "Запечена курка з овочами",
+    "1 ціла курка (~1.5 кг), 4 ст. л. оливкової олії, 1 лимон, 1 червоний перець, Сіль, перець, розмарин за смаком",
+    "1. Розігрійте духовку до 200°C.\n2. Промийте та обсушіть курку.\n3. Підготуйте маринад: змішайте олію, лимонний сік, подрібнений часник та трави.\n4. Натріть курку маринадом зовні та всередині.\n5. Помістіть нарізані овочі у форму для запікання, полийте залишками маринаду.\n6. Покладіть курку зверху овочів і запікайте ~1 годину.\n7. Перевірте готовність, курка повинна мати золотисту скоринку.",
+    "chicken_veggies.jpg",
+    "Базові рецепти"
+  );
+
+  insert.run(
+    "Паста з соусом Болоньєзе",
+    "Макарони, фарш яловичий, цибуля, морква, томатний соус, часник, оливкова олія, сіль, перець, базилік",
+    "1. Відваріть макарони до готовності.\n2. На сковороді обсмажте цибулю та моркву до м'якості.\n3. Додайте фарш і обсмажте до золотистого кольору.\n4. Додайте томатний соус та спеції, тушкуйте 10 хв.\n5. Змішайте соус з макаронами.\n6. Посипте тертим сиром та подавайте.",
+    "pasta_bolognese.jpg",
+    "Базові рецепти"
+  );
+
+  insert.run(
+    "Омлет з овочами",
+    "Яйця, помідори, перець, шпинат, сіль, перець, оливкова олія",
+    "1. Збити яйця з сіллю та перцем.\n2. Нарізати овочі та обсмажити на олії 2-3 хвилини.\n3. Залити яйця на овочі, готувати на середньому вогні 5-7 хвилин.\n4. Подавати гарячим, можна посипати зеленню.",
+    "omelet_veggies.jpg",
+    "Базові рецепти"
+  );
+
+  //   Салати  
+  insert.run(
+    "Салат Цезар",
+    "Салат романо, курка, пармезан, сухарики, соус Цезар",
+    "1. Курку обсмажити до золотистої скоринки.\n2. Листя салату порвати на середні шматочки.\n3. Змішати всі інгредієнти.\n4. Полити соусом Цезар.\n5. Посипати пармезаном і сухариками.",
+    "caesar_salad.jpg",
+    "Салати"
+  );
+
+  insert.run(
+    "Грецький салат",
+    "Огірки, помідори, перець, червона цибуля, оливки, фета, оливкова олія, орегано",
+    "1. Нарізати овочі кубиками.\n2. Додати оливки та фету.\n3. Полити олією, посипати орегано.\n4. Легко перемішати та подавати.",
+    "greek_salad.jpg",
+    "Салати"
+  );
+
+  insert.run(
+    "Салат з тунцем",
+    "Листя салату, тунець консервований, кукурудза, помідори, оливкова олія, сіль, перець",
+    "1. Листя салату порвати.\n2. Додати тунця та кукурудзу.\n3. Додати нарізані помідори.\n4. Полити олією, посолити та поперчити.\n5. Подавати одразу.",
+    "tuna_salad.jpg",
+    "Салати"
+  );
+
+  //   Десерти  
+  insert.run(
+    "Шоколадний торт",
+    "Борошно, цукор, яйця, какао, масло, розпушувач, молоко",
+    "1. Змішати сухі інгредієнти.\n2. Додати яйця, масло та молоко.\n3. Випікати при 180°C 35 хв.\n4. Охолодити і прикрасити шоколадною глазур'ю.",
+    "chocolate_cake.jpg",
+    "Десерти"
+  );
+
+  insert.run(
+    "Яблучний пиріг",
+    "Борошно, масло, цукор, яйця, яблука, кориця",
+    "1. Зробити тісто з борошна, масла та цукру.\n2. Нарізати яблука, змішати з корицею.\n3. Викласти яблука на тісто.\n4. Випікати 40 хв при 180°C.",
+    "apple_pie.jpg",
+    "Десерти"
+  );
+
+  insert.run(
+    "Млинці з ягодами",
+    "Борошно, молоко, яйця, цукор, ягоди, мед",
+    "1. Змішати борошно, молоко та яйця до однорідної маси.\n2. Смажити на сковороді до золотистого кольору.\n3. Подавати з ягодами та медом.",
+    "pancakes_berries.jpg",
+    "Десерти"
+  );
+}
+
+
+
+module.exports = db;

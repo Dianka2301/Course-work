@@ -106,6 +106,26 @@ export async function addComment(recipeId, data) {
     }),
   });
 
+
+  
   if (!res.ok) throw new Error("Add comment failed");
   return res.json();
 }
+
+
+  /* ------------------ AI GENERATION (SECURE) ------------------ */
+  export async function generateAIRecipes(ingredients) {
+    const token = localStorage.getItem("token"); // Беремо токен
+
+    const res = await fetch(`${API_URL}/recipes/generate`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}), // Додаємо якщо є
+      },
+      body: JSON.stringify({ ingredients }),
+    });
+
+    if (!res.ok) throw new Error("AI Generation failed");
+    return res.json();
+  }

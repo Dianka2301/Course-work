@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000/api";
+/*const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000/api";
 
 export async function generateAIRecipe(ingredients) {
   const res = await fetch(`${API_URL}/ai-recipe`, {
@@ -14,3 +14,4 @@ export async function generateAIRecipe(ingredients) {
 
   return await res.json();
 }
+*/
