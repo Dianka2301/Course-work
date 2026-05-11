@@ -112,7 +112,7 @@ h1, h2, h3 {
 
 /* 🔹 TOPBAR */
 .toolbar {
-  position: sticky;
+  /*position: sticky;*/
   top: 15px;
   left: 15px;
   right: 15px;
