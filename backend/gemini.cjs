@@ -1,42 +1,48 @@
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+const dotenv = require("dotenv");
+const path = require("path");
 
-// Ініціалізація ШІ з ключем з .env
-/*const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);*/
-const genAI = new GoogleGenerativeAI("AIzaSyC8iKhYAGrivBh_lVWCT5DBgiho5OKvy8I");
+dotenv.config({ path: path.resolve(__dirname, ".env") });
+
 async function generateRecipesFromAI(ingredients) {
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  const apiKey = process.env.GEMINI_API_KEY;
 
-  const prompt = `
-    Ти — професійний шеф-кухар. На основі цих інгредієнтів: ${ingredients.join(", ")}, 
-    запропонуй 3 різні рецепти українською мовою. 
-    Обов'язково розрахуй КБЖУ для кожного.
-    Відповідь надай СУВОРО у форматі JSON (масив об'єктів). Не пиши ніякого тексту крім JSON.
-    [
-      {
-        "title": "Назва",
-        "calories": "число ккал",
-        "macros": { "p": "білки г", "f": "жири г", "c": "вуглеводи г" },
-        "description": "короткий опис",
-        "steps": ["крок 1", "крок 2"]
-      }
-    ]
-  `;
-
+const url = `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash-lite:generateContent?key=${apiKey}`;
   try {
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    let text = response.text();
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [
+          {
+            parts: [
+              {
+                text: `Ти професійний шеф-кухар. Запропонуй 3 рецепти українською мовою з інгредієнтів: ${ingredients.join(", ")}. 
+            Обов'язково розрахуй КБЖУ. 
+            Відповідь надай ТІЛЬКИ у форматі JSON масиву: 
+            [{"title": "...", "calories": "...", "macros": {"p": "г", "f": "г", "c": "г"}, "description": "...", "steps": ["...", "..."]}]`,
+              },
+            ],
+          },
+        ],
+      }),
+    });
 
-    // 🔥 ОЧИЩЕННЯ JSON (шукаємо початок [ та кінець ])
-    const start = text.indexOf("[");
-    const end = text.lastIndexOf("]") + 1;
-    if (start === -1 || end === 0)
-      throw new Error("ШІ повернув невірний формат");
+    const data = await response.json();
 
-    const cleanJson = text.substring(start, end);
+    if (data.error) {
+      throw new Error(data.error.message);
+    }
+
+    if (!data.candidates || !data.candidates[0].content) {
+      throw new Error("ШІ повернув порожню відповідь");
+    }
+
+    let text = data.candidates[0].content.parts[0].text;
+    const cleanJson = text.replace(/```json|```/g, "").trim();
+
     return JSON.parse(cleanJson);
   } catch (error) {
-    console.error("Gemini Error:", error);
+    console.error("Помилка генерації:", error.message);
     throw error;
   }
 }

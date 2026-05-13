@@ -95,6 +95,17 @@ db.prepare(
 `,
 ).run(Date.now());
 
+db.prepare(
+  `
+  CREATE TABLE IF NOT EXISTS ai_history (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    ingredients TEXT NOT NULL,
+    recipes_json TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  )
+`,
+).run();
 
 const count = db.prepare("SELECT COUNT(*) as count FROM recipes").get().count;
 

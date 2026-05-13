@@ -124,12 +124,18 @@ export default function AuthForm({ mode, onLogin }) {
       {!isLogin && (
         <div className="auth-hint">Пароль має містити мінімум 4 символи</div>
       )}
-      
+
       {isLogin && (
         <div className="auth-links">
-          <a href="/forgot-password" className="forgot-link">
+          <button
+            type="button"
+            className="forgot-link"
+            onClick={() =>
+              window.dispatchEvent(new Event("openForgotPassword"))
+            }
+          >
             Забули пароль?
-          </a>
+          </button>
         </div>
       )}
       {/* 🔘 SUBMIT */}

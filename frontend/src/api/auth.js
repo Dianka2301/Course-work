@@ -42,13 +42,18 @@ export async function forgotPassword(email) {
   return res.json();
 }
 
-export async function resetPassword(token, password) {
+export async function resetPassword(email, code, password) {
   const res = await fetch(`${API}/reset-password`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ token, password }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email,
+      code,
+      password,
+    }),
   });
 
   return res.json();
 }
-

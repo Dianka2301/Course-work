@@ -3,7 +3,7 @@ const cors = require("cors");
 const path = require("path");
 const dotenv = require("dotenv");
 const fs = require("fs");
-const OpenAI = require("openai");
+/*const OpenAI = require("openai");*/
 const multer = require("multer");
 
 const authRoutes = require("./auth.cjs");
@@ -13,7 +13,8 @@ const { generateRecipesFromAI } = require("./gemini.cjs");
 const db = require("./db.cjs");
 
 //dotenv.config({ path: path.join(__dirname, "../.env") });
-dotenv.config();
+//dotenv.config();
+dotenv.config({ path: path.resolve(__dirname, ".env") });
 
 //console.log("API KEY LOADED:", !!process.env.OPENAI_API_KEY);
 
@@ -43,8 +44,6 @@ const jwt = require("jsonwebtoken");
 function authMiddleware(req, res, next) {
   const authHeader = req.headers.authorization;
 
-  console.log("AUTH HEADER:", authHeader);
-
   if (!authHeader) {
     return res.status(401).json({ error: "No token" });
   }
@@ -65,9 +64,9 @@ app.use("/images", express.static(path.join(__dirname, "images")));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 /* ------------------ OPENAI ------------------ */
-const openai = new OpenAI({
+/*const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
-});
+});*/
 
 /* ------------------ ROUTES ------------------ */
 app.use("/api/auth", authRoutes);
@@ -107,9 +106,10 @@ app.get("/api/recipes", (req, res) => {
 });
 
 /* ------------------ AI GENERATION ------------------ */
-app.post("/api/recipes/generate", async (req, res) => {
+app.post("/api/recipes/generate", authMiddleware, async (req, res) => {
   try {
     const { ingredients } = req.body;
+
     console.log("Генерую для:", ingredients);
 
     if (
@@ -117,16 +117,64 @@ app.post("/api/recipes/generate", async (req, res) => {
       !Array.isArray(ingredients) ||
       ingredients.length === 0
     ) {
-      return res.status(400).json({ error: "Будь ласка, додайте інгредієнти" });
+      return res.status(400).json({
+        error: "Будь ласка, додайте інгредієнти",
+      });
     }
 
     const aiRecipes = await generateRecipesFromAI(ingredients);
+
+    const userId = req.user?.id;
+
+    if (userId) {
+      db.prepare(
+        `
+        INSERT INTO ai_history (user_id, ingredients, recipes)
+        VALUES (?, ?, ?)
+      `,
+      ).run(userId, JSON.stringify(ingredients), JSON.stringify(aiRecipes));
+    }
+
     res.json(aiRecipes);
   } catch (err) {
     console.error("FULL ERROR ON SERVER:", err);
-    res
-      .status(500)
-      .json({ error: "Не вдалося згенерувати рецепти. Спробуйте пізніше." });
+
+    res.status(500).json({
+      error: "Не вдалося згенерувати рецепти",
+    });
+  }
+});
+
+/* ------------------ AI HISTORY ------------------ */
+
+app.get("/api/ai-history", authMiddleware, (req, res) => {
+  try {
+    const userId = req.user.id;
+       const rows = db
+         .prepare(
+           `
+      SELECT *
+      FROM ai_history
+      WHERE user_id = ?
+      ORDER BY created_at DESC
+    `,
+         )
+         .all(userId);
+
+       const parsed = rows.map((r) => ({
+         ...r,
+         ingredients: JSON.parse(r.ingredients),
+         recipes: JSON.parse(r.recipes),
+       }));
+
+
+    res.json(parsed);
+  } catch (err) {
+    console.error(err);
+
+    res.status(500).json({
+      error: "Помилка отримання історії",
+    });
   }
 });
 

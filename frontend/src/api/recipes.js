@@ -106,26 +106,41 @@ export async function addComment(recipeId, data) {
     }),
   });
 
-
-  
   if (!res.ok) throw new Error("Add comment failed");
   return res.json();
 }
 
+/* ------------------ AI GENERATION (SECURE) ------------------ */
+export async function generateAIRecipes(ingredients) {
+  const token = localStorage.getItem("token"); 
 
-  /* ------------------ AI GENERATION (SECURE) ------------------ */
-  export async function generateAIRecipes(ingredients) {
-    const token = localStorage.getItem("token"); // Беремо токен
+  const res = await fetch(`${API_URL}/recipes/generate`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}), 
+    },
+    body: JSON.stringify({ ingredients }),
+  });
 
-    const res = await fetch(`${API_URL}/recipes/generate`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        ...(token ? { Authorization: `Bearer ${token}` } : {}), // Додаємо якщо є
-      },
-      body: JSON.stringify({ ingredients }),
-    });
+  if (!res.ok) throw new Error("AI Generation failed");
+  return res.json();
+}
 
-    if (!res.ok) throw new Error("AI Generation failed");
-    return res.json();
+/* ------------------ AI HISTORY ------------------ */
+
+export async function fetchAIHistory() {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${API_URL}/ai-history`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error("Не вдалося завантажити історію");
   }
+
+  return res.json();
+}

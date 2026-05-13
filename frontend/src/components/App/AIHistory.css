@@ -1,0 +1,90 @@
+.ai-history-container {
+  padding: 30px;
+  min-height: 100vh;
+  background: #efe3d3;
+}
+
+.ai-history-title {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #4b3425;
+}
+
+.ai-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.ai-history-card {
+  background: #d2b48c;
+  border-radius: 24px;
+  padding: 25px;
+}
+
+.ai-history-top {
+  margin-bottom: 25px;
+}
+
+.ai-history-date {
+  font-size: 0.9rem;
+  color: #4b3425;
+  margin-bottom: 15px;
+}
+
+.ai-history-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.ai-history-tag {
+  background: #efe3d3;
+  padding: 7px 14px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+}
+
+.ai-history-recipes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.ai-history-recipe-card {
+  background: white;
+  border-radius: 18px;
+  padding: 18px;
+}
+
+.ai-history-recipe-card h4 {
+  margin-bottom: 10px;
+  color: #4b3425;
+}
+
+.ai-history-recipe-card p {
+  font-size: 0.92rem;
+  color: #555;
+}
+
+.ai-history-macros {
+  margin: 12px 0;
+  font-weight: 600;
+}
+
+.ai-history-recipe-card ul {
+  padding-left: 18px;
+  font-size: 0.9rem;
+}
+
+.ai-history-loader,
+.ai-history-empty {
+  text-align: center;
+  padding: 40px;
+}
+
+@media (max-width: 1000px) {
+  .ai-history-recipes {
+    grid-template-columns: 1fr;
+  }
+}

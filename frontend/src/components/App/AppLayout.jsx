@@ -91,7 +91,13 @@ export default function AppLayout({ user, setUser, recipes, onLogout }) {
 
         <button onClick={() => changePage("myRecipes")}>Мої рецепти</button>
 
-        <button onClick={onLogout}>Вийти</button>
+        <div className="sidebar-footer">
+
+
+          <button className="logout-sidebar-btn" onClick={onLogout}>
+            <span className="logout-icon">⎗</span> Вийти
+          </button>
+        </div>
       </aside>
 
       <main className="main-content">

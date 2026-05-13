@@ -4,18 +4,22 @@ const jwt = require("jsonwebtoken");
 const db = require("./db.cjs");
 
 const multer = require("multer");
-const path = require("path");
 const fs = require("fs");
-const crypto = require("crypto");
 const nodemailer = require("nodemailer");
+const dotenv = require("dotenv");
+const path = require("path");
 
+dotenv.config({ path: path.resolve(__dirname, ".env") });
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || "secret_key";
 
 const BASE_URL = "http://localhost:4000";
 
+
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
@@ -175,86 +179,130 @@ router.get("/verify", (req, res) => {
   }
 });
 
-// 🔥 FORGOT PASSWORD
+// 🔥 SEND RESET CODE
 router.post("/forgot-password", async (req, res) => {
   const { email } = req.body;
 
   if (!email) {
-    return res.status(400).json({ error: "Email required" });
-  }
-
-  const user = db.prepare("SELECT * FROM users WHERE email = ?").get(email);
-
-  // ❗ не палимо чи існує користувач
-  if (!user) {
-    return res.json({ message: "If email exists, reset link sent" });
-  }
-
-  const token = crypto.randomBytes(32).toString("hex");
-  const expires = Date.now() + 1000 * 60 * 15; // 15 хв
-
-  db.prepare(
-    `
-    INSERT INTO password_resets (email, token, expires_at)
-    VALUES (?, ?, ?)
-  `,
-  ).run(email, token, expires);
-
-  const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
-
-  try {
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: "Reset password",
-      html: `<p>Click to reset password:</p>
-             <a href="${resetLink}">${resetLink}</a>`,
+    return res.status(400).json({
+      error: "Введіть email",
     });
-
-    res.json({ message: "If email exists, reset link sent" });
-  } catch (err) {
-    console.error(err);
-    console.error(err);
-    res.status(500).json({ error: err.message });
   }
+
+  const user = db
+    .prepare("SELECT * FROM users WHERE email = ?")
+    .get(email);
+
+  if (!user) {
+    return res.status(400).json({
+      error: "Користувача з таким email не знайдено",
+    });
+  }
+
+  // видаляємо старі коди
+  db.prepare(`
+    DELETE FROM password_resets
+    WHERE email = ?
+  `).run(email);
+
+  const code = Math.floor(
+    100000 + Math.random() * 900000
+  ).toString();
+
+  const expires = Date.now() + 1000 * 60 * 15;
+
+  db.prepare(`
+    INSERT INTO password_resets (
+      email,
+      token,
+      expires_at
+    )
+    VALUES (?, ?, ?)
+  `).run(email, code, expires);
+
+
+await transporter.sendMail({
+  from: process.env.EMAIL_USER,
+  to: email,
+  subject: "Відновлення пароля",
+  html: `
+    <div style="
+      font-family: Arial;
+      padding: 20px;
+      color: #222;
+    ">
+      <h2>Відновлення пароля</h2>
+
+      <p>
+        Ваш код для відновлення пароля:
+      </p>
+
+      <div style="
+        font-size: 32px;
+        font-weight: bold;
+        letter-spacing: 5px;
+        margin: 20px 0;
+      ">
+        ${code}
+      </div>
+
+      <p>
+        Код дійсний 15 хвилин.
+      </p>
+    </div>
+  `,
 });
 
-// 🔥 RESET PASSWORD
-router.post("/reset-password", async (req, res) => {
-  const { token, password } = req.body;
+  res.json({
+    message: "Код надіслано",
+  });
+  
+});
 
-  if (!token || !password) {
-    return res.status(400).json({ error: "Token and password required" });
+// 🔥 RESET PASSWORD WITH CODE
+router.post("/reset-password", async (req, res) => {
+  const { email, code, password } = req.body;
+
+  if (!email || !code || !password) {
+    return res.status(400).json({
+      error: "Заповніть усі поля",
+    });
   }
 
-  const record = db
-    .prepare(
-      `
-    SELECT * FROM password_resets WHERE token = ?
-  `,
-    )
-    .get(token);
+  const record = db.prepare(`
+    SELECT * FROM password_resets
+    WHERE email = ?
+    AND token = ?
+  `).get(email, code);
 
-  if (!record || record.expires_at < Date.now()) {
-    return res.status(400).json({ error: "Invalid or expired token" });
+  if (!record) {
+    return res.status(400).json({
+      error: "Невірний код",
+    });
+  }
+
+  if (record.expires_at < Date.now()) {
+    return res.status(400).json({
+      error: "Код прострочений",
+    });
   }
 
   const hashed = await bcrypt.hash(password, 10);
 
-  db.prepare(
-    `
-    UPDATE users SET password = ? WHERE email = ?
-  `,
-  ).run(hashed, record.email);
+  db.prepare(`
+    UPDATE users
+    SET password = ?
+    WHERE email = ?
+  `).run(hashed, email);
 
-  // ❗ видаляємо токен
-  db.prepare(
-    `
-    DELETE FROM password_resets WHERE token = ?
-  `,
-  ).run(token);
+  db.prepare(`
+    DELETE FROM password_resets
+    WHERE email = ?
+  `).run(email);
 
-  res.json({ message: "Password updated" });
+  res.json({
+    message: "Пароль успішно змінено",
+  });
 });
 
 module.exports = router;

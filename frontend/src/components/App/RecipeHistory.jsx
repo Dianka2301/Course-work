@@ -149,7 +149,7 @@ export default function RecipeHistory() {
             setImageFile(null);
           }}
         >
-          <img src={plusIcon} alt="plus" className="icon" />
+          <span className="plus-symbol">+</span>
           Додати рецепт
         </button>
       </div>

@@ -63,9 +63,16 @@ export default function Favorites({ onOpenRecipe }) {
             <div className="card-content">
               <h3>{recipe.title}</h3>
 
-              <p className="ingredients">
-                {recipe.ingredients?.slice(0, 60)}...
-              </p>
+              <div className="ingredients-wrapper">
+                {recipe.ingredients
+                  ?.split(",")
+                  .slice(0, 6)
+                  .map((item, index) => (
+                    <span key={index} className="ingredient-tag">
+                      {item.trim()}
+                    </span>
+                  ))}
+              </div>
 
               <div className="meta">
                 <span>⭐ {recipe.rating || 0}</span>

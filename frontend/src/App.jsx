@@ -5,7 +5,6 @@ import { fetchRecipes } from "./api/recipes.js";
 import AppLayout from "./components/App/AppLayout.jsx";
 import { Routes, Route } from "react-router-dom";
 import ForgotPassword from "./components/Auth/ForgotPassword.jsx";
-import ResetPassword from "./components/Auth/ResetPassword.jsx";
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -13,7 +12,6 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [showAuthModal, setShowAuthModal] = useState(false);
 
-  // 🔥 INIT USER FROM TOKEN
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -25,7 +23,6 @@ export default function App() {
     verifyToken(token)
       .then((data) => {
         if (!data?.user) throw new Error("Invalid token");
-
         setUser(data.user);
       })
       .catch(() => {
@@ -41,13 +38,14 @@ export default function App() {
 
   return (
     <Routes>
-      {/* 🔥 MAIN APP (login + dashboard) */}
       <Route
         path="/"
         element={
           <>
+            {/* 🔥 AUTH PAGE (тільки коли НЕ залогінений) */}
             {!user && <AuthPage onOpenAuth={() => setShowAuthModal(true)} />}
 
+            {/* 🔥 MAIN APP */}
             {user && (
               <AppLayout
                 user={user}
@@ -61,7 +59,7 @@ export default function App() {
               />
             )}
 
-            {/* modal login */}
+            {/* 🔥 MODAL LOGIN */}
             {showAuthModal && (
               <div className="modal-overlay">
                 <div className="modal">
@@ -77,7 +75,6 @@ export default function App() {
                     onLogin={(u, t) => {
                       setUser(u);
                       localStorage.setItem("token", t);
-                      localStorage.setItem("user", JSON.stringify(u));
                       setShowAuthModal(false);
                       fetchRecipes().then(setRecipes);
                     }}
@@ -85,15 +82,12 @@ export default function App() {
                 </div>
               </div>
             )}
+
+            {/* 🔥 FORGOT PASSWORD (керується всередині компонента) */}
+            <ForgotPassword />
           </>
         }
       />
-
-      {/* 🔥 FORGOT PASSWORD */}
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-
-      {/* 🔥 RESET PASSWORD */}
-      <Route path="/reset-password" element={<ResetPassword />} />
     </Routes>
   );
 }

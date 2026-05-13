@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { generateAIRecipes } from "../../api/recipes"; // Шлях до вашого api файлу
 import "./AIGenerator.css";
+import { useNavigate } from "react-router-dom";
+import AIHistory from "./AIHistory.jsx";
 
 export default function AIGenerator() {
   const [ingredients, setIngredients] = useState([]);
@@ -8,6 +10,7 @@ export default function AIGenerator() {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showHistory, setShowHistory] = useState(false);
 
   // Додавання інгредієнта в список
   const addIngredient = () => {
@@ -74,7 +77,7 @@ export default function AIGenerator() {
               onClick={handleGenerate}
               disabled={loading}
             >
-              {loading ? "Генерується..." : "Генерувати!"}
+              {loading ? "Генерується..." : "Генерувати"}
             </button>
           </div>
         </div>
@@ -95,15 +98,23 @@ export default function AIGenerator() {
           </div>
         </div>
       </div>
+      <button
+        className="history-btn"
+        onClick={() => setShowHistory(!showHistory)}
+      >
+        {showHistory ? "Сховати історію" : "Історія генерацій"}
+      </button>
+
+      {showHistory && <AIHistory />}
 
       <div className="results-section">
         <h2 className="results-title">Рецепти</h2>
 
         {error && <p className="error-msg">{error}</p>}
 
-        <div className="recipes-grid">
+        <div className="recipes-ai-grid">
           {recipes.map((res, idx) => (
-            <div key={idx} className="recipe-card">
+            <div key={idx} className="recipe-ai-card">
               <div className="recipe-header">
                 <span className="recipe-number">{idx + 1}:</span>
                 <h4> {res.title} </h4>
@@ -135,7 +146,7 @@ export default function AIGenerator() {
 
           {!loading && recipes.length === 0 && !error && (
             <p className="placeholder-text">
-              Тут з'являться ваші ідеї для вечері...
+              Тут створюються рецепти з ваших продуктів...
             </p>
           )}
           {loading && (

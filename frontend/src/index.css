@@ -164,25 +164,6 @@ h1, h2, h3 {
   z-index: 5;
 }
 
-/* RESPONSIVE */
-/*@media (max-width: 768px) {
-  .sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    z-index: 10;
-    transform: translateX(-100%);
-  }
-
-  .sidebar.open {
-    transform: translateX(0);
-  }
-
-  .burger {
-    display: block;
-  }
-}*/
 
 /* 🔹 ОСНОВНА ОБЛАСТЬ */
 .main-content > div:not(.toolbar) {
@@ -1212,7 +1193,7 @@ h1, h2, h3 {
   display: flex;
   align-items: center;
   gap: 6px;
-  background: #c1a585;
+  background: #4b3425;
   border: none;
   padding: 10px 16px;
   border-radius: 15px;
@@ -1220,6 +1201,11 @@ h1, h2, h3 {
   color: white;
   transition: 0.25s;
   font-size: 14px;
+}
+.plus-symbol {
+  font-size: 1.5rem; /* Робимо плюс більшим */
+  line-height: 1;    /* Щоб не розпирав кнопку по висоті */
+  font-weight: bold;
 }
 
 .add-btn img {
@@ -1539,14 +1525,14 @@ h1, h2, h3 {
 }
 
 .preview-img {
-  width: 180px;
-  height: 180px;
+  width: 185px;
+  height: 185px;
 
   object-fit: cover;
 
   border-radius: 22px;
 
-  margin-top: -194px;
+  margin-top: -254px;
 
   box-shadow: 0 10px 22px rgba(0,0,0,0.12);
 }
@@ -1791,23 +1777,154 @@ h1, h2, h3 {
 /* 🔹 МОБІЛЬНІ ПРИСТРОЇ (До 768px) */
 @media (max-width: 768px) {
   /* Sidebar */
-  .sidebar {
-    display: flex; /* тепер з’являється тільки тут */
+.sidebar {
+    display: flex;
     position: fixed;
     top: 0;
     left: 0;
-    width: 250px;
+    width: 280px; /* Трохи ширше для зручності */
     height: 100%;
+    /* Ефект скла: колір #a27645 з прозорістю + розмиття */
     background: rgba(162, 118, 69, 0.8);
+    backdrop-filter: blur(10px); 
     z-index: 1000;
-
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
+    padding: 30px 20px;
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.3);
+    
+    transform: translateX(-105%); /* Ховаємо трохи далі за край */
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 0 20px 20px 0; /* Закруглення правого краю */
   }
 
   .sidebar.open {
     transform: translateX(0);
   }
+
+  /* Заголовок всередині сайдбару */
+  .sidebar h2 {
+    color: #fdfae6;
+    font-size: 1.5rem;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 25px;
+    text-align: center;
+    
+  }
+
+  /* Стилізація кнопок у сайдбарі */
+  .sidebar button {
+    font-size: 1.03rem;
+    padding: 15px 20px;
+    margin-bottom: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border-left: 4px solid transparent; /* Для ефекту активної кнопки */
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-radius: 15px;
+    font-weight: 600;
+  }
+
+  .sidebar button:hover {
+    background: #c1a585;
+    color: #422e10;
+    transform: translateX(8px);
+    border-left: 4px solid #fdfae6;
+  }
+
+  /* Кнопка виходу */
+  .sidebar .logout {
+    margin-top: auto;
+    background: rgba(255, 0, 0, 0.1);
+    color: #ff6b6b;
+    border-radius: 15px;
+    justify-content: center;
+    font-weight: bold;
+    border: 1px solid rgba(255, 0, 0, 0.2);
+  }
+
+  .sidebar .logout:hover {
+    background: #ff4747;
+    color: white;
+    transform: scale(1.02);
+    border-left-color: transparent;
+  }
+
+  /* Додамо плавне затемнення фону при відкритті сайдбару */
+  /* Додай цей клас в JS до тегу body або зроби окремий div overlay */
+  .sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    display: none;
+  }
+  
+  .sidebar.open + .sidebar-overlay {
+    display: block;
+  }
+
+  .sidebar-footer {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.theme-toggle-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+}
+
+.theme-label {
+  color: #fdfae6;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Стиль сокета зі скріншота image_2c23d0.png */
+.theme-socket {
+  width: 60px;
+  height: 30px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  
+  /* Ефект втиснутої кнопки */
+  background: #2a1f14; /* Темніший за фон сайдбару */
+  box-shadow: 
+    inset -2px -2px 5px rgba(255, 255, 255, 0.05),
+    inset 3px 3px 7px rgba(0, 0, 0, 0.5);
+    
+  display: flex;
+  align-items: center;
+  padding: 0 5px;
+  transition: 0.3s;
+}
+
+.theme-icon {
+  width: 22px;
+  height: 22px;
+  background: #c1a585;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  
+  /* Рух іконки в залежності від теми */
+  /*transform: ${isDarkMode ? 'translateX(28px)' : 'translateX(0)'};*/
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
 
   /* Toolbar */
   .toolbar {
@@ -1824,6 +1941,47 @@ h1, h2, h3 {
   .logout-btn {
     display: none;
   }
+
+  .logout-sidebar-btn {
+  margin-top: auto; /* Ця магія штовхає кнопку в самий низ */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  
+  padding: 15px;
+  background: rgba(255, 71, 71, 0.1) !important; /* Напівпрозорий червоний */
+  color: #ff4747 !important;
+  border: 1px solid rgba(255, 71, 71, 0.2) !important;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.logout-sidebar-btn:hover {
+  background: #ff4747 !important;
+  color: white !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 71, 71, 0.3);
+}
+
+/* Стиль іконки виходу */
+.logout-icon {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+/* Якщо використовуєш img замість символу */
+.logout-sidebar-btn img {
+  width: 20px;
+  height: 20px;
+  filter: invert(30%) sepia(100%) saturate(500%) hue-rotate(320deg); /* Робить картинку червоною */
+}
+
+.logout-sidebar-btn:hover img {
+  filter: brightness(0) invert(1); /* Робить картинку білою при ховері */
+}
 
   /* Grid */
   .recipes-grid {
