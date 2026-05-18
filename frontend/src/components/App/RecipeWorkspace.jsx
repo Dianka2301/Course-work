@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { fetchFavorites, toggleFavorite } from "../../api/favorites.js";
 import searchIcon from "../../images/glass.png";
 
@@ -9,29 +9,50 @@ export default function RecipeWorkspace({
   refreshRecipes,
 }) {
   const [favorites, setFavorites] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const [allCategories, setAllCategories] = useState(["Усі"]); // Фіксований список
   const [selectedCategory, setSelectedCategory] = useState("Усі");
+  const [sortBy, setSortBy] = useState("default"); // Стан для сортування
   const [loading, setLoading] = useState(true);
 
   // 🔍 SEARCH
   const [searchInput, setSearchInput] = useState("");
   const [searchActive, setSearchActive] = useState(false);
   const [search, setSearch] = useState("");
+  const scrollRef = useRef(null);
 
   const BASE_URL = "http://localhost:4000";
 
-  // 🖼 СЛОВНИК ІКОНОК
-  // Пропиши тут назви категорій точно так, як вони приходять з бази
-  const categoryIcons = {
-    Усі: `${BASE_URL}/images/category/all.png`,
-    "Базові рецепти": `${BASE_URL}/images/category/base.png`,
-    Салати: `${BASE_URL}/images/category/salads.jpg`,
-    Десерти: `${BASE_URL}/images/category/desserts.png`,
-    Паста: `${BASE_URL}/images/category/pasta.png`,
-    "М'ясо": `${BASE_URL}/images/category/meat.png`,
-    Морепродукти: `${BASE_URL}/images/category/seafood.png`,
-    "Інші рецепти": `${BASE_URL}/images/category/default.png`,
-  };
+
+const categoryIcons = {
+  Усі: `${BASE_URL}/images/category/all.png`,
+
+  Сніданки: `${BASE_URL}/images/category/breakfast.png`,
+
+  "Основні страви": `${BASE_URL}/images/category/main_courses.png`,
+
+  Супи: `${BASE_URL}/images/category/soups.png`,
+
+  Салати: `${BASE_URL}/images/category/salads.jpg`,
+
+  Паста: `${BASE_URL}/images/category/pasta.png`,
+
+  Закуски: `${BASE_URL}/images/category/snacks.png`,
+
+  Десерти: `${BASE_URL}/images/category/desserts.png`,
+
+  Випічка: `${BASE_URL}/images/category/bakery.png`,
+
+  "Дієтичні страви":
+    `${BASE_URL}/images/category/diet.png`,
+
+  "Напої та смузі":
+    `${BASE_URL}/images/category/drinks.png`,
+
+  "Інші рецепти":
+    `${BASE_URL}/images/category/default.png`,
+};
+
+
 
   useEffect(() => {
     async function loadData() {
@@ -39,22 +60,22 @@ export default function RecipeWorkspace({
         const favs = await fetchFavorites();
         setFavorites(favs.map((f) => f.recipe_id || f.id));
 
-        const cats = Array.from(
-          new Set(recipes.map((r) => r.category || "Інші рецепти")),
-        );
-
-        setCategories(["Усі", ...cats]);
+        // Зберігаємо повний список категорій лише один раз при першому завантаженні recipes
+        if (recipes.length > 0 && allCategories.length === 1) {
+          const cats = Array.from(
+            new Set(recipes.map((r) => r.category || "Інші рецепти")),
+          );
+          setAllCategories(["Усі", ...cats.filter((c) => c !== "Усі")]);
+        }
       } catch (err) {
         console.error(err);
       } finally {
         setLoading(false);
       }
     }
-
     loadData();
   }, [recipes]);
 
-  // ❤️ FAVORITES
   const handleToggleFavorite = async (recipeId) => {
     const { liked } = await toggleFavorite(recipeId);
     setFavorites((prev) =>
@@ -62,7 +83,6 @@ export default function RecipeWorkspace({
     );
   };
 
-  // 🔥 SEARCH
   const handleSearch = () => {
     setSearch(searchInput.toLowerCase());
     setSearchActive(true);
@@ -74,20 +94,33 @@ export default function RecipeWorkspace({
     setSearchActive(false);
   };
 
-  // 🔥 FILTER
-  const filteredRecipes = recipes.filter((r) => {
-    const matchesSearch = searchActive
-      ? r.title.toLowerCase().includes(search) ||
-        r.ingredients.toLowerCase().includes(search)
-      : true;
+  const scroll = (dir) => {
+    scrollRef.current.scrollBy({
+      left: dir === "left" ? -200 : 200,
+      behavior: "smooth",
+    });
+  };
 
-    const matchesCategory =
-      selectedCategory === "Усі" || r.category === selectedCategory;
+  // 🔥 ЛОГІКА ФІЛЬТРАЦІЇ ТА СОРТУВАННЯ
+  const filteredAndSortedRecipes = recipes
+    .filter((r) => {
+      const matchesSearch = searchActive
+        ? r.title.toLowerCase().includes(search) ||
+          r.ingredients.toLowerCase().includes(search)
+        : true;
 
-    const matchesFavorites = showFavorites ? favorites.includes(r.id) : true;
+      const matchesCategory =
+        selectedCategory === "Усі" || r.category === selectedCategory;
 
-    return matchesSearch && matchesCategory && matchesFavorites;
-  });
+      const matchesFavorites = showFavorites ? favorites.includes(r.id) : true;
+
+      return matchesSearch && matchesCategory && matchesFavorites;
+    })
+    .sort((a, b) => {
+      if (sortBy === "rating") return (b.rating || 0) - (a.rating || 0);
+      if (sortBy === "newest") return b.id - a.id; // Припускаємо, що більший ID = новіший
+      return 0;
+    });
 
   if (loading) return <p>Завантаження...</p>;
 
@@ -97,9 +130,10 @@ export default function RecipeWorkspace({
       <div className="search-bar">
         <input
           type="text"
-          placeholder="Пошук рецептів..."
+          placeholder="Пошук рецептів за назвою або інгредієнтом..."
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
         />
         <button className="search-btn" onClick={handleSearch}>
           <img src={searchIcon} alt="search" style={{ width: 18 }} />
@@ -111,73 +145,123 @@ export default function RecipeWorkspace({
         )}
       </div>
 
-      {/* 📂 CATEGORIES (Круглий стиль як на Фото 1) */}
-      <div className="category-row-new">
-        {!searchActive &&
-          categories.map((cat) => (
-            <button
-              key={cat}
-              className={`cat-item ${selectedCategory === cat ? "active" : ""}`}
-              onClick={() => setSelectedCategory(cat)}
-            >
-              <div className="cat-circle">
-                <img
-                  src={
-                    categoryIcons[cat] ||
-                    `${BASE_URL}/images/category/default.jpg`
-                  }
-                  alt={cat}
-                  onError={(e) => {
-                    e.target.src = `${BASE_URL}/images/category/default.jpg`;
-                  }}
-                />
-              </div>
-              <span className="cat-name">{cat}</span>
-            </button>
-          ))}
+      <div
+        className="filters-container"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "20px",
+          marginBottom: "20px",
+        }}
+      >
+        {/* 📂 CATEGORIES */}
+        <div
+          className="category-wrapper"
+          style={{ flex: 1, position: "relative" }}
+        >
+          <button onClick={() => scroll("left")} className="scroll-btn left">
+            ‹
+          </button>
+          <div
+            className="category-row-new"
+            ref={scrollRef}
+            style={{ display: "flex", overflowX: "hidden", gap: "15px" }}
+          >
+            {allCategories.map((cat) => (
+              <button
+                key={cat}
+                className={`cat-item ${selectedCategory === cat ? "active" : ""}`}
+                onClick={() => setSelectedCategory(cat)}
+              >
+                <div className="cat-circle">
+                  <img
+                    src={
+                      categoryIcons[cat] ||
+                      `${BASE_URL}/images/category/default.png`
+                    }
+                    alt={cat}
+                    onError={(e) => {
+                      e.target.src = `${BASE_URL}/images/category/default.png`;
+                    }}
+                  />
+                </div>
+                <span className="cat-name">{cat}</span>
+              </button>
+            ))}
+          </div>
+          <button onClick={() => scroll("right")} className="scroll-btn right">
+            ›
+          </button>
+        </div>
+
+        {/* 📉 SORTING BOX (Збоку) */}
+        <div className="sort-box" style={{ minWidth: "150px" }}>
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="sort-select"
+            style={{
+              padding: "8px",
+              borderRadius: "8px",
+              border: "1px solid #ddd",
+              width: "100%",
+            }}
+          >
+            <option value="default">Сортувати за...</option>
+            <option value="rating">Найкращий рейтинг ⭐</option>
+            <option value="newest">Найновіші 🆕</option>
+          </select>
+        </div>
       </div>
 
-      {/* 🍽 CARDS */}
+      {/* 🍽 CARDS GRID */}
       <div className="recipes-grid">
-        {filteredRecipes.map((recipe) => (
-          <div
-            key={recipe.id}
-            className="recipe-card"
-            onClick={() => onOpenRecipe(recipe)}
-          >
-            <img
-              src={`${BASE_URL}/images/${recipe.image}`}
-              className="recipe-img"
-              alt={recipe.title}
-            />
-            <div className="card-content">
-              <h3>{recipe.title}</h3>
-              <div className="ingredients-wrapper">
-                {recipe.ingredients
-                  ?.split(",")
-                  .slice(0, 6)
-                  .map((item, index) => (
-                    <span key={index} className="ingredient-tag">
-                      {item.trim()}
-                    </span>
-                  ))}
-              </div>
-              <div className="meta">
-                <span>⭐ {recipe.rating || 0}</span>
-                <span>{recipe.category}</span>
-              </div>
-            </div>
-            <button
-              className="fav-btn"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleToggleFavorite(recipe.id);
-              }}
+        {filteredAndSortedRecipes.length > 0 ? (
+          filteredAndSortedRecipes.map((recipe) => (
+            <div
+              key={recipe.id}
+              className="recipe-card"
+              onClick={() => onOpenRecipe(recipe)}
             >
-              {favorites.includes(recipe.id) ? "❤️" : "🤍"}
-            </button>
-          </div>
-        ))}
+              <img
+                src={`${BASE_URL}/images/${recipe.image}`}
+                className="recipe-img"
+                alt={recipe.title}
+              />
+              <div className="card-content">
+                <h3>{recipe.title}</h3>
+                <div className="ingredients-wrapper">
+                  {recipe.ingredients
+                    ?.split("\n") // Виправляємо спліт на новий рядок
+                    .filter((item) => item.trim() !== "") // Додатково прибираємо порожні рядки, якщо вони є
+                    .slice(0, 4) // Беремо перші 4 інгредієнти для прев'ю-тегів
+                    .map((item, index) => (
+                      <span key={index} className="ingredient-tag">
+                        {item.trim()}
+                      </span>
+                    ))}
+                </div>
+                <div className="meta">
+                  <span>⭐ {recipe.rating || 0}</span>
+                  <span className="cat-badge">{recipe.category}</span>
+                </div>
+              </div>
+              <button
+                className="fav-btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleToggleFavorite(recipe.id);
+                }}
+              >
+                {favorites.includes(recipe.id) ? "❤️" : "🤍"}
+              </button>
+            </div>
+          ))
+        ) : (
+          <p style={{ textAlign: "center", width: "100%", marginTop: "50px" }}>
+            Нічого не знайдено. Спробуйте змінити категорію або запит.
+          </p>
+        )}
       </div>
     </div>
   );

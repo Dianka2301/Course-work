@@ -65,8 +65,9 @@ export default function Favorites({ onOpenRecipe }) {
 
               <div className="ingredients-wrapper">
                 {recipe.ingredients
-                  ?.split(",")
-                  .slice(0, 6)
+                  ?.split("\n") // Виправляємо спліт на новий рядок
+                  .filter((item) => item.trim() !== "") // Додатково прибираємо порожні рядки, якщо вони є
+                  .slice(0, 4) // Беремо перші 4 інгредієнти для прев'ю-тегів
                   .map((item, index) => (
                     <span key={index} className="ingredient-tag">
                       {item.trim()}

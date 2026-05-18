@@ -41,20 +41,33 @@ const upload = multer({ storage });
 router.get("/", auth, (req, res) => {
   const user = db
     .prepare(
-      "SELECT id, email, first_name, last_name, avatar FROM users WHERE email = ?",
+      "SELECT id, email, first_name, last_name, bio, avatar, role, created_at FROM users WHERE email = ?",
     )
     .get(req.user.email);
+
+  if (!user) {
+    return res.status(404).json({ error: "User not found" });
+  }
 
   if (user?.avatar) {
     user.avatar = `${BASE_URL}/uploads/${user.avatar}`;
   }
 
-  res.json(user);
+  res.json({
+    id: user.id,
+    email: user.email,
+    firstName: user.first_name,
+    lastName: user.last_name,
+    bio: user.bio,
+    avatar: user.avatar,
+    role: user.role,
+    createdAt: user.created_at,
+  });
 });
 
 /* ------------------ UPDATE PROFILE ------------------ */
 router.put("/", auth, upload.single("avatar"), (req, res) => {
-  const { firstName, lastName, email } = req.body;
+  const { firstName, lastName, email, bio } = req.body;
 
   const currentUser = db
     .prepare("SELECT * FROM users WHERE email = ?")
@@ -74,16 +87,19 @@ router.put("/", auth, upload.single("avatar"), (req, res) => {
     SET first_name = ?,
         last_name = ?,
         email = ?,
+        bio = ?,
         avatar = ?
     WHERE id = ?
   `,
-  ).run(firstName, lastName, email, newAvatar, currentUser.id);
+  ).run(firstName, lastName, email, bio ?? currentUser.bio, newAvatar, currentUser.id);
 
   const updatedUser = {
     id: currentUser.id,
     email,
     firstName,
     lastName,
+    bio: bio ?? currentUser.bio,
+    role: currentUser.role,
     avatar: newAvatar ? `${BASE_URL}/uploads/${newAvatar}` : null,
   };
 

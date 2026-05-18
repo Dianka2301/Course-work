@@ -12,6 +12,7 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [showAuthModal, setShowAuthModal] = useState(false);
 
+  // 🔥 перевірка токена при старті
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -32,6 +33,25 @@ export default function App() {
       .finally(() => setLoading(false));
   }, []);
 
+  // 🔥 завантаження рецептів після логіну
+  useEffect(() => {
+    const openForgot = () => setShowAuthModal(false);
+
+    window.addEventListener("openForgotPassword", openForgot);
+
+    return () => {
+      window.removeEventListener("openForgotPassword", openForgot);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!user) return;
+
+    fetchRecipes("all", "new")
+      .then(setRecipes)
+      .catch((err) => console.error("Recipes load error:", err));
+  }, [user]);
+
   if (loading) {
     return <div className="center">Завантаження...</div>;
   }
@@ -42,10 +62,10 @@ export default function App() {
         path="/"
         element={
           <>
-            {/* 🔥 AUTH PAGE (тільки коли НЕ залогінений) */}
+            {/* AUTH PAGE */}
             {!user && <AuthPage onOpenAuth={() => setShowAuthModal(true)} />}
 
-            {/* 🔥 MAIN APP */}
+            {/* MAIN APP */}
             {user && (
               <AppLayout
                 user={user}
@@ -59,7 +79,7 @@ export default function App() {
               />
             )}
 
-            {/* 🔥 MODAL LOGIN */}
+            {/* MODAL LOGIN */}
             {showAuthModal && (
               <div className="modal-overlay">
                 <div className="modal">
@@ -76,14 +96,18 @@ export default function App() {
                       setUser(u);
                       localStorage.setItem("token", t);
                       setShowAuthModal(false);
-                      fetchRecipes().then(setRecipes);
+
+                      // 🔥 FIX: правильний виклик
+                      fetchRecipes("all", "new")
+                        .then(setRecipes)
+                        .catch(console.error);
                     }}
                   />
                 </div>
               </div>
             )}
 
-            {/* 🔥 FORGOT PASSWORD (керується всередині компонента) */}
+            {/* FORGOT PASSWORD */}
             <ForgotPassword />
           </>
         }

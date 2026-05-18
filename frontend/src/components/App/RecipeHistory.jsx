@@ -4,6 +4,7 @@ import {
   createRecipe,
   updateRecipe,
   deleteRecipe,
+  publishRecipe,
 } from "../../api/recipes";
 import editIcon from "../../images/edit.png";
 import deleteIcon from "../../images/delete.png";
@@ -25,10 +26,15 @@ export default function RecipeHistory() {
 
   const [form, setForm] = useState({
     title: "",
+    description: "",
     ingredients: "",
     steps: "",
     is_private: 1,
     image: "",
+    category: "Сніданки",
+    prep_time: "",
+    portions: "",
+    difficulty: "easy",
   });
 
   const showToast = (msg) => {
@@ -90,10 +96,15 @@ export default function RecipeHistory() {
 
     setForm({
       title: "",
+      description: "",
       ingredients: "",
       steps: "",
       is_private: 1,
       image: "",
+      category: "Сніданки",
+      prep_time: "",
+      portions: "",
+      difficulty: "easy",
     });
 
     setImageFile(null);
@@ -111,19 +122,35 @@ export default function RecipeHistory() {
     showToast("Видалено");
   };
 
+  const handlePublish = async (id) => {
+    try {
+      await publishRecipe(id);
+      showToast("Заявку на публікацію надіслано");
+      fetchMyRecipes(page, limit).then((data) => setRecipes(data.data || []));
+    } catch (err) {
+      console.error(err);
+      showToast("Не вдалося надіслати заявку");
+    }
+  };
+
   /* ------------------ EDIT ------------------ */
   const handleEdit = (r) => {
-    setForm(r);
+    //setForm(r);
+    setForm({
+      title: r.title || "",
+      description: r.description || "",
+      ingredients: r.ingredients || "",
+      steps: r.steps || "",
+      is_private: r.is_private ?? 1,
+      image: r.image || "",
+      category: r.category || "Сніданки",
+      prep_time: r.prep_time || "",
+      portions: r.portions || "",
+      difficulty: r.difficulty || "easy",
+    });
     setEditingId(r.id);
     setPreview(r.image || "");
     setShowForm(true);
-  };
-
-  const togglePrivate = () => {
-    setForm((prev) => ({
-      ...prev,
-      is_private: prev.is_private ? 0 : 1,
-    }));
   };
 
   return (
@@ -140,10 +167,15 @@ export default function RecipeHistory() {
             setEditingId(null);
             setForm({
               title: "",
+              description: "",
               ingredients: "",
               steps: "",
               is_private: 1,
               image: "",
+              category: "Сніданки",
+              prep_time: "",
+              portions: "",
+              difficulty: "easy",
             });
             setPreview("");
             setImageFile(null);
@@ -164,6 +196,75 @@ export default function RecipeHistory() {
                 value={form.title}
                 onChange={(e) => setForm({ ...form, title: e.target.value })}
               />
+            </div>
+
+            <div className="field">
+              <h3>Опис</h3>
+              <textarea
+                placeholder="Коротко опишіть рецепт..."
+                value={form.description}
+                onChange={(e) =>
+                  setForm({ ...form, description: e.target.value })
+                }
+              />
+            </div>
+
+            <div className="field">
+              <h3>Категорія</h3>
+
+              <select
+                value={form.category}
+                onChange={(e) => setForm({ ...form, category: e.target.value })}
+              >
+                <option>Сніданки</option>
+                <option>Салати</option>
+                <option>Основні страви</option>
+                <option>Супи</option>
+                <option>Десерти</option>
+                <option>Швидкі страви</option>
+                <option>Вегетаріанські</option>
+                <option>Національні кухні</option>
+              </select>
+            </div>
+
+            <div className="recipe-form-row">
+              <div className="field">
+                <h3>Час</h3>
+                <input
+                  placeholder="Наприклад: 30 хв"
+                  value={form.prep_time}
+                  onChange={(e) =>
+                    setForm({ ...form, prep_time: e.target.value })
+                  }
+                />
+              </div>
+
+              <div className="field">
+                <h3>Порції</h3>
+                <input
+                  type="number"
+                  min="1"
+                  placeholder="2"
+                  value={form.portions}
+                  onChange={(e) =>
+                    setForm({ ...form, portions: e.target.value })
+                  }
+                />
+              </div>
+
+              <div className="field">
+                <h3>Складність</h3>
+                <select
+                  value={form.difficulty}
+                  onChange={(e) =>
+                    setForm({ ...form, difficulty: e.target.value })
+                  }
+                >
+                  <option value="easy">easy</option>
+                  <option value="medium">medium</option>
+                  <option value="hard">hard</option>
+                </select>
+              </div>
             </div>
 
             <div className="field">
@@ -203,15 +304,6 @@ export default function RecipeHistory() {
             {preview && <img src={preview} className="preview-img" />}
           </div>
 
-          <label className="checkbox">
-            <input
-              type="checkbox"
-              checked={form.is_private === 1}
-              onChange={togglePrivate}
-            />
-            Приватний рецепт (тільки мій записник)
-          </label>
-
           <div className="form-actions">
             <button onClick={handleSubmit}>
               {editingId ? "Зберегти" : "Додати"}
@@ -224,7 +316,10 @@ export default function RecipeHistory() {
       {loading ? (
         <p>Loading...</p>
       ) : recipes.length === 0 ? (
-        <p className="empty">Немає рецептів ✨</p>
+        <div className="empty-state">
+          <h3>Ваш записник поки порожній</h3>
+          <p>Додайте перший рецепт, а потім надішліть його на публікацію.</p>
+        </div>
       ) : (
         <div className="recipes-grid">
           {recipes.map((r) => (
@@ -253,18 +348,31 @@ export default function RecipeHistory() {
 
               {/* TITLE */}
               <h3 className="recipe-title">{r.title}</h3>
+              <div className="recipe-status">
+                Статус: {r.status || "private"}
+              </div>
 
               {/* INGREDIENT CHIPS */}
               <div className="chips">
                 {r.ingredients
-                  ?.split(",")
-                  .slice(0, 5)
-                  .map((ing, i) => (
-                    <span key={i} className="chip">
-                      {ing.trim()}
+                  ?.split("\n") // Виправляємо спліт на новий рядок
+                  .filter((item) => item.trim() !== "") // Додатково прибираємо порожні рядки, якщо вони є
+                  .slice(0, 4) // Беремо перші 4 інгредієнти для прев'ю-тегів
+                  .map((item, index) => (
+                    <span key={index} className="ingredient-tag">
+                      {item.trim()}
                     </span>
                   ))}
               </div>
+
+              {r.status !== "pending" && r.status !== "approved" && (
+                <button
+                  className="publish-btn"
+                  onClick={() => handlePublish(r.id)}
+                >
+                  Опублікувати
+                </button>
+              )}
             </div>
           ))}
         </div>

@@ -5,6 +5,8 @@ export default function Toolbar({
   onLogout,
   onBack,
 }) {
+  const isAdmin = user?.role === "admin";
+
   return (
     <div className="toolbar">
       <div className="toolbar-left">
@@ -16,16 +18,21 @@ export default function Toolbar({
 
         <div className="nav-links">
           <button onClick={() => setPage("catalog")}>Каталог</button>
-          <button onClick={() => setPage("favorites")}>Обране</button>
-          <button onClick={() => setPage("ai")}>AI</button>
+          {!isAdmin && <button onClick={() => setPage("favorites")}>Обране</button>}
+          {!isAdmin && <button onClick={() => setPage("ai")}>AI</button>}
           <button onClick={() => setPage("profile")}>Профіль</button>
-          <button onClick={() => setPage("myRecipes")}>Мої рецепти</button>
+          {!isAdmin && (
+            <button onClick={() => setPage("myRecipes")}>Мої рецепти</button>
+          )}
+          {isAdmin && (
+            <button onClick={() => setPage("admin")}>Заявки</button>
+          )}
         </div>
       </div>
 
       <div className="toolbar-right">
         <button className="logout-btn" onClick={onLogout}>
-          Вийти
+          ⎗ Вийти
         </button>
       </div>
     </div>

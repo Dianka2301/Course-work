@@ -1,9 +1,29 @@
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000/api";
 
 /* ------------------ ALL RECIPES ------------------ */
-export async function fetchRecipes() {
+/*export async function fetchRecipes() {
   const res = await fetch(`${API_URL}/recipes`);
   if (!res.ok) throw new Error("Помилка при отриманні рецептів");
+  return res.json();
+}*/
+export async function fetchRecipes(category = "all", sort = "new") {
+  const res = await fetch(
+    `${API_URL}/recipes?category=${category}&sort=${sort}`,
+  );
+
+  if (!res.ok) throw new Error("Помилка при отриманні рецептів");
+  return res.json();
+}
+
+export async function fetchRecipeDetails(id) {
+  const res = await fetch(`${API_URL}/recipes/${id}`);
+  if (!res.ok) throw new Error("Помилка при отриманні рецепта");
+  return res.json();
+}
+
+export async function fetchSimilarRecipes(id) {
+  const res = await fetch(`${API_URL}/recipes/${id}/similar`);
+  if (!res.ok) return [];
   return res.json();
 }
 
@@ -86,6 +106,20 @@ export async function deleteRecipe(id) {
   return res.json();
 }
 
+export async function publishRecipe(id) {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${API_URL}/my-recipes/${id}/publish`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) throw new Error("Не вдалося надіслати рецепт на публікацію");
+  return res.json();
+}
+
 export async function fetchComments(recipeId) {
   const res = await fetch(`${API_URL}/recipes/${recipeId}/comments`);
   if (!res.ok) throw new Error("Load comments failed");
@@ -107,6 +141,74 @@ export async function addComment(recipeId, data) {
   });
 
   if (!res.ok) throw new Error("Add comment failed");
+  return res.json();
+}
+
+export async function fetchAdminRecipeRequests() {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${API_URL}/admin/recipe-requests`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) throw new Error("Не вдалося завантажити заявки");
+  return res.json();
+}
+
+export async function fetchAdminRecipeRequest(id) {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${API_URL}/admin/recipe-requests/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) throw new Error("Не вдалося завантажити заявку");
+  return res.json();
+}
+
+export async function analyzeAdminRecipe(id) {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${API_URL}/admin/recipe-requests/${id}/analyze`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) throw new Error("Не вдалося виконати AI-аналіз");
+  return res.json();
+}
+
+export async function approveAdminRecipe(id) {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${API_URL}/admin/recipe-requests/${id}/approve`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) throw new Error("Не вдалося схвалити рецепт");
+  return res.json();
+}
+
+export async function rejectAdminRecipe(id) {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${API_URL}/admin/recipe-requests/${id}/reject`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) throw new Error("Не вдалося відхилити рецепт");
   return res.json();
 }
 

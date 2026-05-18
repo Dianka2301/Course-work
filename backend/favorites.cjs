@@ -1,10 +1,31 @@
 const express = require("express");
 const router = express.Router();
 const db = require("./db.cjs");
+const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
+const path = require("path");
+
+dotenv.config({ path: path.resolve(__dirname, ".env") });
+
+const JWT_SECRET = process.env.JWT_SECRET || "secret_key";
+
+function getUserId(req) {
+  const token = req.headers.authorization?.split(" ")[1];
+
+  if (!token) {
+    return req.session?.userId || 1;
+  }
+
+  try {
+    return jwt.verify(token, JWT_SECRET).id;
+  } catch {
+    return req.session?.userId || 1;
+  }
+}
 
 // Отримати всі обрані рецепти користувача
 router.get("/", (req, res) => {
-  const userId = req.session?.userId || 1; // тестово 1
+  const userId = getUserId(req);
 
   try {
     const rows = db
@@ -35,7 +56,7 @@ router.get("/", (req, res) => {
 
 // Додати/видалити рецепт з обраного (toggle)
 router.post("/", (req, res) => {
-  const userId = req.session?.userId || 1; // тестово
+  const userId = getUserId(req);
   const { recipeId } = req.body;
 
   if (!recipeId) {
@@ -43,6 +64,14 @@ router.post("/", (req, res) => {
   }
 
   try {
+    const recipe = db
+      .prepare("SELECT id FROM recipes WHERE id = ?")
+      .get(recipeId);
+
+    if (!recipe) {
+      return res.status(404).json({ error: "Рецепт не знайдено" });
+    }
+
     const exists = db
       .prepare("SELECT id FROM favorites WHERE user_id = ? AND recipe_id = ?")
       .get(userId, recipeId);

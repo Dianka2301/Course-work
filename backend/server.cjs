@@ -9,7 +9,7 @@ const multer = require("multer");
 const authRoutes = require("./auth.cjs");
 const favoritesRoutes = require("./favorites.cjs");
 const profileRoutes = require("./profile.cjs"); // 🔥 FIX: ДОДАНО
-const { generateRecipesFromAI } = require("./gemini.cjs");
+const { generateRecipesFromAI, analyzeRecipeWithAI } = require("./gemini.cjs");
 const db = require("./db.cjs");
 
 //dotenv.config({ path: path.join(__dirname, "../.env") });
@@ -40,6 +40,22 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const jwt = require("jsonwebtoken");
+const JWT_SECRET = process.env.JWT_SECRET || "secret_key";
+
+function getUserIdFromRequest(req) {
+  const bodyUserId = req.body?.userId;
+  if (bodyUserId) return bodyUserId;
+
+  const authHeader = req.headers.authorization;
+  if (!authHeader) return null;
+
+  try {
+    const token = authHeader.replace("Bearer ", "");
+    return jwt.verify(token, JWT_SECRET).id;
+  } catch {
+    return null;
+  }
+}
 
 function authMiddleware(req, res, next) {
   const authHeader = req.headers.authorization;
@@ -51,12 +67,37 @@ function authMiddleware(req, res, next) {
   const token = authHeader.replace("Bearer ", "");
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, JWT_SECRET);
     req.user = decoded;
     next();
   } catch (err) {
     return res.status(401).json({ error: "Invalid token" });
   }
+}
+
+function adminMiddleware(req, res, next) {
+  authMiddleware(req, res, () => {
+    if (req.user?.role !== "admin") {
+      return res.status(403).json({ error: "Admin access required" });
+    }
+
+    next();
+  });
+}
+
+function mapRecipe(row) {
+  if (!row) return row;
+
+  return {
+    ...row,
+    is_private: row.is_public === 1 ? 0 : 1,
+    authorName:
+      [row.first_name, row.last_name].filter(Boolean).join(" ") ||
+      "Автор рецепта",
+    authorAvatar: row.avatar
+      ? `http://localhost:4000/uploads/${row.avatar}`
+      : null,
+  };
 }
 
 /* ------------------ STATIC ------------------ */
@@ -81,7 +122,7 @@ app.get("/api/health", (req, res) => {
 });
 
 /* ------------------ RECIPES ------------------ */
-app.get("/api/recipes", (req, res) => {
+/*app.get("/api/recipes", (req, res) => {
   try {
     const recipes = db
       .prepare(
@@ -102,6 +143,144 @@ app.get("/api/recipes", (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Помилка при отриманні рецептів" });
+  }
+});*/
+app.get("/api/recipes", (req, res) => {
+  try {
+    const { category = "all", sort = "new" } = req.query;
+
+    let query = `
+      SELECT 
+        r.*,
+        u.first_name,
+        u.last_name,
+        u.avatar,
+        ROUND(AVG(c.rating), 1) as rating,
+        COUNT(c.rating) as rating_count
+      FROM recipes r
+      LEFT JOIN users u ON u.id = r.user_id
+      LEFT JOIN comments c ON r.id = c.recipe_id
+    `;
+
+    const params = [];
+    const filters = ["r.is_public = 1", "r.status = 'approved'"];
+
+    if (category && category !== "all") {
+      filters.push("r.category = ?");
+      params.push(category);
+    }
+
+    query += ` WHERE ${filters.join(" AND ")} `;
+    query += ` GROUP BY r.id `;
+
+    if (sort === "rating") {
+      query += ` ORDER BY rating DESC NULLS LAST `;
+    } else {
+      query += ` ORDER BY r.created_at DESC `;
+    }
+
+    const recipes = db.prepare(query).all(...params).map(mapRecipe);
+
+    res.json(recipes);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Помилка при отриманні рецептів" });
+  }
+});
+
+app.get("/api/recipes/:id", (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const recipe = db
+      .prepare(
+        `
+        SELECT 
+          r.*,
+          u.first_name,
+          u.last_name,
+          u.avatar,
+          ROUND(AVG(rt.rating), 1) as rating,
+          COUNT(rt.rating) as rating_count
+        FROM recipes r
+        LEFT JOIN users u ON u.id = r.user_id
+        LEFT JOIN ratings rt ON rt.recipe_id = r.id
+        WHERE r.id = ?
+        GROUP BY r.id
+      `,
+      )
+      .get(id);
+
+    if (!recipe) {
+      return res.status(404).json({ error: "Рецепт не знайдено" });
+    }
+
+    res.json(mapRecipe(recipe));
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Помилка отримання рецепта" });
+  }
+});
+
+app.get("/api/recipes/:id/similar", (req, res) => {
+  try {
+    const { id } = req.params;
+    const recipe = db.prepare("SELECT * FROM recipes WHERE id = ?").get(id);
+
+    if (!recipe) {
+      return res.status(404).json({ error: "Рецепт не знайдено" });
+    }
+
+    const sourceIngredients = new Set(
+      (recipe.ingredients || "")
+        .toLowerCase()
+        .split(/[\n,.;]+/)
+        .map((item) => item.trim())
+        .filter((item) => item.length > 2),
+    );
+
+    const candidates = db
+      .prepare(
+        `
+        SELECT r.*, u.first_name, u.last_name, u.avatar
+        FROM recipes r
+        LEFT JOIN users u ON u.id = r.user_id
+        WHERE r.id != ?
+          AND r.is_public = 1
+          AND r.status = 'approved'
+      `,
+      )
+      .all(id);
+
+    const similar = candidates
+      .map((candidate) => {
+        const ingredients = (candidate.ingredients || "")
+          .toLowerCase()
+          .split(/[\n,.;]+/)
+          .map((item) => item.trim())
+          .filter((item) => item.length > 2);
+
+        const shared = ingredients.filter((item) =>
+          Array.from(sourceIngredients).some(
+            (source) => source.includes(item) || item.includes(source),
+          ),
+        );
+
+        const categoryScore = candidate.category === recipe.category ? 1 : 0;
+
+        return {
+          ...mapRecipe(candidate),
+          shared_count: shared.length + categoryScore,
+        };
+      })
+      .filter((candidate) => candidate.shared_count > 0)
+      .sort((a, b) => b.shared_count - a.shared_count)
+      .slice(0, 4);
+
+    res.json(similar);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Помилка отримання схожих рецептів" });
   }
 });
 
@@ -129,7 +308,7 @@ app.post("/api/recipes/generate", authMiddleware, async (req, res) => {
     if (userId) {
       db.prepare(
         `
-        INSERT INTO ai_history (user_id, ingredients, recipes)
+        INSERT INTO ai_history (user_id, ingredients, recipes_json)
         VALUES (?, ?, ?)
       `,
       ).run(userId, JSON.stringify(ingredients), JSON.stringify(aiRecipes));
@@ -164,7 +343,7 @@ app.get("/api/ai-history", authMiddleware, (req, res) => {
        const parsed = rows.map((r) => ({
          ...r,
          ingredients: JSON.parse(r.ingredients),
-         recipes: JSON.parse(r.recipes),
+         recipes: JSON.parse(r.recipes_json),
        }));
 
 
@@ -178,26 +357,128 @@ app.get("/api/ai-history", authMiddleware, (req, res) => {
   }
 });
 
-app.post("/api/recipes/:id/comments", (req, res) => {
+app.get("/api/recipes/:id/comments", (req, res) => {
   try {
-    const { text, rating, userId } = req.body;
     const { id } = req.params;
 
-    //const userId = req.session?.userId; // 🔥 ось тут
+    const rows = db
+      .prepare(
+        `
+        SELECT
+          c.*,
+          u.first_name,
+          u.last_name,
+          u.avatar
+        FROM comments c
+        LEFT JOIN users u ON u.id = c.user_id
+        WHERE c.recipe_id = ?
+        ORDER BY c.created_at DESC
+      `,
+      )
+      .all(id);
+
+    const comments = rows.map((comment) => ({
+        ...comment,
+        userName:
+          [comment.first_name, comment.last_name].filter(Boolean).join(" ") ||
+          "Користувач",
+        avatar: comment.avatar
+          ? `http://localhost:4000/uploads/${comment.avatar}`
+          : null,
+        replies: [],
+      }));
+
+    const byId = new Map(comments.map((comment) => [comment.id, comment]));
+    const nested = [];
+
+    comments.forEach((comment) => {
+      if (comment.parent_id && byId.has(comment.parent_id)) {
+        byId.get(comment.parent_id).replies.push(comment);
+      } else {
+        nested.push(comment);
+      }
+    });
+
+    res.json(nested);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Помилка отримання коментарів" });
+  }
+});
+
+app.post("/api/recipes/:id/comments", (req, res) => {
+  try {
+    const { text, rating, parentId } = req.body;
+    const userId = getUserIdFromRequest(req);
+    const { id } = req.params;
 
     if (!userId) {
       return res.status(401).json({ error: "Не авторизований" });
     }
 
+    if (!text?.trim()) {
+      return res.status(400).json({ error: "Коментар не може бути порожнім" });
+    }
+
+    if (parentId) {
+      const parent = db
+        .prepare("SELECT id FROM comments WHERE id = ? AND recipe_id = ?")
+        .get(parentId, id);
+
+      if (!parent) {
+        return res.status(404).json({ error: "Коментар не знайдено" });
+      }
+    }
+
     db.prepare(
-      `INSERT INTO comments (user_id, recipe_id, text, rating)
-       VALUES (?, ?, ?, ?)`,
-    ).run(userId, id, text, rating);
+      `INSERT INTO comments (user_id, recipe_id, parent_id, text, rating)
+       VALUES (?, ?, ?, ?, ?)`,
+    ).run(userId, id, parentId || null, text, parentId ? null : rating || null);
 
     res.json({ success: true });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Comment error" });
+  }
+});
+
+app.post("/api/recipes/:id/rating", (req, res) => {
+  try {
+    const { id } = req.params;
+    const { rating } = req.body;
+    const userId = getUserIdFromRequest(req);
+
+    if (!userId) {
+      return res.status(401).json({ error: "Не авторизований" });
+    }
+
+    if (!rating || rating < 1 || rating > 5) {
+      return res.status(400).json({ error: "Рейтинг має бути від 1 до 5" });
+    }
+
+    db.prepare(
+      `
+      INSERT INTO ratings (user_id, recipe_id, rating)
+      VALUES (?, ?, ?)
+      ON CONFLICT(user_id, recipe_id)
+      DO UPDATE SET rating = excluded.rating, created_at = CURRENT_TIMESTAMP
+    `,
+    ).run(userId, id, rating);
+
+    const summary = db
+      .prepare(
+        `
+        SELECT ROUND(AVG(rating), 1) as rating, COUNT(rating) as rating_count
+        FROM ratings
+        WHERE recipe_id = ?
+      `,
+      )
+      .get(id);
+
+    res.json({ success: true, ...summary });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Помилка оновлення рейтингу" });
   }
 });
 
@@ -215,7 +496,8 @@ app.get("/api/my-recipes", authMiddleware, (req, res) => {
     const recipes = db
       .prepare(
         `
-        SELECT *
+        SELECT *,
+          CASE WHEN is_public = 1 THEN 0 ELSE 1 END as is_private
         FROM recipes
         WHERE user_id = ?
         ORDER BY created_at DESC
@@ -249,7 +531,18 @@ app.get("/api/my-recipes", authMiddleware, (req, res) => {
 /* ------------------ CREATE MY RECIPE ------------------ */
 app.post("/api/my-recipes", authMiddleware, (req, res) => {
   try {
-    const { title, ingredients, steps, is_private, image } = req.body;
+    const {
+      title,
+      description,
+      ingredients,
+      steps,
+      is_private,
+      image,
+      category,
+      portions,
+      prep_time,
+      difficulty,
+    } = req.body;
 
     const userId = req.user?.id;
 
@@ -261,22 +554,48 @@ app.post("/api/my-recipes", authMiddleware, (req, res) => {
       return res.status(400).json({ error: "Назва обовʼязкова" });
     }
 
+    const isPublic = is_private ? 0 : 1;
+    const status = isPublic ? "pending" : "private";
+
     const result = db
       .prepare(
         `
-        INSERT INTO recipes (title, ingredients, steps, is_private, image, user_id, created_at)
-        VALUES (?, ?, ?, ?, ?, ?, datetime('now'))
-      `,
+      INSERT INTO recipes (
+        title, description, ingredients, steps, portions, prep_time, difficulty,
+        image, category, is_public, user_id, status, created_at
       )
-      .run(title, ingredients, steps, is_private, image, userId);
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
+    `,
+      )
+      .run(
+        title,
+        description || "",
+        ingredients,
+        steps,
+        portions || null,
+        prep_time || null,
+        difficulty || "easy",
+        image || null,
+        category || "Сніданки",
+        isPublic,
+        userId,
+        status,
+      );
 
     res.json({
       id: result.lastInsertRowid,
       title,
+      description: description || "",
       ingredients,
       steps,
-      is_private,
+      is_private: isPublic ? 0 : 1,
+      is_public: isPublic,
       image,
+      category: category || "Сніданки",
+      portions: portions || null,
+      prep_time: prep_time || null,
+      difficulty: difficulty || "easy",
+      status,
     });
   } catch (err) {
     console.error(err);
@@ -284,18 +603,100 @@ app.post("/api/my-recipes", authMiddleware, (req, res) => {
   }
 });
 
-app.put("/api/my-recipes/:id", authMiddleware, (req, res) => {
+app.post("/api/my-recipes/:id/publish", authMiddleware, (req, res) => {
   try {
     const { id } = req.params;
-    const { title, ingredients, steps, is_private, image } = req.body;
+    const userId = req.user?.id;
+
+    const recipe = db
+      .prepare("SELECT id, status FROM recipes WHERE id = ? AND user_id = ?")
+      .get(id, userId);
+
+    if (!recipe) {
+      return res.status(404).json({ error: "Рецепт не знайдено" });
+    }
+
+    if (recipe.status === "approved") {
+      return res.status(400).json({ error: "Рецепт уже опублікований" });
+    }
 
     db.prepare(
       `
       UPDATE recipes
-      SET title = ?, ingredients = ?, steps = ?, is_private = ?, image = ?
-      WHERE id = ?
+      SET status = 'pending',
+          is_public = 0,
+          updated_at = datetime('now')
+      WHERE id = ? AND user_id = ?
     `,
-    ).run(title, ingredients, steps, is_private, image, id);
+    ).run(id, userId);
+
+    res.json({ success: true, status: "pending" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Помилка подання рецепта на публікацію" });
+  }
+});
+
+app.put("/api/my-recipes/:id", authMiddleware, (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      title,
+      description,
+      ingredients,
+      steps,
+      is_private,
+      image,
+      category,
+      portions,
+      prep_time,
+      difficulty,
+    } = req.body;
+
+    const userId = req.user?.id;
+    const recipe = db
+      .prepare("SELECT id FROM recipes WHERE id = ? AND user_id = ?")
+      .get(id, userId);
+
+    if (!recipe) {
+      return res.status(404).json({ error: "Рецепт не знайдено" });
+    }
+
+    const isPublic = is_private ? 0 : 1;
+    const status = isPublic ? "pending" : "private";
+
+    db.prepare(
+      `
+      UPDATE recipes
+      SET title = ?,
+          description = ?,
+          ingredients = ?,
+          steps = ?,
+          portions = ?,
+          prep_time = ?,
+          difficulty = ?,
+          image = ?,
+          category = ?,
+          is_public = ?,
+          status = ?,
+          updated_at = datetime('now')
+      WHERE id = ? AND user_id = ?
+    `,
+    ).run(
+      title,
+      description || "",
+      ingredients,
+      steps,
+      portions || null,
+      prep_time || null,
+      difficulty || "easy",
+      image || null,
+      category || "Сніданки",
+      isPublic,
+      status,
+      id,
+      userId,
+    );
 
     res.json({ success: true });
   } catch (err) {
@@ -306,12 +707,176 @@ app.put("/api/my-recipes/:id", authMiddleware, (req, res) => {
 app.delete("/api/my-recipes/:id", authMiddleware, (req, res) => {
   try {
     const { id } = req.params;
+    const userId = req.user?.id;
 
-    db.prepare("DELETE FROM recipes WHERE id = ?").run(id);
+    const result = db
+      .prepare("DELETE FROM recipes WHERE id = ? AND user_id = ?")
+      .run(id, userId);
+
+    if (result.changes === 0) {
+      return res.status(404).json({ error: "Рецепт не знайдено" });
+    }
 
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: "Помилка видалення" });
+  }
+});
+
+/* ------------------ ADMIN MODERATION ------------------ */
+app.get("/api/admin/recipe-requests", adminMiddleware, (req, res) => {
+  try {
+    const rows = db
+      .prepare(
+        `
+        SELECT
+          r.id,
+          r.user_id,
+          r.title,
+          r.category,
+          r.status,
+          r.created_at,
+          r.updated_at,
+          r.ai_score,
+          u.first_name,
+          u.last_name
+        FROM recipes r
+        LEFT JOIN users u ON u.id = r.user_id
+        WHERE r.status IN ('pending', 'rejected', 'approved')
+        ORDER BY
+          CASE r.status WHEN 'pending' THEN 0 WHEN 'rejected' THEN 1 ELSE 2 END,
+          COALESCE(r.updated_at, r.created_at) DESC
+      `,
+      )
+      .all()
+      .map(mapRecipe);
+
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Помилка отримання заявок" });
+  }
+});
+
+app.get("/api/admin/recipe-requests/:id", adminMiddleware, (req, res) => {
+  try {
+    const { id } = req.params;
+    const recipe = db
+      .prepare(
+        `
+        SELECT r.*, u.first_name, u.last_name, u.avatar
+        FROM recipes r
+        LEFT JOIN users u ON u.id = r.user_id
+        WHERE r.id = ?
+      `,
+      )
+      .get(id);
+
+    if (!recipe) {
+      return res.status(404).json({ error: "Рецепт не знайдено" });
+    }
+
+    res.json(mapRecipe(recipe));
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Помилка отримання заявки" });
+  }
+});
+
+app.post("/api/admin/recipe-requests/:id/analyze", adminMiddleware, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const recipe = db.prepare("SELECT * FROM recipes WHERE id = ?").get(id);
+
+    if (!recipe) {
+      return res.status(404).json({ error: "Рецепт не знайдено" });
+    }
+
+    const analysis = await analyzeRecipeWithAI(recipe);
+    const score = Number(analysis.score) || null;
+    const confidence = Number(analysis.confidence) || null;
+    const flags = Array.isArray(analysis.flags) ? analysis.flags : [];
+
+    db.prepare(
+      `
+      UPDATE recipes
+      SET ai_score = ?,
+          ai_review = ?,
+          ai_confidence = ?,
+          ai_flags = ?,
+          updated_at = datetime('now')
+      WHERE id = ?
+    `,
+    ).run(
+      score,
+      analysis.review || "",
+      confidence,
+      JSON.stringify(flags),
+      id,
+    );
+
+    res.json({
+      score,
+      review: analysis.review || "",
+      confidence,
+      flags,
+      recommendation: analysis.recommendation || null,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Помилка AI-аналізу рецепта" });
+  }
+});
+
+app.post("/api/admin/recipe-requests/:id/approve", adminMiddleware, (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = db
+      .prepare(
+        `
+        UPDATE recipes
+        SET status = 'approved',
+            is_public = 1,
+            updated_at = datetime('now')
+        WHERE id = ?
+      `,
+      )
+      .run(id);
+
+    if (result.changes === 0) {
+      return res.status(404).json({ error: "Рецепт не знайдено" });
+    }
+
+    res.json({ success: true, status: "approved" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Помилка схвалення рецепта" });
+  }
+});
+
+app.post("/api/admin/recipe-requests/:id/reject", adminMiddleware, (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = db
+      .prepare(
+        `
+        UPDATE recipes
+        SET status = 'rejected',
+            is_public = 0,
+            updated_at = datetime('now')
+        WHERE id = ?
+      `,
+      )
+      .run(id);
+
+    if (result.changes === 0) {
+      return res.status(404).json({ error: "Рецепт не знайдено" });
+    }
+
+    res.json({ success: true, status: "rejected" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Помилка відхилення рецепта" });
   }
 });
 
