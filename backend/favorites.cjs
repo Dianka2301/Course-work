@@ -33,10 +33,14 @@ router.get("/", (req, res) => {
         `
       SELECT 
       r.*,
+      u.first_name,
+      u.last_name,
+      u.avatar,
       ROUND(AVG(rt.rating), 1) as rating,
       COUNT(rt.rating) as rating_count
       FROM favorites f
       JOIN recipes r ON r.id = f.recipe_id
+      LEFT JOIN users u ON u.id = r.user_id
       LEFT JOIN ratings rt ON r.id = rt.recipe_id
       WHERE f.user_id = ?
       GROUP BY r.id
@@ -46,7 +50,16 @@ router.get("/", (req, res) => {
       .all(userId);
 
     // Повертаємо масив (може бути пустий)
-    res.json(Array.isArray(rows) ? rows : []);
+    res.json(
+      Array.isArray(rows)
+        ? rows.map((row) => ({
+            ...row,
+            authorName:
+              [row.first_name, row.last_name].filter(Boolean).join(" ") ||
+              "Автор рецепта",
+          }))
+        : [],
+    );
   } catch (err) {
     console.error(err);
     // Повертаємо порожній масив замість помилки

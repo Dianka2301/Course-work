@@ -630,6 +630,13 @@ app.post("/api/my-recipes/:id/publish", authMiddleware, (req, res) => {
     `,
     ).run(id, userId);
 
+    db.prepare(
+      `
+      INSERT INTO notifications (user_id, type, message, related_recipe_id)
+      VALUES (?, ?, ?, ?)
+    `,
+    ).run(userId, "recipe_pending", "Ваш рецепт надіслано на перевірку адміну", id);
+
     res.json({ success: true, status: "pending" });
   } catch (err) {
     console.error(err);
@@ -662,8 +669,12 @@ app.put("/api/my-recipes/:id", authMiddleware, (req, res) => {
       return res.status(404).json({ error: "Рецепт не знайдено" });
     }
 
-    const isPublic = is_private ? 0 : 1;
-    const status = isPublic ? "pending" : "private";
+    const currentRecipe = db
+      .prepare("SELECT status, is_public FROM recipes WHERE id = ? AND user_id = ?")
+      .get(id, userId);
+    const isApproved = currentRecipe?.status === "approved";
+    const isPublic = isApproved ? 1 : is_private ? 0 : 1;
+    const status = isApproved ? "approved" : isPublic ? "pending" : "private";
 
     db.prepare(
       `
@@ -831,6 +842,12 @@ app.post("/api/admin/recipe-requests/:id/analyze", adminMiddleware, async (req, 
 app.post("/api/admin/recipe-requests/:id/approve", adminMiddleware, (req, res) => {
   try {
     const { id } = req.params;
+    const recipe = db.prepare("SELECT user_id, title FROM recipes WHERE id = ?").get(id);
+
+    if (!recipe) {
+      return res.status(404).json({ error: "Рецепт не знайдено" });
+    }
+
     const result = db
       .prepare(
         `
@@ -843,9 +860,12 @@ app.post("/api/admin/recipe-requests/:id/approve", adminMiddleware, (req, res) =
       )
       .run(id);
 
-    if (result.changes === 0) {
-      return res.status(404).json({ error: "Рецепт не знайдено" });
-    }
+    db.prepare(
+      `
+      INSERT INTO notifications (user_id, type, message, related_recipe_id)
+      VALUES (?, ?, ?, ?)
+    `,
+    ).run(recipe.user_id, "recipe_approved", `Рецепт "${recipe.title}" схвалено та опубліковано`, id);
 
     res.json({ success: true, status: "approved" });
   } catch (err) {
@@ -857,6 +877,12 @@ app.post("/api/admin/recipe-requests/:id/approve", adminMiddleware, (req, res) =
 app.post("/api/admin/recipe-requests/:id/reject", adminMiddleware, (req, res) => {
   try {
     const { id } = req.params;
+    const recipe = db.prepare("SELECT user_id, title FROM recipes WHERE id = ?").get(id);
+
+    if (!recipe) {
+      return res.status(404).json({ error: "Рецепт не знайдено" });
+    }
+
     const result = db
       .prepare(
         `
@@ -869,14 +895,165 @@ app.post("/api/admin/recipe-requests/:id/reject", adminMiddleware, (req, res) =>
       )
       .run(id);
 
-    if (result.changes === 0) {
-      return res.status(404).json({ error: "Рецепт не знайдено" });
-    }
+    db.prepare(
+      `
+      INSERT INTO notifications (user_id, type, message, related_recipe_id)
+      VALUES (?, ?, ?, ?)
+    `,
+    ).run(recipe.user_id, "recipe_rejected", `Рецепт "${recipe.title}" відхилено адміністратором`, id);
 
     res.json({ success: true, status: "rejected" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Помилка відхилення рецепта" });
+  }
+});
+
+app.put("/api/admin/recipes/:id", adminMiddleware, (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      title,
+      description,
+      ingredients,
+      steps,
+      category,
+      portions,
+      prep_time,
+      difficulty,
+      image,
+    } = req.body;
+
+    const result = db
+      .prepare(
+        `
+        UPDATE recipes
+        SET title = ?,
+            description = ?,
+            ingredients = ?,
+            steps = ?,
+            category = ?,
+            portions = ?,
+            prep_time = ?,
+            difficulty = ?,
+            image = ?,
+            updated_at = datetime('now')
+        WHERE id = ?
+      `,
+      )
+      .run(
+        title,
+        description || "",
+        ingredients,
+        steps,
+        category || "Сніданки",
+        portions || null,
+        prep_time || null,
+        difficulty || "easy",
+        image || null,
+        id,
+      );
+
+    if (result.changes === 0) {
+      return res.status(404).json({ error: "Рецепт не знайдено" });
+    }
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Помилка оновлення рецепта" });
+  }
+});
+
+/* ------------------ NOTIFICATIONS ------------------ */
+app.get("/api/notifications", authMiddleware, (req, res) => {
+  try {
+    const rows = db
+      .prepare(
+        `
+        SELECT *
+        FROM notifications
+        WHERE user_id = ?
+        ORDER BY created_at DESC
+      `,
+      )
+      .all(req.user.id);
+
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Помилка отримання сповіщень" });
+  }
+});
+
+app.get("/api/notifications/unread-count", authMiddleware, (req, res) => {
+  try {
+    const row = db
+      .prepare(
+        `
+        SELECT COUNT(*) as count
+        FROM notifications
+        WHERE user_id = ? AND is_read = 0
+      `,
+      )
+      .get(req.user.id);
+
+    res.json({ count: row.count });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Помилка отримання кількості сповіщень" });
+  }
+});
+
+app.patch("/api/notifications/:id/read", authMiddleware, (req, res) => {
+  try {
+    db.prepare(
+      `
+      UPDATE notifications
+      SET is_read = 1
+      WHERE id = ? AND user_id = ?
+    `,
+    ).run(req.params.id, req.user.id);
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Помилка оновлення сповіщення" });
+  }
+});
+
+app.patch("/api/notifications/read-all", authMiddleware, (req, res) => {
+  try {
+    db.prepare("UPDATE notifications SET is_read = 1 WHERE user_id = ?").run(
+      req.user.id,
+    );
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Помилка оновлення сповіщень" });
+  }
+});
+
+app.delete("/api/notifications/:id", authMiddleware, (req, res) => {
+  try {
+    db.prepare("DELETE FROM notifications WHERE id = ? AND user_id = ?").run(
+      req.params.id,
+      req.user.id,
+    );
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Помилка видалення сповіщення" });
+  }
+});
+
+app.delete("/api/notifications", authMiddleware, (req, res) => {
+  try {
+    db.prepare("DELETE FROM notifications WHERE user_id = ?").run(req.user.id);
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Помилка видалення сповіщень" });
   }
 });
 

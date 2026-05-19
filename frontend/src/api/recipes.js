@@ -212,6 +212,80 @@ export async function rejectAdminRecipe(id) {
   return res.json();
 }
 
+export async function updateAdminRecipe(id, data) {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${API_URL}/admin/recipes/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!res.ok) throw new Error("Не вдалося оновити рецепт");
+  return res.json();
+}
+
+export async function fetchNotifications() {
+  const token = localStorage.getItem("token");
+  const res = await fetch(`${API_URL}/notifications`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) throw new Error("Не вдалося завантажити сповіщення");
+  return res.json();
+}
+
+export async function fetchUnreadNotificationsCount() {
+  const token = localStorage.getItem("token");
+  const res = await fetch(`${API_URL}/notifications/unread-count`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) return { count: 0 };
+  return res.json();
+}
+
+export async function markNotificationRead(id) {
+  const token = localStorage.getItem("token");
+  const res = await fetch(`${API_URL}/notifications/${id}/read`, {
+    method: "PATCH",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) throw new Error("Не вдалося прочитати сповіщення");
+  return res.json();
+}
+
+export async function markAllNotificationsRead() {
+  const token = localStorage.getItem("token");
+  const res = await fetch(`${API_URL}/notifications/read-all`, {
+    method: "PATCH",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) throw new Error("Не вдалося прочитати всі сповіщення");
+  return res.json();
+}
+
+export async function deleteNotification(id) {
+  const token = localStorage.getItem("token");
+  const res = await fetch(`${API_URL}/notifications/${id}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) throw new Error("Не вдалося видалити сповіщення");
+  return res.json();
+}
+
+export async function deleteAllNotifications() {
+  const token = localStorage.getItem("token");
+  const res = await fetch(`${API_URL}/notifications`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) throw new Error("Не вдалося видалити всі сповіщення");
+  return res.json();
+}
+
 /* ------------------ AI GENERATION (SECURE) ------------------ */
 export async function generateAIRecipes(ingredients) {
   const token = localStorage.getItem("token"); 

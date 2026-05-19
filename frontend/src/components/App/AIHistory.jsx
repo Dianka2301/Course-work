@@ -2,7 +2,35 @@ import React, { useEffect, useState } from "react";
 import { fetchAIHistory } from "../../api/recipes";
 import "./AIHistory.css";
 
-export default function AIHistory() {
+function MacroPanel({ recipe }) {
+  return (
+    <div className="macro-panel">
+      <div className="calorie-ring">
+        <span>{recipe.calories || "-"}</span>
+        <small>ккал</small>
+      </div>
+      <div className="macro-bars">
+        <div>
+          <b>{recipe.macros?.p || "-"}</b>
+          <span>білки</span>
+          <i className="protein"></i>
+        </div>
+        <div>
+          <b>{recipe.macros?.f || "-"}</b>
+          <span>жири</span>
+          <i className="fat"></i>
+        </div>
+        <div>
+          <b>{recipe.macros?.c || "-"}</b>
+          <span>вуглеводи</span>
+          <i className="carbs"></i>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function AIHistory({ onBack }) {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -23,6 +51,11 @@ export default function AIHistory() {
 
   return (
     <div className="ai-history-container">
+      {onBack && (
+        <button className="back-btn" onClick={onBack}>
+          ← Назад
+        </button>
+      )}
       <h2 className="ai-history-title">Історія AI рецептів</h2>
 
       {loading ? (
@@ -54,9 +87,7 @@ export default function AIHistory() {
 
                     <p>{recipe.description}</p>
 
-                    <div className="ai-history-macros">
-                      🔥 {recipe.calories}
-                    </div>
+                    <MacroPanel recipe={recipe} />
 
                     <ul>
                       {recipe.steps?.slice(0, 3).map((step, i) => (

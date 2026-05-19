@@ -1,16 +1,13 @@
 import React, { useState } from "react";
 import { generateAIRecipes } from "../../api/recipes"; // Шлях до вашого api файлу
 import "./AIGenerator.css";
-import { useNavigate } from "react-router-dom";
-import AIHistory from "./AIHistory.jsx";
 
-export default function AIGenerator() {
+export default function AIGenerator({ onOpenHistory }) {
   const [ingredients, setIngredients] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [showHistory, setShowHistory] = useState(false);
 
   // Додавання інгредієнта в список
   const addIngredient = () => {
@@ -98,14 +95,9 @@ export default function AIGenerator() {
           </div>
         </div>
       </div>
-      <button
-        className="history-btn"
-        onClick={() => setShowHistory(!showHistory)}
-      >
-        {showHistory ? "Сховати історію" : "Історія генерацій"}
+      <button className="history-btn" onClick={onOpenHistory}>
+        Історія генерацій
       </button>
-
-      {showHistory && <AIHistory />}
 
       <div className="results-section">
         <h2 className="results-title">Рецепти</h2>

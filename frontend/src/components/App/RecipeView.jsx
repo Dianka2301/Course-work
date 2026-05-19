@@ -21,6 +21,14 @@ function avatarSrc(avatar) {
   return `${BASE_URL}/uploads/${avatar}`;
 }
 
+function parseFlags(flags) {
+  try {
+    return JSON.parse(flags || "[]");
+  } catch {
+    return [];
+  }
+}
+
 export default function RecipeView({ recipe, user, onBack, onOpenRecipe }) {
   const [details, setDetails] = useState(recipe);
   const [comments, setComments] = useState([]);
@@ -32,6 +40,8 @@ export default function RecipeView({ recipe, user, onBack, onOpenRecipe }) {
   const [activeReply, setActiveReply] = useState(null);
   const [avgRating, setAvgRating] = useState(recipe.rating || 0);
   const [publishing, setPublishing] = useState(false);
+  const [smartSortComments, setSmartSortComments] = useState(false);
+  const [showAiReview, setShowAiReview] = useState(false);
 
   useEffect(() => {
     loadRecipe();
@@ -133,10 +143,43 @@ export default function RecipeView({ recipe, user, onBack, onOpenRecipe }) {
         .split("\n")
         .filter(Boolean);
 
+  const commentRelevance = (comment) => {
+    const text = `${comment.text || ""}`.toLowerCase();
+    const recipeWords = `${details.ingredients || ""} ${details.steps || ""}`
+      .toLowerCase()
+      .split(/[\s,.;:!?()]+/)
+      .filter((word) => word.length > 3);
+    const kitchenWords = [
+      "інгредієнт",
+      "температур",
+      "градус",
+      "духов",
+      "сіль",
+      "цукор",
+      "борош",
+      "соус",
+      "варити",
+      "смаж",
+      "запік",
+      "хв",
+      "час",
+      "порц",
+    ];
+
+    return (
+      kitchenWords.filter((word) => text.includes(word)).length * 3 +
+      recipeWords.filter((word) => text.includes(word)).length
+    );
+  };
+
+  const visibleComments = smartSortComments
+    ? [...comments].sort((a, b) => commentRelevance(b) - commentRelevance(a))
+    : comments;
+
   return (
     <div className="recipe-view">
       <button className="back-btn" onClick={onBack}>
-        Назад
+        ← Назад
       </button>
 
       <div className="recipe-layout">
@@ -172,26 +215,39 @@ export default function RecipeView({ recipe, user, onBack, onOpenRecipe }) {
           )}
 
           <div className="recipe-meta-grid">
-            <span>{details.prep_time || "Час не вказано"}</span>
-            <span>{details.portions ? `${details.portions} порц.` : "Порції не вказано"}</span>
-            <span>{details.difficulty || "easy"}</span>
+            <span>
+              <img src="/images/time.png" alt="" />
+              {details.prep_time || "Час не вказано"}
+            </span>
+            <span>
+              <img src="/images/portion.png" alt="" />
+              {details.portions
+                ? `${details.portions} порц.`
+                : "Порції не вказано"}
+            </span>
+            <span>
+              <img src="/images/cookware.png" alt="" />
+              {details.difficulty || "easy"}
+            </span>
           </div>
 
-          <div className="rating-box">
-            <div className="stars">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <span key={star} className="star">
-                  {star <= Math.round(avgRating) ? "★" : "☆"}
-                </span>
-              ))}
-            </div>
+          {Number(avgRating) > 0 && (
+            <div className="rating-box">
+              <div className="stars">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <span key={star} className="star">
+                    {star <= Math.round(avgRating) ? "★" : "☆"}
+                  </span>
+                ))}
+              </div>
 
-            <div className="avg-rating">
-              <h4>
-                Рейтинг: <b>{avgRating}/5</b>
-              </h4>
+              <div className="avg-rating">
+                <h4>
+                  Рейтинг: <b>{avgRating}/5</b>
+                </h4>
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         <div className="recipe-right">
@@ -225,6 +281,29 @@ export default function RecipeView({ recipe, user, onBack, onOpenRecipe }) {
         </div>
       </div>
 
+      {details.ai_review && (
+        <div className="public-ai-review">
+          <button onClick={() => setShowAiReview((prev) => !prev)}>
+            {showAiReview ? "Згорнути AI-аналіз" : "Розгорнути AI-аналіз"}
+          </button>
+          {showAiReview && (
+            <div className="public-ai-review-body">
+              {details.ai_score && (
+                <strong>AI оцінка: {details.ai_score}/5</strong>
+              )}
+              <p>{details.ai_review}</p>
+              {details.ai_flags && (
+                <div className="ai-flags">
+                  {parseFlags(details.ai_flags).map((flag, index) => (
+                    <span key={index}>{flag}</span>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
       {similar.length > 0 && (
         <div className="similar-recipes">
           <h4>Схожі рецепти</h4>
@@ -244,10 +323,22 @@ export default function RecipeView({ recipe, user, onBack, onOpenRecipe }) {
       )}
 
       <div className="comments">
-        <h4>Коментарі</h4>
+        <div className="comments-head">
+          <h4>Коментарі</h4>
+          <button
+            className={
+              smartSortComments
+                ? "ai-comment-filter active"
+                : "ai-comment-filter"
+            }
+            onClick={() => setSmartSortComments((prev) => !prev)}
+          >
+            AI-фільтр
+          </button>
+        </div>
 
         <div className="comment-list">
-          {comments.map((c) => (
+          {visibleComments.map((c) => (
             <div key={c.id} className="comment">
               <div className="comment-top">
                 <img
@@ -276,7 +367,9 @@ export default function RecipeView({ recipe, user, onBack, onOpenRecipe }) {
 
               <button
                 className="reply-toggle"
-                onClick={() => setActiveReply(activeReply === c.id ? null : c.id)}
+                onClick={() =>
+                  setActiveReply(activeReply === c.id ? null : c.id)
+                }
               >
                 Відповісти
               </button>
@@ -293,7 +386,10 @@ export default function RecipeView({ recipe, user, onBack, onOpenRecipe }) {
                     }
                     placeholder="Написати відповідь..."
                   />
-                  <button onClick={() => handleAddReply(c.id)}>Reply</button>
+                  <button onClick={() => handleAddReply(c.id)}>
+                    <img src="/images/send.png" alt="send" />
+                    send
+                  </button>
                 </div>
               )}
 
@@ -344,7 +440,10 @@ export default function RecipeView({ recipe, user, onBack, onOpenRecipe }) {
             placeholder="Написати коментар..."
           />
 
-          <button onClick={handleAddComment}>Додати</button>
+          <button onClick={handleAddComment}>
+            <img src="/images/send.png" alt="send" />
+            send
+          </button>
         </div>
       </div>
     </div>

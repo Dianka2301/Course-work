@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
 import Favorites from "./Favorites.jsx";
 import AIGenerator from "./AIGenerator.jsx";
+import AIHistory from "./AIHistory.jsx";
 import RecipeWorkspace from "./RecipeWorkspace.jsx";
 import RecipeHistory from "./RecipeHistory.jsx";
 import Toolbar from "./Toolbar.jsx";
 import RecipeView from "./RecipeView.jsx";
 import Profile from "./Profile.jsx";
 import AdminModeration from "./AdminModeration.jsx";
-import { fetchRecipes } from "../../api/recipes";
+import Notifications from "./Notifications.jsx";
+import { fetchRecipes, fetchUnreadNotificationsCount } from "../../api/recipes";
 
 export default function AppLayout({ user, setUser, recipes, onLogout }) {
   const [page, setPage] = useState("catalog");
@@ -21,11 +23,16 @@ export default function AppLayout({ user, setUser, recipes, onLogout }) {
 
   const [loadingRecipes, setLoadingRecipes] = useState(false);
   const [serverRecipes, setServerRecipes] = useState(recipes || []);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   // 🔥 LOAD FROM SERVER (category + sort)
   useEffect(() => {
     loadRecipes();
   }, [category, sort]);
+
+  useEffect(() => {
+    loadUnreadCount();
+  }, [user?.id]);
 
   const loadRecipes = async () => {
     try {
@@ -39,6 +46,12 @@ export default function AppLayout({ user, setUser, recipes, onLogout }) {
     } finally {
       setLoadingRecipes(false);
     }
+  };
+
+  const loadUnreadCount = async () => {
+    if (!user || user.role === "admin") return;
+    const data = await fetchUnreadNotificationsCount();
+    setUnreadCount(data.count || 0);
   };
 
   // 🔥 NAVIGATION
@@ -94,13 +107,19 @@ export default function AppLayout({ user, setUser, recipes, onLogout }) {
         );
 
       case "ai":
-        return <AIGenerator />;
+        return <AIGenerator onOpenHistory={() => changePage("aiHistory")} />;
+
+      case "aiHistory":
+        return <AIHistory onBack={() => changePage("ai")} />;
 
       case "profile":
         return <Profile user={user} setUser={setUser} />;
 
       case "myRecipes":
         return <RecipeHistory />;
+
+      case "notifications":
+        return <Notifications onChanged={loadUnreadCount} />;
 
       case "admin":
         return <AdminModeration />;
@@ -137,11 +156,23 @@ export default function AppLayout({ user, setUser, recipes, onLogout }) {
           <button onClick={() => changePage("ai")}>AI рецепти</button>
         )}
         <button onClick={() => changePage("profile")}>Профіль</button>
+
         {user?.role !== "admin" && (
           <button onClick={() => changePage("myRecipes")}>Мої рецепти</button>
         )}
         {user?.role === "admin" && (
-          <button onClick={() => changePage("admin")}>Список рецептів на публікацію</button>
+          <button onClick={() => changePage("admin")}>
+            Список рецептів на публікацію
+          </button>
+        )}
+        {user?.role !== "admin" && (
+          <button
+            className="sidebar-notification-btn"
+            onClick={() => changePage("notifications")}
+          >
+            Сповіщення
+            {unreadCount > 0 && <span>{unreadCount}</span>}
+          </button>
         )}
 
         <div className="sidebar-footer">
@@ -158,6 +189,7 @@ export default function AppLayout({ user, setUser, recipes, onLogout }) {
           onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
           onLogout={onLogout}
           onBack={selectedRecipe ? goBack : null}
+          unreadCount={unreadCount}
         />
 
         {renderPage()}

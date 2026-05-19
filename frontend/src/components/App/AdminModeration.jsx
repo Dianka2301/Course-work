@@ -5,6 +5,7 @@ import {
   analyzeAdminRecipe,
   approveAdminRecipe,
   rejectAdminRecipe,
+  updateAdminRecipe,
 } from "../../api/recipes";
 
 const BASE_URL = "http://localhost:4000";
@@ -19,6 +20,7 @@ export default function AdminModeration() {
   const [requests, setRequests] = useState([]);
   const [selected, setSelected] = useState(null);
   const [analysis, setAnalysis] = useState(null);
+  const [editForm, setEditForm] = useState(null);
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState("");
 
@@ -48,6 +50,17 @@ export default function AdminModeration() {
     try {
       const data = await fetchAdminRecipeRequest(id);
       setSelected(data);
+      setEditForm({
+        title: data.title || "",
+        description: data.description || "",
+        category: data.category || "Сніданки",
+        prep_time: data.prep_time || "",
+        portions: data.portions || "",
+        difficulty: data.difficulty || "easy",
+        ingredients: data.ingredients || "",
+        steps: data.steps || "",
+        image: data.image || "",
+      });
       setAnalysis(
         data.ai_score
           ? {
@@ -99,6 +112,20 @@ export default function AdminModeration() {
     } catch (err) {
       console.error(err);
       showToast("Дію не виконано");
+    }
+  };
+
+  const handleAdminSave = async () => {
+    if (!selected || !editForm) return;
+
+    try {
+      await updateAdminRecipe(selected.id, editForm);
+      showToast("Рецепт оновлено");
+      openRequest(selected.id);
+      loadRequests();
+    } catch (err) {
+      console.error(err);
+      showToast("Не вдалося оновити рецепт");
     }
   };
 
@@ -160,8 +187,77 @@ export default function AdminModeration() {
         {selected && (
           <div className="admin-detail">
             <img src={imageSrc(selected.image)} alt={selected.title} />
-            <h3>{selected.title}</h3>
-            <p>{selected.description}</p>
+            <div className="admin-edit-form">
+              <label>Назва</label>
+              <input
+                value={editForm?.title || ""}
+                onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
+              />
+
+              <label>Опис</label>
+              <textarea
+                value={editForm?.description || ""}
+                onChange={(e) =>
+                  setEditForm({ ...editForm, description: e.target.value })
+                }
+              />
+
+              <div className="recipe-form-row">
+                <div>
+                  <label>Категорія</label>
+                  <input
+                    value={editForm?.category || ""}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, category: e.target.value })
+                    }
+                  />
+                </div>
+                <div>
+                  <label>Час</label>
+                  <input
+                    value={editForm?.prep_time || ""}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, prep_time: e.target.value })
+                    }
+                  />
+                </div>
+                <div>
+                  <label>Порції</label>
+                  <input
+                    value={editForm?.portions || ""}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, portions: e.target.value })
+                    }
+                  />
+                </div>
+              </div>
+
+              <label>Складність</label>
+              <select
+                value={editForm?.difficulty || "easy"}
+                onChange={(e) =>
+                  setEditForm({ ...editForm, difficulty: e.target.value })
+                }
+              >
+                <option value="easy">easy</option>
+                <option value="medium">medium</option>
+                <option value="hard">hard</option>
+              </select>
+
+              <label>Інгредієнти</label>
+              <textarea
+                value={editForm?.ingredients || ""}
+                onChange={(e) =>
+                  setEditForm({ ...editForm, ingredients: e.target.value })
+                }
+              />
+
+              <label>Кроки</label>
+              <textarea
+                value={editForm?.steps || ""}
+                onChange={(e) => setEditForm({ ...editForm, steps: e.target.value })}
+              />
+            </div>
 
             <div className="recipe-meta-grid">
               <span>{selected.category}</span>
@@ -182,6 +278,7 @@ export default function AdminModeration() {
               <button onClick={handleAnalyze} disabled={loading}>
                 AI-аналіз
               </button>
+              <button onClick={handleAdminSave}>Зберегти зміни</button>
               <button onClick={() => handleDecision("approve")}>Схвалити</button>
               <button onClick={() => handleDecision("reject")}>Відхилити</button>
             </div>

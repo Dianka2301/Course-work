@@ -2,11 +2,8 @@ import { useState } from "react";
 import AuthForm from "./AuthForm.jsx";
 import "./Auth.css";
 import About from "./About.jsx";
-import Features from "./Features.jsx"; // 🔥 ДОДАЛИ
-import dashboardImg from "../../images/dashboard.png";
 
 export default function AuthPage({ onLogin, onOpenAuth, isModal }) {
-  const [tab, setTab] = useState("about");
   const [mode, setMode] = useState("login");
 
   // 🔥 MODAL
@@ -52,19 +49,7 @@ export default function AuthPage({ onLogin, onOpenAuth, isModal }) {
           <div className="logo-app">Food Recipe App</div>
 
           <div className="nav-tabs">
-            <button
-              className={tab === "about" ? "active" : ""}
-              onClick={() => setTab("about")}
-            >
-              Про нас
-            </button>
-
-            <button
-              className={tab === "features" ? "active" : ""}
-              onClick={() => setTab("features")}
-            >
-              Функції застосунку
-            </button>
+            <button className="active">Про застосунок</button>
 
             <button className="login-btn" onClick={onOpenAuth}>
               Вхід / Реєстрація
@@ -84,10 +69,10 @@ export default function AuthPage({ onLogin, onOpenAuth, isModal }) {
       </div>
 
       <div className="auth-content">
-        {tab === "about" && <About />}
-
-        {/* 🔥 ТУТ НОВИЙ КОМПОНЕНТ */}
-        {tab === "features" && <Features />}
+        <About />
+        <footer className="landing-footer">
+          © 2026 Food Recipe App Team. Усі права захищені.
+        </footer>
       </div>
     </div>
   );

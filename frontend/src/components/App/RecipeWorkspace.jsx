@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { fetchFavorites, toggleFavorite } from "../../api/favorites.js";
-import searchIcon from "../../images/glass.png";
+import searchIcon from "../../images/glass.jpg";
 
 export default function RecipeWorkspace({
   recipes = [],
@@ -24,35 +24,87 @@ export default function RecipeWorkspace({
 
 
 const categoryIcons = {
-  Усі: `${BASE_URL}/images/category/all.png`,
+  "Усі рецепти": `${BASE_URL}/images/category/all.jpg`,
 
-  Сніданки: `${BASE_URL}/images/category/breakfast.png`,
+  Сніданки: `${BASE_URL}/images/category/breakfast.jpg`,
 
-  "Основні страви": `${BASE_URL}/images/category/main_courses.png`,
+  "Основні страви": `${BASE_URL}/images/category/main_courses.jpg`,
 
-  Супи: `${BASE_URL}/images/category/soups.png`,
+  Супи: `${BASE_URL}/images/category/soups.jpg`,
 
   Салати: `${BASE_URL}/images/category/salads.jpg`,
 
-  Паста: `${BASE_URL}/images/category/pasta.png`,
+  Паста: `${BASE_URL}/images/category/pasta.jpg`,
 
-  Закуски: `${BASE_URL}/images/category/snacks.png`,
+  Закуски: `${BASE_URL}/images/category/snacks.jpg`,
 
-  Десерти: `${BASE_URL}/images/category/desserts.png`,
+  Десерти: `${BASE_URL}/images/category/desserts.jpg`,
 
-  Випічка: `${BASE_URL}/images/category/bakery.png`,
+  Випічка: `${BASE_URL}/images/category/bakery.jpg`,
 
   "Дієтичні страви":
-    `${BASE_URL}/images/category/diet.png`,
+    `${BASE_URL}/images/category/diet.jpg`,
 
   "Напої та смузі":
-    `${BASE_URL}/images/category/drinks.png`,
+    `${BASE_URL}/images/category/drinks.jpg`,
 
-  "Інші рецепти":
-    `${BASE_URL}/images/category/default.png`,
 };
 
+function RecipeCard({ recipe, isFavorite, onOpenRecipe, onToggleFavorite }) {
+  const rating = Number(recipe.rating || 0);
 
+  return (
+    <div className="recipe-card catalog-card" onClick={() => onOpenRecipe(recipe)}>
+      <div className="recipe-card-image-wrap">
+        {recipe.prep_time && <span className="time-chip">{recipe.prep_time}</span>}
+        <img
+          src={`${BASE_URL}/images/${recipe.image}`}
+          className="recipe-img"
+          alt={recipe.title}
+        />
+        <button
+          className="fav-btn bookmark-btn heart-btn"
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleFavorite(recipe.id);
+          }}
+        >
+          {isFavorite ? "❤️" : "🤍"}
+        </button>
+      </div>
+
+      <div className="card-content">
+        <div className="recipe-card-badges">
+          <span className="cat-badge">{recipe.category}</span>
+          {recipe.difficulty && (
+            <span className="difficulty-badge">{recipe.difficulty}</span>
+          )}
+          {rating > 0 && (
+            <span className="rating-badge">★ {rating}</span>
+          )}
+        </div>
+
+        <h3>{recipe.title}</h3>
+
+        <div className="ingredients-wrapper">
+          {recipe.ingredients
+            ?.split("\n")
+            .filter((item) => item.trim() !== "")
+            .slice(0, 4)
+            .map((item, index) => (
+              <span key={index} className="ingredient-tag">
+                {item.trim()}
+              </span>
+            ))}
+        </div>
+
+        {recipe.authorName && (
+          <div className="recipe-card-author">{recipe.authorName}</div>
+        )}
+      </div>
+    </div>
+  );
+}
 
   useEffect(() => {
     async function loadData() {
@@ -125,26 +177,7 @@ const categoryIcons = {
   if (loading) return <p>Завантаження...</p>;
 
   return (
-    <div style={{ padding: "20px" }}>
-      {/* 🔍 SEARCH BAR */}
-      <div className="search-bar">
-        <input
-          type="text"
-          placeholder="Пошук рецептів за назвою або інгредієнтом..."
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-        />
-        <button className="search-btn" onClick={handleSearch}>
-          <img src={searchIcon} alt="search" style={{ width: 18 }} />
-        </button>
-        {searchActive && (
-          <button className="clear-btn" onClick={resetSearch}>
-            ✖
-          </button>
-        )}
-      </div>
-
+    <div className="catalog-page">
       <div
         className="filters-container"
         style={{
@@ -177,11 +210,11 @@ const categoryIcons = {
                   <img
                     src={
                       categoryIcons[cat] ||
-                      `${BASE_URL}/images/category/default.png`
+                      `${BASE_URL}/images/category/default.jpg`
                     }
                     alt={cat}
                     onError={(e) => {
-                      e.target.src = `${BASE_URL}/images/category/default.png`;
+                      e.target.src = `${BASE_URL}/images/category/default.jpg`;
                     }}
                   />
                 </div>
@@ -193,23 +226,36 @@ const categoryIcons = {
             ›
           </button>
         </div>
+      </div>
 
-        {/* 📉 SORTING BOX (Збоку) */}
-        <div className="sort-box" style={{ minWidth: "150px" }}>
+      <div className="catalog-filter-row">
+        <div className="search-bar">
+          <input
+            type="text"
+            placeholder="Пошук рецептів за назвою або інгредієнтом..."
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+          />
+          <button className="search-btn" onClick={handleSearch}>
+            <img src={searchIcon} alt="search" style={{ width: 18 }} />
+          </button>
+          {searchActive && (
+            <button className="clear-btn" onClick={resetSearch}>
+              Очистити
+            </button>
+          )}
+        </div>
+
+        <div className="sort-box">
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
             className="sort-select"
-            style={{
-              padding: "8px",
-              borderRadius: "8px",
-              border: "1px solid #ddd",
-              width: "100%",
-            }}
           >
             <option value="default">Сортувати за...</option>
-            <option value="rating">Найкращий рейтинг ⭐</option>
-            <option value="newest">Найновіші 🆕</option>
+            <option value="rating">Найкращий рейтинг</option>
+            <option value="newest">Найновіші</option>
           </select>
         </div>
       </div>
@@ -218,44 +264,13 @@ const categoryIcons = {
       <div className="recipes-grid">
         {filteredAndSortedRecipes.length > 0 ? (
           filteredAndSortedRecipes.map((recipe) => (
-            <div
+            <RecipeCard
               key={recipe.id}
-              className="recipe-card"
-              onClick={() => onOpenRecipe(recipe)}
-            >
-              <img
-                src={`${BASE_URL}/images/${recipe.image}`}
-                className="recipe-img"
-                alt={recipe.title}
-              />
-              <div className="card-content">
-                <h3>{recipe.title}</h3>
-                <div className="ingredients-wrapper">
-                  {recipe.ingredients
-                    ?.split("\n") // Виправляємо спліт на новий рядок
-                    .filter((item) => item.trim() !== "") // Додатково прибираємо порожні рядки, якщо вони є
-                    .slice(0, 4) // Беремо перші 4 інгредієнти для прев'ю-тегів
-                    .map((item, index) => (
-                      <span key={index} className="ingredient-tag">
-                        {item.trim()}
-                      </span>
-                    ))}
-                </div>
-                <div className="meta">
-                  <span>⭐ {recipe.rating || 0}</span>
-                  <span className="cat-badge">{recipe.category}</span>
-                </div>
-              </div>
-              <button
-                className="fav-btn"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleToggleFavorite(recipe.id);
-                }}
-              >
-                {favorites.includes(recipe.id) ? "❤️" : "🤍"}
-              </button>
-            </div>
+              recipe={recipe}
+              isFavorite={favorites.includes(recipe.id)}
+              onOpenRecipe={onOpenRecipe}
+              onToggleFavorite={handleToggleFavorite}
+            />
           ))
         ) : (
           <p style={{ textAlign: "center", width: "100%", marginTop: "50px" }}>

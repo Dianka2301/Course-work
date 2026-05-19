@@ -1,6 +1,62 @@
 import React, { useEffect, useState } from "react";
 import { fetchFavorites, toggleFavorite } from "../../api/favorites.js";
 
+const BASE_URL = "http://localhost:4000";
+
+function FavoriteCard({ recipe, onOpenRecipe, onRemove }) {
+  const rating = Number(recipe.rating || 0);
+
+  return (
+    <div className="recipe-card catalog-card" onClick={() => onOpenRecipe(recipe)}>
+      <div className="recipe-card-image-wrap">
+        {recipe.prep_time && <span className="time-chip">{recipe.prep_time}</span>}
+        <img
+          src={`${BASE_URL}/images/${recipe.image}`}
+          className="recipe-img"
+          alt={recipe.title}
+        />
+        <button
+          className="fav-btn bookmark-btn heart-btn"
+          onClick={(e) => {
+            e.stopPropagation();
+            onRemove(recipe.id);
+          }}
+        >
+          ❤️
+        </button>
+      </div>
+
+      <div className="card-content">
+        <div className="recipe-card-badges">
+          <span className="cat-badge">{recipe.category}</span>
+          {recipe.difficulty && (
+            <span className="difficulty-badge">{recipe.difficulty}</span>
+          )}
+          {rating > 0 && <span className="rating-badge">★ {rating}</span>}
+        </div>
+
+        <h3>{recipe.title}</h3>
+
+        <div className="ingredients-wrapper">
+          {recipe.ingredients
+            ?.split("\n")
+            .filter((item) => item.trim() !== "")
+            .slice(0, 4)
+            .map((item, index) => (
+              <span key={index} className="ingredient-tag">
+                {item.trim()}
+              </span>
+            ))}
+        </div>
+
+        {recipe.authorName && (
+          <div className="recipe-card-author">{recipe.authorName}</div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function Favorites({ onOpenRecipe }) {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -48,50 +104,12 @@ export default function Favorites({ onOpenRecipe }) {
       {/* 🔥 GRID */}
       <div className="recipes-grid">
         {recipes.map((recipe) => (
-          <div
+          <FavoriteCard
             key={recipe.id}
-            className="recipe-card"
-            onClick={() => onOpenRecipe(recipe)}
-          >
-            {/* IMAGE */}
-            <img
-              src={`http://localhost:4000/images/${recipe.image}`}
-              className="recipe-img"
-            />
-
-            {/* CONTENT */}
-            <div className="card-content">
-              <h3>{recipe.title}</h3>
-
-              <div className="ingredients-wrapper">
-                {recipe.ingredients
-                  ?.split("\n") // Виправляємо спліт на новий рядок
-                  .filter((item) => item.trim() !== "") // Додатково прибираємо порожні рядки, якщо вони є
-                  .slice(0, 4) // Беремо перші 4 інгредієнти для прев'ю-тегів
-                  .map((item, index) => (
-                    <span key={index} className="ingredient-tag">
-                      {item.trim()}
-                    </span>
-                  ))}
-              </div>
-
-              <div className="meta">
-                <span>⭐ {recipe.rating || 0}</span>
-                <span>{recipe.category}</span>
-              </div>
-            </div>
-
-            {/* ❤️ REMOVE */}
-            <button
-              className="fav-btn"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleToggle(recipe.id);
-              }}
-            >
-              ❤️
-            </button>
-          </div>
+            recipe={recipe}
+            onOpenRecipe={onOpenRecipe}
+            onRemove={handleToggle}
+          />
         ))}
       </div>
     </div>
