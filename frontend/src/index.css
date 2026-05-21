@@ -1188,12 +1188,12 @@ h1, h2, h3 {
   box-shadow: 0 6px 14px rgba(61, 45, 30, 0.1);
 }
 
-.cat-item.active .cat-circle {
+/*.cat-item.active .cat-circle {
   border-color: #4c7a5a;
-}
+}*/
 
 .cat-item.active .cat-name {
-  color: #4c7a5a;
+  color: #c1ab7b;
   font-weight: 800;
 }
 
@@ -2491,7 +2491,7 @@ h1, h2, h3 {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   
   /* Тінь робимо ледь помітною */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+  /*box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);*/
 }
 
 .cat-circle img {
@@ -2505,8 +2505,9 @@ h1, h2, h3 {
 
 /* Активний стан (Жовте коло) */
 .cat-item.active .cat-circle {
-  background: rgba(219, 159, 91, 0.8); 
-  box-shadow: 0 8px 20px rgba(255, 193, 7, 0.35);
+  /*background: rgba(219, 159, 91, 0.8); */
+  box-shadow: 0 8px 20px rgba(31, 30, 27, 0.35);
+  opacity: 1;
 }
 
 /* Стиль тексту */
@@ -3252,9 +3253,9 @@ h1, h2, h3 {
   object-fit: cover;
 }
 
-.cat-item.active .cat-circle {
-  border: 3px solid #ff6b6b;
-}
+/*.cat-item.active .cat-circle {
+  border: 3px solid #9c8710;
+}*/
 
 .cat-name {
   font-size: 13px;
