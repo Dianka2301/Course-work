@@ -42,6 +42,7 @@ export default function RecipeView({
   onBack,
   onOpenRecipe,
   onOpenAuthorProfile,
+  onAdminUpdate,
 }) {
   const [details, setDetails] = useState(recipe);
   const [comments, setComments] = useState([]);
@@ -56,11 +57,26 @@ export default function RecipeView({
   const [smartSortComments, setSmartSortComments] = useState(false);
   const [showAiReview, setShowAiReview] = useState(false);
 
+  // Стан для редагування адміном
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState({
+    title: "",
+    description: "",
+    category: "",
+    prep_time: "",
+    portions: "",
+    difficulty: "easy",
+    ingredients: "",
+    steps: "",
+    image: "",
+  });
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
+
   useEffect(() => {
     loadRecipe();
     loadComments();
     loadSimilar();
-    // Перекидає вгору сторінки при зміні id рецепта
     window.scrollTo({ top: 0, behavior: "instant" });
   }, [recipe.id]);
 
@@ -191,43 +207,304 @@ export default function RecipeView({
     ? [...comments].sort((a, b) => commentRelevance(b) - commentRelevance(a))
     : comments;
 
+  // Режим редагування (копіювання даних у форму)
+  const handleStartEditing = () => {
+    setEditForm({
+      title: details.title || "",
+      description: details.description || "",
+      category: details.category || "Сніданки",
+      prep_time: details.prep_time || "",
+      portions: details.portions || "",
+      difficulty: details.difficulty || "easy",
+      ingredients: details.ingredients || "",
+      steps: details.steps || "",
+      image: details.image || "",
+    });
+    setImagePreview(imageSrc(details.image));
+    setIsEditing(true);
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleSaveEdit = async () => {
+    try {
+      let uploadedImageUrl = editForm.image;
+
+      if (imageFile) {
+        const fd = new FormData();
+        fd.append("image", imageFile);
+        const res = await fetch("http://localhost:4000/api/upload", {
+          method: "POST",
+          body: fd,
+        });
+        const data = await res.json();
+        uploadedImageUrl = data.url;
+      }
+
+      const updatedData = {
+        ...editForm,
+        image: uploadedImageUrl,
+      };
+
+      if (onAdminUpdate) {
+        await onAdminUpdate(details.id, updatedData);
+      }
+
+      setDetails((prev) => ({ ...prev, ...updatedData }));
+      setIsEditing(false);
+      setImageFile(null);
+    } catch (err) {
+      console.error("Failed to save edited recipe:", err);
+    }
+  };
+
+  
+  // --- РЕЖИМ РЕДАГУВАННЯ ЯК НА ФОТО 1 ---
+  if (isEditing) {
+    return (
+      
+      <div className="admin-edit-container-new">
+        <div className="recipe-form-card-new">
+          <div className="edit-card-header">
+            
+            <h3>Редагування рецепту</h3>
+          </div>
+
+          <div className="recipe-form-layout-new">
+            {/* Ліва колонка: прямокутне фото та кнопка */}
+            <div className="form-left-col-new">
+              <div className="image-preview-box-new">
+                <img src={imagePreview} alt="preview" />
+              </div>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                id="admin-image-upload-new"
+                hidden
+              />
+              <label
+                htmlFor="admin-image-upload-new"
+                className="admin-upload-btn-new"
+              >
+                Завантажити фото
+              </label>
+            </div>
+
+            {/* Права колонка: поля введення */}
+            <div className="form-right-col-new">
+              <div className="form-group-new">
+                <label>Назва рецепту</label>
+                <input
+                  type="text"
+                  value={editForm.title}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, title: e.target.value })
+                  }
+                  placeholder="Введіть назву"
+                />
+              </div>
+
+              <div className="form-group-new">
+                <label>Опис</label>
+                <textarea
+                  value={editForm.description}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, description: e.target.value })
+                  }
+                  placeholder="Коротко опишіть рецепт..."
+                  rows={4}
+                />
+              </div>
+
+              {/* Зменшений вибір категорії */}
+              <div className="form-group-new">
+                <label>Категорія</label>
+                <select
+                  value={editForm.category}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, category: e.target.value })
+                  }
+                  className="admin-category-select-new"
+                >
+                  <option>Сніданки</option>
+                  <option>Салати</option>
+                  <option>Основні страви</option>
+                  <option>Супи</option>
+                  <option>Десерти</option>
+                  <option>Швидкі страви</option>
+                  <option>Вегетаріанські</option>
+                  <option>Національні кухні</option>
+                  <option>Паста</option>
+                  <option>Закуски</option>
+                  <option>Випічка</option>
+                  <option>Дієтичні страви</option>
+                  <option>Напої та смузі</option>
+                  "Усі рецепти": `${BASE_URL}/images/category/all.jpg`,
+                  Сніданки: `${BASE_URL}/images/category/breakfast.jpg`,
+                  "Основні страви": `${BASE_URL}
+                  /images/category/main_courses.jpg`, Супи: `${BASE_URL}
+                  /images/category/soups.jpg`, Салати: `${BASE_URL}
+                  /images/category/salads.jpg`, Паста: `${BASE_URL}
+                  /images/category/pasta.jpg`, Закуски: `${BASE_URL}
+                  /images/category/snacks.jpg`, Десерти: `${BASE_URL}
+                  /images/category/desserts.jpg`, Випічка: `${BASE_URL}
+                  /images/category/bakery.jpg`, "Дієтичні страви": `${BASE_URL}
+                  /images/category/diet.jpg`, "Напої та смузі
+                </select>
+              </div>
+
+              {/* Рядок: Час, Порції, Складність */}
+              <div className="form-sub-row-new">
+                <div className="form-group-new flex-1">
+                  <label>Час</label>
+                  <input
+                    type="text"
+                    value={editForm.prep_time}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, prep_time: e.target.value })
+                    }
+                    placeholder="15 хв"
+                  />
+                </div>
+                <div className="form-group-new flex-1">
+                  <label>Порції</label>
+                  <input
+                    type="number"
+                    value={editForm.portions}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, portions: e.target.value })
+                    }
+                    placeholder="4"
+                  />
+                </div>
+                <div className="form-group-new flex-1">
+                  <label>Складність</label>
+                  <select
+                    value={editForm.difficulty}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, difficulty: e.target.value })
+                    }
+                  >
+                    <option value="easy">easy</option>
+                    <option value="medium">medium</option>
+                    <option value="hard">hard</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="form-group-new">
+                <label>Інгредієнти</label>
+                <textarea
+                  value={editForm.ingredients}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, ingredients: e.target.value })
+                  }
+                  placeholder="Інгредієнти..."
+                  rows={6}
+                />
+              </div>
+
+              <div className="form-group-new">
+                <label>Приготування</label>
+                <textarea
+                  value={editForm.steps}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, steps: e.target.value })
+                  }
+                  placeholder="Приготування..."
+                  rows={6}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Кнопки дії як на фото 1 */}
+          <div className="form-actions-new">
+            <button className="btn-save-new" onClick={handleSaveEdit}>
+              Зберегти
+            </button>
+            <button
+              className="btn-cancel-new"
+              onClick={() => setIsEditing(false)}
+            >
+              Скасувати
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // --- РЕЖИМ ПЕРЕГЛЯДУ (З ЦЕНТРУВАННЯМ ТА ЗМЕНШЕНИМ ФОТО) ---
   return (
     <div className="recipe-view">
       <button className="back-btn" onClick={onBack}>
         ← Назад
       </button>
+
       {user?.role === "admin" && (
         <button
           className="publish-btn"
           style={{ marginLeft: "10px" }}
-          onClick={() => {
-            // Ви можете викликати модальне вікно або відкривати поля редагування.
-            // Наприклад, звичайний alert або відкриття форми.
-            const newTitle = prompt(
-              "Введіть нову назву рецепта:",
-              details.title,
-            );
-            if (newTitle) {
-              onAdminUpdate(details.id, { ...details, title: newTitle });
-            }
-          }}
+          onClick={handleStartEditing}
         >
-          Швидке редагування назви (Адмін)
+          Редагувати рецепт
         </button>
       )}
 
       <div className="recipe-layout">
-        <div className="recipe-left">
+        {/* Центрація фото, назви, зірочок */}
+        <div
+          className="recipe-left"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            textAlign: "center",
+          }}
+        >
           <img
             src={imageSrc(details.image)}
             className="recipe-view-img"
             alt={details.title}
+            style={{
+              maxWidth: "160px",
+              height: "auto",
+              margin: "0 auto",
+              display: "block",
+              borderRadius: "12px",
+            }} // Зменшено головне фото
           />
 
-          <h2 className="recipe-title">{details.title}</h2>
+          {/* Назва по центру */}
+          <h2
+            className="recipe-title"
+            style={{
+              textAlign: "center",
+              width: "100%",
+              marginTop: "15px",
+              marginBottom: "5px",
+            }}
+          >
+            {details.title}
+          </h2>
 
           {details.authorName && !isSystemAdmin(details.authorName) && (
-            <div className="recipe-author">
+            <div
+              className="recipe-author"
+              style={{
+                textAlign: "center",
+                width: "100%",
+                marginBottom: "10px",
+              }}
+            >
               Автор:{" "}
               <b
                 onClick={() => onOpenAuthorProfile?.(details.user_id)}
@@ -254,7 +531,18 @@ export default function RecipeView({
             <div className="recipe-status-badge">Очікує схвалення адміна</div>
           )}
 
-          <div className="recipe-meta-grid">
+          {/* Рейтинг по центру із зірочками */}
+
+          {/* Властивості по центру */}
+          <div
+            className="recipe-meta-grid"
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              gap: "15px",
+              width: "100%",
+            }}
+          >
             <span>
               <img src="/images/time.png" alt="" />
               {details.prep_time || "Час не вказано"}
@@ -270,18 +558,36 @@ export default function RecipeView({
               {details.difficulty || "easy"}
             </span>
           </div>
-
           {Number(avgRating) > 0 && (
-            <div className="rating-box">
-              <div className="stars">
+            <div
+              className="rating-box"
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                width: "100%",
+                marginTop: "5px",
+                marginBottom: "15px",
+              }}
+            >
+              <div
+                className="stars"
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  gap: "2px",
+                }}
+              >
                 {[1, 2, 3, 4, 5].map((star) => (
                   <span key={star} className="star">
                     {star <= Math.round(avgRating) ? "★" : "☆"}
                   </span>
                 ))}
               </div>
-
-              <div className="avg-rating">
+              <div
+                className="avg-rating"
+                style={{ textAlign: "center", marginTop: "4px" }}
+              >
                 <h4>
                   Рейтинг: <b>{avgRating}/5</b>
                 </h4>
@@ -366,6 +672,7 @@ export default function RecipeView({
         <div className="comments-head">
           <h4>Коментарі</h4>
           <button
+            title="Можливість фільтрувати коментарі"
             className={
               smartSortComments
                 ? "ai-comment-filter active"
@@ -439,7 +746,6 @@ export default function RecipeView({
                 <div className="reply-list">
                   {c.replies.map((reply) => (
                     <div key={reply.id} className="reply">
-                      {/* Оновлена структура для правильного позиціонування дати за CSS-класами */}
                       <div className="comment-top">
                         <img
                           src={avatarSrc(reply.avatar)}

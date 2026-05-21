@@ -22,28 +22,30 @@
   font-style: normal;
 }
 
-
 body {
   margin: 0;
-  font-family: 'Lexend', sans-serif;
+  font-family: "Lexend", sans-serif;
   min-height: 100vh;
   color: #333;
 
-  background-color: #fdfbf9; 
-  background-image: 
-    radial-gradient(at 0% 0%, rgba(162, 118, 69, 0.15) 0px, transparent 50%), 
-    radial-gradient(at 100% 0%, rgba(193, 165, 133, 0.12) 0px, transparent 50%), 
-    radial-gradient(at 100% 100%, rgba(162, 118, 69, 0.08) 0px, transparent 50%),
+  background-color: #fdfbf9;
+  background-image:
+    radial-gradient(at 0% 0%, rgba(162, 118, 69, 0.15) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(193, 165, 133, 0.12) 0px, transparent 50%),
+    radial-gradient(
+      at 100% 100%,
+      rgba(162, 118, 69, 0.08) 0px,
+      transparent 50%
+    ),
     radial-gradient(at 0% 100%, rgba(255, 255, 255, 1) 0px, transparent 50%);
 
   background-attachment: fixed;
-  
 }
 
-
-
-h1, h2, h3 {
-  font-family: 'Montserrat', sans-serif;
+h1,
+h2,
+h3 {
+  font-family: "Montserrat", sans-serif;
   font-weight: 700;
 }
 
@@ -127,8 +129,9 @@ h1, h2, h3 {
   padding: 0 40px;
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 
-              inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.15),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
   z-index: 100;
 }
 
@@ -138,13 +141,12 @@ h1, h2, h3 {
   font-size: 28px;
   letter-spacing: -0.5px;
   color: #ffffff;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .toolbar .user {
   opacity: 0.8;
 }
-
 
 /* BURGER */
 .burger {
@@ -160,10 +162,9 @@ h1, h2, h3 {
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   z-index: 5;
 }
-
 
 /* 🔹 ОСНОВНА ОБЛАСТЬ */
 .main-content > div:not(.toolbar) {
@@ -213,7 +214,7 @@ h1, h2, h3 {
   padding: 10px 15px;
   border-radius: 20px;
   cursor: pointer;
-  background: rgba(162, 118, 69, 0.8); 
+  background: rgba(162, 118, 69, 0.8);
   color: white;
 }
 
@@ -249,7 +250,7 @@ h1, h2, h3 {
 /* 🔥 CARD */
 
 .recipe-card {
-  background: rgba(162, 118, 69, 0.8);;
+  background: rgba(162, 118, 69, 0.8);
   border-radius: 16px;
   padding: 10px;
   overflow: hidden;
@@ -257,7 +258,6 @@ h1, h2, h3 {
   transition: 0.3s;
   position: relative;
 }
-
 
 .recipe-card:hover {
   transform: scale(1.03);
@@ -317,9 +317,8 @@ h1, h2, h3 {
   width: 32px;
   height: 32px;
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
-
 
 /* FORM */
 .form-group {
@@ -351,7 +350,6 @@ h1, h2, h3 {
   margin-top: 20px;
 }
 
-
 /* ================= PROFILE (SAAS STYLE) ================= */
 
 .profile-wrapper {
@@ -367,7 +365,7 @@ h1, h2, h3 {
   background: white;
   border-radius: 18px;
   padding: 20px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
   text-align: center;
 }
 
@@ -390,17 +388,18 @@ h1, h2, h3 {
 
 /* UPLOAD BUTTON */
 .upload-btn {
-  background: rgba(162, 118, 69, 0.8); 
+  background: rgba(162, 118, 69, 0.8);
   color: white;
   padding: 8px 14px;
   border-radius: 10px;
   cursor: pointer;
   font-size: 13px;
   transition: 0.2s;
+  font-weight: 600;
 }
 
 .upload-btn:hover {
-  background: rgba(156, 99, 35, 0.8); 
+  background: rgba(156, 99, 35, 0.8);
 }
 
 /* RIGHT CARD */
@@ -409,7 +408,7 @@ h1, h2, h3 {
   background: white;
   border-radius: 18px;
   padding: 30px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
 /* FORM */
@@ -428,7 +427,7 @@ h1, h2, h3 {
 
 /* SAVE BUTTON */
 .save-btn {
-  background: rgba(162, 118, 69, 0.8); 
+  background: rgba(162, 118, 69, 0.8);
   color: white;
   border: none;
   padding: 12px 20px;
@@ -436,12 +435,12 @@ h1, h2, h3 {
   cursor: pointer;
   margin-top: 10px;
   transition: 0.2s;
+  font-weight: 600;
 }
 
 .save-btn:hover {
-  background: rgba(156, 99, 35, 0.8); 
+  background: rgba(156, 99, 35, 0.8);
 }
-
 
 /* ================= RESPONSIVE ================= */
 
@@ -504,7 +503,6 @@ h1, h2, h3 {
     padding: 10px;
   }
 }*/
-
 
 /* 📱 TABLET */
 @media (max-width: 768px) {
@@ -663,6 +661,7 @@ h1, h2, h3 {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
+  max-width: 400px;
 }
 
 .recipe-status {
@@ -721,9 +720,9 @@ h1, h2, h3 {
 .admin-header button {
   margin: 2px;
   padding: 7px 10px;
-  border: 1px solid #ddd;
+  border: 1px solid #c3a98f;
   border-radius: 8px;
-  background: #fff;
+  background: #f8f2ea;
   cursor: pointer;
 }
 
@@ -1212,13 +1211,15 @@ h1, h2, h3 {
   border-radius: 10px;
   background:
     linear-gradient(45deg, transparent 50%, #826a55 50%),
-    linear-gradient(135deg, #826a55 50%, transparent 50%),
-    #fff;
+    linear-gradient(135deg, #826a55 50%, transparent 50%), #fff;
   background-position:
     calc(100% - 18px) 17px,
     calc(100% - 12px) 17px,
     100% 0;
-  background-size: 6px 6px, 6px 6px, 100% 100%;
+  background-size:
+    6px 6px,
+    6px 6px,
+    100% 100%;
   background-repeat: no-repeat;
   appearance: none;
   color: #4c3d32;
@@ -1294,6 +1295,8 @@ h1, h2, h3 {
 
 .similar-card img {
   height: 150px;
+  padding-top: 3px;
+  border-radius: 13px;
 }
 
 .similar-card span {
@@ -1417,7 +1420,6 @@ h1, h2, h3 {
 .notifications-nav-btn img {
   width: 18px;
   height: 18px;
-  margin-right: 6px;
   vertical-align: middle;
 }
 
@@ -1617,7 +1619,7 @@ h1, h2, h3 {
 .cropper-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1673,15 +1675,20 @@ h1, h2, h3 {
   color: white;
   padding: 12px 18px;
   border-radius: 10px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
   animation: fadeIn 0.3s ease;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
-
 
 /* NAV LINKS (DESKTOP) */
 /* Навігація в тулбарі */
@@ -1696,7 +1703,7 @@ h1, h2, h3 {
   background: none;
   border: none;
   color: rgba(255, 255, 255, 0.9);
-  font-weight: 500;
+  font-weight: 600;
   font-size: 16px;
   padding: 8px 12px;
   border-radius: 15px;
@@ -1720,20 +1727,21 @@ h1, h2, h3 {
   right: 20%;
   height: 2px;
   background: #fff;
-  box-shadow: 0 0 8px rgba(255,255,255,0.8);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
   border-radius: 2px;
 }
 
 .logout-btn {
-  background: linear-gradient(135deg, #c1a585 0%, #8a6238 100%);
-  border: 1px solid rgba(255,255,255,0.2);
-  color: white;
-  font-weight: 600;
-  padding: 10px 24px;
-  border-radius: 15px;
+  background: #f8f2ea;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: black;
+  font-weight: 500;
+  font-size: 14px;
+  padding: 10px 14px;
+  border-radius: 13px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -1741,10 +1749,9 @@ h1, h2, h3 {
 
 .logout-btn:hover {
   transform: scale(1.05);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
   filter: brightness(1.1);
 }
-
 
 /* FEATURES GRID */
 .features-grid {
@@ -1758,7 +1765,7 @@ h1, h2, h3 {
   background: #fff;
   padding: 20px;
   border-radius: 14px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   transition: 0.25s;
 }
 
@@ -1775,9 +1782,6 @@ h1, h2, h3 {
   }
 }*/
 
-
-
-
 .card-content {
   padding: 12px;
   color: white;
@@ -1791,13 +1795,18 @@ h1, h2, h3 {
 .ingredients-wrapper {
   display: flex;
   flex-wrap: wrap; /* Дозволяє переносити теги на новий рядок */
-  gap: 8px;        /* Відстань між овалами */
+  gap: 8px; /* Відстань між овалами */
   margin-top: 10px;
 }
 
 /* Стиль самого овального інгредієнта */
 .ingredient-tag {
-  background: rgba(255, 255, 255, 0.2); /* Напівпрозорий білий (під стиль glassmorphism) */
+  background: rgba(
+    255,
+    255,
+    255,
+    0.2
+  ); /* Напівпрозорий білий (під стиль glassmorphism) */
   color: white;
   padding: 4px 12px;
   border-radius: 20px; /* Робить прямокутник овальним */
@@ -1820,127 +1829,6 @@ h1, h2, h3 {
   color: #efeeee;
 }
 
-/* PAGE */
-/*
-.recipe-view {
-  width: 100%;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 24px;
-}*/
-
-/* TITLE */
-/*.recipe-title {
-  margin-bottom: 20px;
-}
-
-/* LAYOUT */
-/*.recipe-layout {
-  display: flex;
-  gap: 30px;
-}
-*/
-
-/* LEFT */
-/*.recipe-left {
-  flex: 1;
-}*/
-
-/* RIGHT */
-/*.recipe-right {
-  flex: 1;
-}*/
-
-/* IMAGE */
-/*.recipe-view-img {
-  width: 100%;
-  height: 300px;
-  max-width: 420px;
-  border-radius: 16px;
-  object-fit: cover;
-}
-*/
-
-/* BACK BUTTON */
-/*.back-btn {
-  margin-bottom: 15px;
-  padding: 8px 12px;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-}*/
-
-/* ⭐ RATING BOX */
-/*.rating-box {
-  margin-top: 15px;
-  padding: 12px;
-  background: #f6f6f6;
-  border-radius: 12px;
-  width: fit-content;
-}
-
-.stars {
-  font-size: 26px;
-  cursor: pointer;
-}
-
-.star {
-  margin-right: 5px;
-  transition: 0.2s;
-}
-
-.star:hover {
-  transform: scale(1.2);
-}
-
-/* SECTIONS */
-/*.section {
-  margin-bottom: 20px;
-}*/
-
-/* COMMENTS */
-/*.comments {
-  margin-top: 30px;
-}
-
-.comment-list {
-  margin-bottom: 10px;
-}
-
-.comment {
-  background: #222;
-  color: white;
-  padding: 10px;
-  margin-bottom: 8px;
-  border-radius: 10px;
-}
-
-/* INPUT BOX */
-/*.comment-box {
-  display: flex;
-  gap: 10px;
-}
-
-.comment-box input {
-  flex: 1;
-  padding: 10px;
-  border-radius: 12px;
-  border: 1px solid #ccc;
-}
-
-.comment-box button {
-  padding: 10px 14px;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
-  background: #c1a585;
-  color: white;
-  transition: 0.2s;
-}
-
-.comment-box button:hover {
-  transform: scale(1.05);
-}*/
 .recipe-view {
   padding: 30px 60px;
   background: #f7f3ef;
@@ -1949,17 +1837,22 @@ h1, h2, h3 {
 }
 
 /* 🔙 кнопка */
-.back-btn {
+.back-btn,
+.publish-btn {
   background: #e6d3bd;
   border: none;
   padding: 8px 16px;
-  border-radius: 12px;
+  border-radius: 13px;
   cursor: pointer;
   margin-bottom: 20px;
   transition: 0.3s;
 }
+.publish-btn {
+  color: #000000;
+}
 
-.back-btn:hover {
+.back-btn:hover,
+.publish-btn:hover {
   background: #d8bfa3;
 }
 
@@ -1980,13 +1873,15 @@ h1, h2, h3 {
 /* фото */
 .recipe-view-img {
   width: 100%;
-  max-width: 520px;
-  height: 350px;
+  max-width: 380px; /* було 520px */
+  height: 250px; /* було 350px */
   border-radius: 20px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   transition: transform 0.4s;
-  margin-top: 10px;   /* вниз */
-  margin-left: -10px; /* лівіше */
+  margin-top: 10px;
+  margin-left: -10px;
+
+  object-fit: cover; /* щоб фото гарно обрізалось */
 }
 
 .recipe-view-img:hover {
@@ -2024,11 +1919,17 @@ h1, h2, h3 {
   color: #555;
 }
 
+.recipe-layout {
+  display: grid;
+  grid-template-columns: 420px 680px;
+  gap: 40px;
+}
 /* 📄 RIGHT */
 .recipe-right {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  max-width: 680px;
 }
 
 /* 📦 секції (оці "бежеві рамки") */
@@ -2036,7 +1937,7 @@ h1, h2, h3 {
   background: #f3e5d7;
   padding: 20px;
   border-radius: 16px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
   transition: 0.3s;
 }
 
@@ -2057,7 +1958,7 @@ h1, h2, h3 {
 }
 
 .ingredient-item {
-  background: rgba(255,255,255,0.5);
+  background: rgba(255, 255, 255, 0.5);
   padding: 6px 10px;
   border-radius: 10px;
   margin-top: 7px;
@@ -2134,7 +2035,6 @@ h1, h2, h3 {
   flex: 1;
 }
 
-
 /* поле вводу */
 .comment-box {
   display: flex;
@@ -2173,55 +2073,7 @@ h1, h2, h3 {
     opacity: 1;
     transform: translateY(0);
   }
-} 
-/* 📱 MOBILE */
-/*@media (max-width: 768px) {
-  .recipe-layout {
-    flex-direction: column;
-  }
-
-  .recipe-view-img {
-    max-width: 100%;
-  }
-}*/
-
-
-
-/*@media (max-width: 1024px) {
-  .recipes-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}*/
-
-/*@media (max-width: 600px) {
-  .recipes-grid {
-    grid-template-columns: 1fr;
-  }
-}*/
-
-/* COMMENTS */
-/*.comments {
-  margin-top: 30px;
 }
-
-.comment {
-  background: #222;
-  padding: 10px;
-  margin-bottom: 8px;
-  border-radius: 8px;
-}
-
-.comment-box {
-  display: flex;
-  gap: 10px;
-}
-
-.comment-box input {
-  flex: 1;
-  padding: 8px;
-}*/
-
-
 
 .my-recipes {
   padding: 20px;
@@ -2238,7 +2090,7 @@ h1, h2, h3 {
   display: flex;
   align-items: center;
   gap: 6px;
-  background: #4b3425;
+  background: rgba(162, 118, 69, 0.8);
   border: none;
   padding: 10px 16px;
   border-radius: 15px;
@@ -2246,10 +2098,11 @@ h1, h2, h3 {
   color: white;
   transition: 0.25s;
   font-size: 14px;
+  font-weight: 600;
 }
 .plus-symbol {
   font-size: 1.5rem; /* Робимо плюс більшим */
-  line-height: 1;    /* Щоб не розпирав кнопку по висоті */
+  line-height: 1; /* Щоб не розпирав кнопку по висоті */
   font-weight: bold;
 }
 
@@ -2310,7 +2163,6 @@ h1, h2, h3 {
   cursor: pointer;
 }
 
-
 .card-actions {
   display: flex;
   justify-content: space-between;
@@ -2320,7 +2172,6 @@ h1, h2, h3 {
 .empty {
   opacity: 0.7;
 }
-
 
 /* GRID */
 .recipes-grid {
@@ -2445,7 +2296,7 @@ h1, h2, h3 {
   cursor: pointer;
   padding: 6px 10px;
   border-radius: 50%;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .scroll-btn:hover {
@@ -2461,9 +2312,9 @@ h1, h2, h3 {
   cursor: pointer;
   min-width: 90px;
   transition: all 0.2s ease;
-  
+
   /* Прибираємо стандартні рамки, якщо це button */
-  border: none; 
+  border: none;
   background: none;
   outline: none;
   padding: 0;
@@ -2478,29 +2329,29 @@ h1, h2, h3 {
   width: 75px;
   height: 75px;
   border-radius: 50%;
-  
+
   /* Світлий димчастий фон як у зразку */
-  background: #f4f4f7; 
-  
+  background: #f4f4f7;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  
+
   /* Важливо для круглої форми */
-  overflow: hidden; 
+  overflow: hidden;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  
+
   /* Тінь робимо ледь помітною */
   /*box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);*/
 }
 
 .cat-circle img {
-  width: 60%; 
+  width: 60%;
   height: 60%;
   object-fit: contain;
-  
+
   /* Якщо у картинки є білий фон, цей рядок зробить його прозорим (якщо картинка на білому) */
-  mix-blend-mode: multiply; 
+  mix-blend-mode: multiply;
 }
 
 /* Активний стан (Жовте коло) */
@@ -2544,9 +2395,9 @@ h1, h2, h3 {
   border-radius: 28px;
 
   background: rgba(255, 248, 240, 0.92);
-  border: 1px solid rgba(196,154,108,0.18);
+  border: 1px solid rgba(196, 154, 108, 0.18);
 
-  box-shadow: 0 12px 40px rgba(0,0,0,0.10);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
 }
 
 /* =========================================================
@@ -2579,16 +2430,20 @@ h1, h2, h3 {
 
   border-radius: 22px;
 
-  background: linear-gradient(145deg, rgba(255,255,255,0.7), rgba(255,255,255,0.45));
-  border: 2px dashed rgba(196,154,108,0.45);
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.7),
+    rgba(255, 255, 255, 0.45)
+  );
+  border: 2px dashed rgba(196, 154, 108, 0.45);
 
-  color: rgba(120,90,60,0.6);
+  color: rgba(120, 90, 60, 0.6);
   font-size: 14px;
   font-weight: 500;
 
   box-shadow:
-    inset 0 2px 10px rgba(255,255,255,0.5),
-    0 8px 20px rgba(0,0,0,0.06);
+    inset 0 2px 10px rgba(255, 255, 255, 0.5),
+    0 8px 20px rgba(0, 0, 0, 0.06);
 }
 
 .preview-img {
@@ -2601,7 +2456,7 @@ h1, h2, h3 {
 
   margin-top: -254px;
 
-  box-shadow: 0 10px 22px rgba(0,0,0,0.12);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
 }
 
 /* upload button */
@@ -2625,7 +2480,7 @@ h1, h2, h3 {
 
   transition: 0.25s;
 
-  box-shadow: 0 8px 18px rgba(162,118,69,0.18);
+  box-shadow: 0 8px 18px rgba(162, 118, 69, 0.18);
 }
 
 .upload-box label:hover,
@@ -2648,9 +2503,9 @@ h1, h2, h3 {
   margin-bottom: 16px;
 
   border-radius: 16px;
-  border: 1px solid rgba(196,154,108,0.18);
+  border: 1px solid rgba(196, 154, 108, 0.18);
 
-  background: rgba(255,255,255,0.75);
+  background: rgba(255, 255, 255, 0.75);
 
   color: #4a3422;
 
@@ -2662,15 +2517,15 @@ h1, h2, h3 {
 
 .recipe-form input::placeholder,
 .recipe-form textarea::placeholder {
-  color: rgba(80,60,40,0.45);
+  color: rgba(80, 60, 40, 0.45);
 }
 
 .recipe-form input:focus,
 .recipe-form textarea:focus {
-  border-color: rgba(196,154,108,0.7);
+  border-color: rgba(196, 154, 108, 0.7);
   background: white;
 
-  box-shadow: 0 0 0 4px rgba(196,154,108,0.10);
+  box-shadow: 0 0 0 4px rgba(196, 154, 108, 0.1);
 }
 
 .recipe-form textarea {
@@ -2742,7 +2597,7 @@ h1, h2, h3 {
   background: linear-gradient(135deg, #c49a6c, #a27645);
   color: white;
 
-  box-shadow: 0 10px 22px rgba(162,118,69,0.18);
+  box-shadow: 0 10px 22px rgba(162, 118, 69, 0.18);
 }
 
 .form-actions button:first-child:hover {
@@ -2752,14 +2607,14 @@ h1, h2, h3 {
 
 /* CANCEL */
 .form-actions button:last-child {
-  background: rgba(196,154,108,0.10);
-  border: 1px solid rgba(196,154,108,0.18);
+  background: rgba(196, 154, 108, 0.1);
+  border: 1px solid rgba(196, 154, 108, 0.18);
 
   color: #6d523a;
 }
 
 .form-actions button:last-child:hover {
-  background: rgba(196,154,108,0.16);
+  background: rgba(196, 154, 108, 0.16);
 }
 
 /* =========================================================
@@ -2767,7 +2622,6 @@ h1, h2, h3 {
    ========================================================= */
 
 @media (max-width: 768px) {
-
   .recipe-form {
     grid-template-columns: 1fr;
     grid-template-areas:
@@ -2797,7 +2651,6 @@ h1, h2, h3 {
 }
 
 @media (max-width: 480px) {
-
   .recipe-form {
     padding: 16px;
     border-radius: 22px;
@@ -2814,7 +2667,6 @@ h1, h2, h3 {
     line-height: 1.5;
   }
 }
-
 
 /* ================= RECIPE VIEW RESPONSIVE ================= */
 /* ============================================================
@@ -2844,7 +2696,7 @@ h1, h2, h3 {
 /* 🔹 МОБІЛЬНІ ПРИСТРОЇ (До 768px) */
 @media (max-width: 768px) {
   /* Sidebar */
-.sidebar {
+  .sidebar {
     display: flex;
     position: fixed;
     top: 0;
@@ -2853,11 +2705,11 @@ h1, h2, h3 {
     height: 100%;
     /* Ефект скла: колір #a27645 з прозорістю + розмиття */
     background: rgba(162, 118, 69, 0.8);
-    backdrop-filter: blur(10px); 
+    backdrop-filter: blur(10px);
     z-index: 1000;
     padding: 30px 20px;
     box-shadow: 10px 0 30px rgba(0, 0, 0, 0.3);
-    
+
     transform: translateX(-105%); /* Ховаємо трохи далі за край */
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     border-radius: 0 20px 20px 0; /* Закруглення правого краю */
@@ -2875,7 +2727,6 @@ h1, h2, h3 {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     margin-bottom: 25px;
     text-align: center;
-    
   }
 
   /* Стилізація кнопок у сайдбарі */
@@ -2929,69 +2780,69 @@ h1, h2, h3 {
     z-index: 999;
     display: none;
   }
-  
+
   .sidebar.open + .sidebar-overlay {
     display: block;
   }
 
   .sidebar-footer {
-  margin-top: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding-top: 20px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
 
-.theme-toggle-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 10px;
-}
+  .theme-toggle-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+  }
 
-.theme-label {
-  color: #fdfae6;
-  font-size: 0.9rem;
-  font-weight: 500;
-}
+  .theme-label {
+    color: #fdfae6;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
 
-/* Стиль сокета зі скріншота image_2c23d0.png */
-.theme-socket {
-  width: 60px;
-  height: 30px;
-  border-radius: 20px;
-  border: none;
-  cursor: pointer;
-  position: relative;
-  
-  /* Ефект втиснутої кнопки */
-  background: #2a1f14; /* Темніший за фон сайдбару */
-  box-shadow: 
-    inset -2px -2px 5px rgba(255, 255, 255, 0.05),
-    inset 3px 3px 7px rgba(0, 0, 0, 0.5);
-    
-  display: flex;
-  align-items: center;
-  padding: 0 5px;
-  transition: 0.3s;
-}
+  /* Стиль сокета зі скріншота image_2c23d0.png */
+  .theme-socket {
+    width: 60px;
+    height: 30px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    position: relative;
 
-.theme-icon {
-  width: 22px;
-  height: 22px;
-  background: #c1a585;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.8rem;
-  transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  
-  /* Рух іконки в залежності від теми */
-  /*transform: ${isDarkMode ? 'translateX(28px)' : 'translateX(0)'};*/
-  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-}
+    /* Ефект втиснутої кнопки */
+    background: #2a1f14; /* Темніший за фон сайдбару */
+    box-shadow:
+      inset -2px -2px 5px rgba(255, 255, 255, 0.05),
+      inset 3px 3px 7px rgba(0, 0, 0, 0.5);
+
+    display: flex;
+    align-items: center;
+    padding: 0 5px;
+    transition: 0.3s;
+  }
+
+  .theme-icon {
+    width: 22px;
+    height: 22px;
+    background: #c1a585;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+    /* Рух іконки в залежності від теми */
+    /*transform: ${isDarkMode ? 'translateX(28px)' : 'translateX(0)'};*/
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  }
 
   /* Toolbar */
   .toolbar {
@@ -3010,45 +2861,45 @@ h1, h2, h3 {
   }
 
   .logout-sidebar-btn {
-  margin-top: auto; /* Ця магія штовхає кнопку в самий низ */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  
-  padding: 15px;
-  background: rgba(255, 71, 71, 0.1) !important; /* Напівпрозорий червоний */
-  color: #ff4747 !important;
-  border: 1px solid rgba(255, 71, 71, 0.2) !important;
-  border-radius: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
+    margin-top: auto; /* Ця магія штовхає кнопку в самий низ */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
 
-.logout-sidebar-btn:hover {
-  background: #ff4747 !important;
-  color: white !important;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 71, 71, 0.3);
-}
+    padding: 15px;
+    background: rgba(255, 71, 71, 0.1) !important; /* Напівпрозорий червоний */
+    color: #ff4747 !important;
+    border: 1px solid rgba(255, 71, 71, 0.2) !important;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
 
-/* Стиль іконки виходу */
-.logout-icon {
-  font-size: 1.2rem;
-  line-height: 1;
-}
+  .logout-sidebar-btn:hover {
+    background: #ff4747 !important;
+    color: white !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 71, 71, 0.3);
+  }
 
-/* Якщо використовуєш img замість символу */
-.logout-sidebar-btn img {
-  width: 20px;
-  height: 20px;
-  filter: invert(30%) sepia(100%) saturate(500%) hue-rotate(320deg); /* Робить картинку червоною */
-}
+  /* Стиль іконки виходу */
+  .logout-icon {
+    font-size: 1.2rem;
+    line-height: 1;
+  }
 
-.logout-sidebar-btn:hover img {
-  filter: brightness(0) invert(1); /* Робить картинку білою при ховері */
-}
+  /* Якщо використовуєш img замість символу */
+  .logout-sidebar-btn img {
+    width: 20px;
+    height: 20px;
+    filter: invert(30%) sepia(100%) saturate(500%) hue-rotate(320deg); /* Робить картинку червоною */
+  }
+
+  .logout-sidebar-btn:hover img {
+    filter: brightness(0) invert(1); /* Робить картинку білою при ховері */
+  }
 
   /* Grid */
   .recipes-grid {
@@ -3064,7 +2915,7 @@ h1, h2, h3 {
     align-items: center;
   }
 
-    .recipe-view-img {
+  .recipe-view-img {
     max-width: 100%;
     height: 250px;
   }
@@ -3076,7 +2927,8 @@ h1, h2, h3 {
     gap: 20px;
   }
 
-  .profile-card, .profile-form-card {
+  .profile-card,
+  .profile-form-card {
     width: 100%;
   }
 
@@ -3085,7 +2937,6 @@ h1, h2, h3 {
     grid-template-columns: 1fr;
   }
 }
-
 
 /* 🔹 МАЛЕНЬКІ СМАРТФОНИ (До 480px) */
 @media (max-width: 480px) {
@@ -3147,7 +2998,6 @@ h1, h2, h3 {
     flex: 0 0 auto;
     scroll-snap-align: start;
   }
-  
 
   .chip {
     font-size: 13px;
@@ -3167,7 +3017,6 @@ h1, h2, h3 {
   right: 20px;
   text-align: center;
 }
-
 
 /* WRAPPER */
 .category-wrapper {
@@ -3206,7 +3055,7 @@ h1, h2, h3 {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
   transition: 0.2s ease;
   flex-shrink: 0;
 }
@@ -3333,8 +3182,6 @@ h1, h2, h3 {
   }
 }
 
-
-
 /* 1. Вирівнювання ПІБ автора у картках до самого низу контейнера */
 .catalog-card {
   display: flex;
@@ -3360,13 +3207,13 @@ h1, h2, h3 {
   .category-wrapper .scroll-btn {
     display: none !important; /* приховуємо стрілочки */
   }
-  
+
   .category-row-new {
     overflow-x: auto !important; /* дозволяємо горизонтальний скрол */
-    -ms-overflow-style: none;  /* для Internet Explorer та Edge */
-    scrollbar-width: none;  /* для Firefox */
+    -ms-overflow-style: none; /* для Internet Explorer та Edge */
+    scrollbar-width: none; /* для Firefox */
   }
-  
+
   .category-row-new::-webkit-scrollbar {
     display: none; /* приховуємо скролбар для Chrome, Safari та Opera */
   }
@@ -3400,7 +3247,7 @@ h1, h2, h3 {
   background: #fff;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 /* 5. Стилізація прямокутного фото автора, біографії та публікацій */
@@ -3414,7 +3261,7 @@ h1, h2, h3 {
   background: #fff;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   margin-bottom: 30px;
 }
 
@@ -3456,7 +3303,6 @@ h1, h2, h3 {
   height: 24px;
 }
 
-
 /* ================= TOOLBAR BUTTONS (Стилізація кнопок сповіщення та кабінету) ================= */
 
 .toolbar-right {
@@ -3471,11 +3317,11 @@ h1, h2, h3 {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
-  background: #fff;
-  border: 2px solid #eadfd2; /* Ніжна бежева рамка */
-  border-radius: 10px;
+  width: 38px;
+  height: 38px;
+  background: #f8f2ea;
+  border: 2px solid #f8f2ea; /* Ніжна бежева рамка */
+  border-radius: 13px;
   cursor: pointer;
   padding: 0;
   transition: background 0.2s ease;
@@ -3505,23 +3351,23 @@ h1, h2, h3 {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Кнопка "Кабінет" (профіль) */
 .profile-btn-nav {
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: #fff;
-  border: 2px solid #eadfd2; /* Ніжна бежева рамка */
-  border-radius: 10px;
-  padding: 8px 16px;
+  gap: 3px;
+  background: #f8f2ea;
+  border: 2px solid #f8f2ea; /* Ніжна бежева рамка */
+  border-radius: 14px;
+  padding: 7px 10px;
   font-size: 16px;
-  color: #333;
+  color: #000000;
   font-weight: 500;
   cursor: pointer;
-  height: 48px;
+  height: 38px;
   box-sizing: border-box;
   transition: background 0.2s ease;
 }
@@ -3540,7 +3386,6 @@ h1, h2, h3 {
   background-size: contain;
   background-repeat: no-repeat;
 }
-
 
 /* ================= PAGINATION BUTTONS (Пагінація як на скріншоті) ================= */
 
@@ -3589,7 +3434,6 @@ h1, h2, h3 {
   color: #aaa;
 }
 
-
 /* ================= MOBILE CATEGORIES (Відображення 3-4 категорій на телефонах) ================= */
 
 @media (max-width: 480px) {
@@ -3597,33 +3441,34 @@ h1, h2, h3 {
     gap: 10px !important;
     justify-content: space-between;
   }
-  
+
   .cat-item {
     flex: 0 0 22% !important; /* Розподіл місця, щоб помістилося 4 штуки */
     min-width: 60px !important;
   }
-  
+
   .cat-circle {
     width: 48px !important;
     height: 48px !important;
   }
-  
+
   .cat-name {
     font-size: 11px !important;
   }
 }
-
 
 /* ================= RECIPE VIEW CORRECT ALIGNMENT (Вирівнювання тексту та мета-гріду ліворуч) ================= */
 
 .recipe-left {
   display: flex;
   flex-direction: column;
-  align-items: flex-start !important; /* Вирівнювання вмісту ліворуч */
+  align-items: flex-start !important;
   background: #fff;
   border: 1px solid #eadfd2;
   border-radius: 12px;
-  padding: 14px;
+  padding: 10px; /* було 14px */
+
+  max-width: 420px; /* можна обмежити */
 }
 
 .recipe-title {
@@ -3642,16 +3487,21 @@ h1, h2, h3 {
   gap: 15px;
 }
 
-
 /* ================= MY RECIPES STATUS BADGE (Статус внизу картки "Мої рецепти") ================= */
 
 .my-recipe-card .status-badge {
-  display: block;
-  font-size: 13px;
-  font-weight: bold;
-  padding: 6px 12px;
-  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  padding: 4px 8px;
+  min-height: 24px;
+
+  border-radius: 4px;
   width: fit-content;
+
   margin-top: 8px;
 }
 
@@ -3671,4 +3521,375 @@ h1, h2, h3 {
   background-color: #e2e3e5;
   color: #383d41;
   border: 1px solid #d6d8db;
+}
+
+/* Правильне вирівнювання дати для відповідей (replies) до правого краю */
+.reply .comment-header {
+  display: flex !important;
+  justify-content: space-between !important; /* Розносить ім'я та дату по боках */
+  align-items: center;
+  width: 100%;
+}
+
+.reply .comment-date {
+  margin-left: auto !important; /* Гарантує притискання дати до правого краю */
+}
+
+/* AI-фільтр підказка при наведенні */
+.ai-comment-filter {
+  cursor: pointer;
+}
+
+/* Центрування гріду властивостей у RecipeView */
+.recipe-meta-grid {
+  display: flex !important;
+  justify-content: center !important; /* Центрує час, порції, складність */
+  align-items: center;
+  gap: 15px;
+  width: 100% !important;
+}
+
+/* Контейнер редагування як на фото 1 (кремовий дизайн) */
+.admin-edit-container-new {
+  padding: 24px;
+  background-color: #faf3ea; /* Світло-кремовий теплий фон */
+  border-radius: 16px;
+  border: 1px solid #eadfd2;
+  margin-top: 15px;
+}
+
+.recipe-form-card-new {
+  background-color: #fdfcf9; /* Фонова підкладка карти */
+  padding: 30px;
+  border-radius: 14px;
+  border: 1px solid #eadfd2;
+}
+
+.edit-card-header h3 {
+  font-size: 20px;
+  color: #513e27;
+  margin-bottom: 20px;
+  font-weight: 600;
+  border-bottom: 1px solid #eadfd2;
+  padding-bottom: 10px;
+}
+
+/* Макет форми: два стовпці */
+.recipe-form-layout-new {
+  display: flex;
+  gap: 30px;
+}
+
+/* Ліва колонка з фото */
+.form-left-col-new {
+  flex: 0 0 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.image-preview-box-new {
+  width: 150px;
+  height: 150px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid #eadfd2;
+  background-color: #fcf9f5;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.image-preview-box-new img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Кнопка "Завантажити фото" (коричневий стиль як на фото 1) */
+.admin-upload-btn-new {
+  margin-top: 12px;
+  background-color: #b88e5d; /* Світло-коричнева бронзова кнопка */
+  color: #fff;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  text-align: center;
+  transition: background-color 0.2s ease;
+}
+
+.admin-upload-btn-new:hover {
+  background-color: #a07849;
+}
+
+/* Права колонка з полями */
+.form-right-col-new {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group-new {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group-new label {
+  font-size: 14px;
+  color: #715e49;
+  font-weight: 500;
+}
+
+.form-group-new input[type="text"],
+.form-group-new input[type="number"],
+.form-group-new textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #eadfd2;
+  border-radius: 12px; /* Закруглені краї як на фото 1 */
+  background-color: #fff;
+  font-size: 14px;
+  color: #333;
+  box-sizing: border-box;
+}
+
+.form-group-new textarea {
+  resize: vertical;
+}
+
+/* Компактний вибір категорії */
+.admin-category-select-new {
+  width: 100%;
+  max-width: 300px; /* Зменшений розмір випадаючого списку */
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid #eadfd2;
+  background-color: #fff;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+}
+
+/* Рядок: Час, Порції, Складність */
+.form-sub-row-new {
+  display: flex;
+  gap: 15px;
+  max-width: 400px;
+}
+
+.form-sub-row-new .flex-1 {
+  flex: 1;
+}
+
+.form-sub-row-new select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid #eadfd2;
+  background-color: #fff;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+}
+
+/* Нижні кнопки як на фото 1 */
+.form-actions-new {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+  border-top: 1px solid #eadfd2;
+  padding-top: 20px;
+}
+
+.btn-save-new {
+  flex: 1;
+  max-width: 350px;
+  background-color: #b88e5d; /* Коричнева кнопка Зберегти */
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-save-new:hover {
+  background-color: #a07849;
+}
+
+.btn-cancel-new {
+  flex: 1;
+  max-width: 350px;
+  background-color: #fdfcf9;
+  color: #715e49;
+  border: 1px solid #eadfd2; /* Контурна рамка кнопки Скасувати */
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-cancel-new:hover {
+  background-color: #f5eedf;
+}
+
+@media (max-width: 768px) {
+  .recipe-form-layout-new {
+    flex-direction: column;
+  }
+  .form-left-col-new {
+    flex: 0 0 auto;
+    margin-bottom: 20px;
+  }
+}
+
+/* ================= RECIPE CREATION: IMAGE PREVIEW ADAPTIVE (Мої рецепти: Адаптив прев'ю зображення) ================= */
+
+.upload-box {
+  grid-area: photo;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+}
+
+/* Обмежуємо розміри прев'ю картинки, щоб вона не накладалась на інший текст */
+.upload-box .preview-img {
+  max-width: 100%;
+  max-height: 180px; /* Фіксуємо висоту */
+  object-fit: contain; /* Картинка масштабується правильно без спотворень */
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+}
+
+/* ================= MOBILE ADAPTIVE FORM PUSH DOWN (Адаптив для форми на телефонах) ================= */
+
+@media (max-width: 480px) {
+  .recipe-form {
+    display: flex;
+    flex-direction: column !important; /* На мобільних все стає в один стовпчик */
+    gap: 15px;
+  }
+
+  .recipe-form input,
+  .recipe-form textarea {
+    font-size: 14px;
+    padding: 10px !important; /* Зменшений внутрішній відступ на маленьких екранах */
+  }
+
+  .upload-box {
+    margin-top: 15px; /* Штовхаємо блок завантаження вниз від попередніх полів */
+  }
+}
+
+/* ================= COMPACT ACTIONS BUTTONS (Менші кнопки Зберегти/Скасувати) ================= */
+
+.form-actions {
+  grid-area: actions;
+  display: flex;
+  gap: 14px;
+  margin-top: 15px;
+  justify-content: flex-start; /* Притискаємо ліворуч, щоб не розтягувалися */
+}
+
+.form-actions button {
+  padding: 10px 20px;
+  width: auto !important; /* Обмежуємо автоматичне розтягнення */
+  min-width: 110px; /* Мінімальна акуратна ширина */
+  font-size: 14px;
+}
+
+/* ================= SLEEK & COMPACT CATEGORIES WINDOWS (Компактний select) ================= */
+
+.sort-select,
+.recipe-form select {
+  width: 100% !important;
+  max-width: 260px; /* Зменшений загальний розмір випадаючого вікна */
+  min-height: 38px; /* Менша за 42px висота */
+  padding: 8px 30px 8px 12px;
+  border: 1px solid #dacdbd;
+  border-radius: 10px;
+  background:
+    linear-gradient(45deg, transparent 50%, #826a55 50%),
+    linear-gradient(135deg, #826a55 50%, transparent 50%), #fff;
+  background-position:
+    calc(100% - 15px) 15px,
+    calc(100% - 11px) 15px,
+    100% 0;
+  background-size:
+    5px 5px,
+    5px 5px,
+    100% 100%;
+  background-repeat: no-repeat;
+  appearance: none;
+  color: #4c3d32;
+  font-weight: 700;
+  font-size: 13px; /* Трохи менший шрифт для акуратності */
+}
+
+/* ================= CATALOG FILTER & SEARCH IMPROVED (Покращений пошук та фільтри) ================= */
+
+.catalog-filter-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+  flex-wrap: wrap; /* Дозволяє красиво переноситись на нові рядки при потребі */
+}
+
+/* Робимо пошук меншим, щоб фільтру залишити більше місця */
+.search-bar {
+  display: flex;
+  gap: 8px;
+  flex: 1;
+  max-width: 48%; /* Пошуковий блок займає до 48% ширини */
+  min-width: 260px;
+}
+
+.search-bar input {
+  flex: 1;
+  padding: 8px 12px; /* Компактніший інпут пошуку */
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  outline: none;
+  font-size: 13px;
+}
+
+.search-btn {
+  border: none;
+  padding: 8px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  background: rgba(162, 118, 69, 0.8);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Менша кнопка очищення */
+.clear-btn {
+  border: none;
+  padding: 6px 10px; /* Компактніші відступи */
+  border-radius: 20px;
+  cursor: pointer;
+  color: white;
+  font-size: 11px; /* Менший шрифт */
+}
+
+/* Блок фільтру має більше простору */
+.sort-box {
+  flex: 1;
+  max-width: 300px; /* Збільшуємо максимальну доступну ширину для фільтру */
+  display: flex;
+  justify-content: flex-end;
 }

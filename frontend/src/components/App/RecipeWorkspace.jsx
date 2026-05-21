@@ -92,14 +92,15 @@ export default function RecipeWorkspace({
   onOpenAuthorProfile,
 }) {
   const [favorites, setFavorites] = useState([]);
-  const [allCategories, setAllCategories] = useState(["Усі"]);
-  const [selectedCategory, setSelectedCategory] = useState("Усі");
+  const [allCategories, setAllCategories] = useState(["Усі рецепти"]);
+  const [selectedCategory, setSelectedCategory] = useState("Усі рецепти");
   const [sortBy, setSortBy] = useState("default");
   const [loading, setLoading] = useState(true);
 
   // Стан пагінації (по 15 елементів на сторінку)
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 15;
+
   // Автоматичний скрол вгору при зміні сторінки каталогу
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
@@ -134,7 +135,7 @@ export default function RecipeWorkspace({
           const cats = Array.from(
             new Set(recipes.map((r) => r.category || "Інші рецепти")),
           );
-          setAllCategories(["Усі", ...cats.filter((c) => c !== "Усі")]);
+          setAllCategories(["Усі рецепти", ...cats.filter((c) => c !== "Усі рецепти")]);
         }
       } catch (err) {
         console.error(err);
@@ -175,6 +176,13 @@ export default function RecipeWorkspace({
     });
   };
 
+  // Вага для складності при сортуванні
+  const difficultyWeights = {
+    easy: 1,
+    medium: 2,
+    hard: 3,
+  };
+
   const filteredAndSortedRecipes = recipes
     .filter((r) => {
       const matchesSearch = searchActive
@@ -183,7 +191,7 @@ export default function RecipeWorkspace({
         : true;
 
       const matchesCategory =
-        selectedCategory === "Усі" || r.category === selectedCategory;
+        selectedCategory === "Усі рецепти" || r.category === selectedCategory;
 
       const matchesFavorites = showFavorites ? favorites.includes(r.id) : true;
 
@@ -192,6 +200,21 @@ export default function RecipeWorkspace({
     .sort((a, b) => {
       if (sortBy === "rating") return (b.rating || 0) - (a.rating || 0);
       if (sortBy === "newest") return b.id - a.id;
+
+      // Сортування за легкістю
+      if (sortBy === "difficulty_easy") {
+        const weightA = difficultyWeights[a.difficulty?.toLowerCase()] || 1;
+        const weightB = difficultyWeights[b.difficulty?.toLowerCase()] || 1;
+        return weightA - weightB;
+      }
+
+      // Сортування за складністю
+      if (sortBy === "difficulty_hard") {
+        const weightA = difficultyWeights[a.difficulty?.toLowerCase()] || 1;
+        const weightB = difficultyWeights[b.difficulty?.toLowerCase()] || 1;
+        return weightB - weightA;
+      }
+
       return 0;
     });
 
@@ -284,6 +307,11 @@ export default function RecipeWorkspace({
             <option value="default">Сортувати за...</option>
             <option value="rating">Найкращий рейтинг</option>
             <option value="newest">Найновіші</option>
+            {/* Додані опції сортування за складністю */}
+            <option value="difficulty_easy">Складність: спочатку легкі</option>
+            <option value="difficulty_hard">
+              Складність: спочатку складні
+            </option>
           </select>
         </div>
       </div>
