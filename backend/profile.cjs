@@ -78,8 +78,10 @@ router.put("/", auth, upload.single("avatar"), (req, res) => {
   }
 
   const avatarFile = req.file;
-
   const newAvatar = avatarFile ? avatarFile.filename : currentUser.avatar;
+
+  // Використовуємо bio, якщо воно надіслане (навіть якщо порожнє), інакше залишаємо старе
+  const updatedBio = bio !== undefined ? bio : currentUser.bio;
 
   db.prepare(
     `
@@ -91,14 +93,14 @@ router.put("/", auth, upload.single("avatar"), (req, res) => {
         avatar = ?
     WHERE id = ?
   `,
-  ).run(firstName, lastName, email, bio ?? currentUser.bio, newAvatar, currentUser.id);
+  ).run(firstName, lastName, email, updatedBio, newAvatar, currentUser.id);
 
   const updatedUser = {
     id: currentUser.id,
     email,
     firstName,
     lastName,
-    bio: bio ?? currentUser.bio,
+    bio: updatedBio,
     role: currentUser.role,
     avatar: newAvatar ? `${BASE_URL}/uploads/${newAvatar}` : null,
   };

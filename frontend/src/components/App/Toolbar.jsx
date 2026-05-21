@@ -3,7 +3,6 @@ export default function Toolbar({
   onToggleSidebar,
   setPage,
   onLogout,
-  onBack,
   unreadCount = 0,
 }) {
   const isAdmin = user?.role === "admin";
@@ -23,25 +22,35 @@ export default function Toolbar({
             <button onClick={() => setPage("favorites")}>Обране</button>
           )}
           {!isAdmin && <button onClick={() => setPage("ai")}>AI</button>}
-          <button onClick={() => setPage("profile")}>Профіль</button>
           {!isAdmin && (
             <button onClick={() => setPage("myRecipes")}>Мої рецепти</button>
           )}
           {isAdmin && <button onClick={() => setPage("admin")}>Заявки</button>}
-          {!isAdmin && (
-            <button
-              className="notifications-nav-btn"
-              onClick={() => setPage("notifications")}
-            >
-              <img src="/images/notifications.svg" alt="" />
-              Сповіщення
-              {unreadCount > 0 && <span>{unreadCount}</span>}
-            </button>
-          )}
         </div>
       </div>
 
       <div className="toolbar-right">
+        {/* Сповіщення (тільки для користувачів) */}
+        {!isAdmin && (
+          <button
+            className="notifications-nav-btn"
+            onClick={() => setPage("notifications")}
+          >
+            <img src="/images/notifications.svg" alt="bell" />
+            {unreadCount > 0 && <span>{unreadCount}</span>}
+          </button>
+        )}
+
+        {/* Вкладка Профіль/Кабінет (тільки для користувачів) */}
+        {!isAdmin && (
+          <button
+            className="profile-btn-nav"
+            onClick={() => setPage("profile")}
+          >
+            Кабінет
+          </button>
+        )}
+
         <button className="logout-btn" onClick={onLogout}>
           ⎗ Вийти
         </button>

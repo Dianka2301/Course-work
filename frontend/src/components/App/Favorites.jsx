@@ -3,13 +3,25 @@ import { fetchFavorites, toggleFavorite } from "../../api/favorites.js";
 
 const BASE_URL = "http://localhost:4000";
 
-function FavoriteCard({ recipe, onOpenRecipe, onRemove }) {
+// Функція перевірки системного адміністратора
+const isSystemAdmin = (name) => {
+  if (!name) return true;
+  const lower = name.toLowerCase().trim();
+  return lower === "diana admin" || lower === "admin";
+};
+
+function FavoriteCard({ recipe, onOpenRecipe, onRemove, onOpenAuthorProfile }) {
   const rating = Number(recipe.rating || 0);
 
   return (
-    <div className="recipe-card catalog-card" onClick={() => onOpenRecipe(recipe)}>
+    <div
+      className="recipe-card catalog-card"
+      onClick={() => onOpenRecipe(recipe)}
+    >
       <div className="recipe-card-image-wrap">
-        {recipe.prep_time && <span className="time-chip">{recipe.prep_time}</span>}
+        {recipe.prep_time && (
+          <span className="time-chip">{recipe.prep_time}</span>
+        )}
         <img
           src={`${BASE_URL}/images/${recipe.image}`}
           className="recipe-img"
@@ -49,15 +61,24 @@ function FavoriteCard({ recipe, onOpenRecipe, onRemove }) {
             ))}
         </div>
 
-        {recipe.authorName && (
-          <div className="recipe-card-author">{recipe.authorName}</div>
+        {recipe.authorName && !isSystemAdmin(recipe.authorName) && (
+          <div
+            className="recipe-card-author"
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpenAuthorProfile?.(recipe.user_id);
+            }}
+            style={{ cursor: "pointer", textDecoration: "underline" }}
+          >
+            {recipe.authorName}
+          </div>
         )}
       </div>
     </div>
   );
 }
 
-export default function Favorites({ onOpenRecipe }) {
+export default function Favorites({ onOpenRecipe, onOpenAuthorProfile }) {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -76,7 +97,6 @@ export default function Favorites({ onOpenRecipe }) {
     loadFavorites();
   }, []);
 
-  // ❤️ REMOVE FROM FAVORITES
   const handleToggle = async (recipeId) => {
     try {
       const res = await toggleFavorite(recipeId);
@@ -92,16 +112,20 @@ export default function Favorites({ onOpenRecipe }) {
   if (loading)
     return <p style={{ padding: "20px" }}>Завантаження обраних рецептів...</p>;
 
+  // Дизайн як у сповіщеннях, коли порожньо
   if (recipes.length === 0)
     return (
-      <p style={{ padding: "20px", fontSize: "16px" }}>
-        У вас ще немає обраних рецептів ❤️
-      </p>
+      <div
+        className="empty-state"
+        style={{ padding: "40px 20px", textAlign: "center" }}
+      >
+        <h3>У вас ще немає обраних рецептів</h3>
+        <p>Додавайте улюблені рецепти за допомогою сердечка ❤️ у каталозі.</p>
+      </div>
     );
 
   return (
     <div style={{ padding: "20px" }}>
-      {/* 🔥 GRID */}
       <div className="recipes-grid">
         {recipes.map((recipe) => (
           <FavoriteCard
@@ -109,6 +133,7 @@ export default function Favorites({ onOpenRecipe }) {
             recipe={recipe}
             onOpenRecipe={onOpenRecipe}
             onRemove={handleToggle}
+            onOpenAuthorProfile={onOpenAuthorProfile}
           />
         ))}
       </div>

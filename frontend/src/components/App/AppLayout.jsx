@@ -9,7 +9,13 @@ import RecipeView from "./RecipeView.jsx";
 import Profile from "./Profile.jsx";
 import AdminModeration from "./AdminModeration.jsx";
 import Notifications from "./Notifications.jsx";
-import { fetchRecipes, fetchUnreadNotificationsCount } from "../../api/recipes";
+import {
+  fetchRecipes,
+  fetchUnreadNotificationsCount,
+  updateAdminRecipe,
+} from "../../api/recipes";
+
+const BASE_URL = "http://localhost:4000";
 
 export default function AppLayout({ user, setUser, recipes, onLogout }) {
   const [page, setPage] = useState("catalog");
@@ -17,7 +23,9 @@ export default function AppLayout({ user, setUser, recipes, onLogout }) {
   const [fromPage, setFromPage] = useState("catalog");
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // 🔥 FILTER STATE (backend-driven)
+  // Стан для перегляду профілю іншого автора
+  const [authorProfile, setAuthorProfile] = useState(null);
+
   const [category, setCategory] = useState("all");
   const [sort, setSort] = useState("new");
 
@@ -25,7 +33,6 @@ export default function AppLayout({ user, setUser, recipes, onLogout }) {
   const [serverRecipes, setServerRecipes] = useState(recipes || []);
   const [unreadCount, setUnreadCount] = useState(0);
 
-  // 🔥 LOAD FROM SERVER (category + sort)
   useEffect(() => {
     loadRecipes();
   }, [category, sort]);
@@ -37,9 +44,7 @@ export default function AppLayout({ user, setUser, recipes, onLogout }) {
   const loadRecipes = async () => {
     try {
       setLoadingRecipes(true);
-
       const data = await fetchRecipes(category, sort);
-
       setServerRecipes(data);
     } catch (err) {
       console.error("Recipes load error:", err);
@@ -50,15 +55,19 @@ export default function AppLayout({ user, setUser, recipes, onLogout }) {
 
   const loadUnreadCount = async () => {
     if (!user || user.role === "admin") return;
-    const data = await fetchUnreadNotificationsCount();
-    setUnreadCount(data.count || 0);
+    try {
+      const data = await fetchUnreadNotificationsCount();
+      setUnreadCount(data.count || 0);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  // 🔥 NAVIGATION
   const changePage = (newPage) => {
     setPage(newPage);
     setSelectedRecipe(null);
     setSidebarOpen(false);
+    setAuthorProfile(null);
   };
 
   const openRecipe = (recipe, from) => {
@@ -72,6 +81,36 @@ export default function AppLayout({ user, setUser, recipes, onLogout }) {
     setPage(fromPage);
   };
 
+  // Відкрити публічний профіль автора
+  const openAuthorProfile = (authorId) => {
+    const authorRecipes = serverRecipes.filter((r) => r.user_id === authorId);
+    if (authorRecipes.length === 0) return;
+
+    const firstRecipe = authorRecipes[0];
+    setAuthorProfile({
+      id: authorId,
+      name: firstRecipe.authorName || "Автор",
+      avatar: firstRecipe.avatar || null,
+      bio: firstRecipe.bio || "Біографія відсутня.",
+      recipes: authorRecipes,
+    });
+    setPage("author-profile");
+    setSelectedRecipe(null);
+  };
+
+  // Збереження змін адміном прямо з каталогу
+  const handleAdminUpdateRecipe = async (recipeId, updatedData) => {
+    try {
+      await updateAdminRecipe(recipeId, updatedData);
+      await loadRecipes();
+      if (selectedRecipe && selectedRecipe.id === recipeId) {
+        setSelectedRecipe((prev) => ({ ...prev, ...updatedData }));
+      }
+    } catch (err) {
+      console.error("Admin save from catalog failed:", err);
+    }
+  };
+
   const renderPage = () => {
     if (selectedRecipe) {
       return (
@@ -80,6 +119,8 @@ export default function AppLayout({ user, setUser, recipes, onLogout }) {
           user={user}
           onBack={goBack}
           onOpenRecipe={(r) => openRecipe(r, fromPage)}
+          onOpenAuthorProfile={openAuthorProfile}
+          onAdminUpdate={handleAdminUpdateRecipe} // Передаємо хендлер для збереження змін адміном
         />
       );
     }
@@ -90,6 +131,7 @@ export default function AppLayout({ user, setUser, recipes, onLogout }) {
           <RecipeWorkspace
             recipes={serverRecipes}
             onOpenRecipe={(r) => openRecipe(r, "catalog")}
+            onOpenAuthorProfile={openAuthorProfile}
             category={category}
             setCategory={setCategory}
             sort={sort}
@@ -103,6 +145,7 @@ export default function AppLayout({ user, setUser, recipes, onLogout }) {
           <Favorites
             user={user}
             onOpenRecipe={(r) => openRecipe(r, "favorites")}
+            onOpenAuthorProfile={openAuthorProfile}
           />
         );
 
@@ -124,11 +167,69 @@ export default function AppLayout({ user, setUser, recipes, onLogout }) {
       case "admin":
         return <AdminModeration />;
 
+      case "author-profile":
+        if (!authorProfile) return <p>Завантаження профілю...</p>;
+        return (
+          <div className="author-profile-container">
+            <button className="back-btn" onClick={() => setPage(fromPage)}>
+              ← Назад
+            </button>
+            <div className="author-profile-card-layout">
+              <div className="author-left-rect-avatar">
+                <img
+                  src={
+                    authorProfile.avatar
+                      ? `${BASE_URL}/uploads/${authorProfile.avatar}`
+                      : "/images/default-avatar.png"
+                  }
+                  onError={(e) => {
+                    e.target.src = "/images/default-avatar.png";
+                  }}
+                  alt={authorProfile.name}
+                />
+              </div>
+              <div className="author-right-info">
+                <h2>{authorProfile.name}</h2>
+                <div className="author-bio-section">
+                  <p>{authorProfile.bio}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="author-recipes-section">
+              <h3>Публікації автора ({authorProfile.recipes.length})</h3>
+              <div className="recipes-grid">
+                {authorProfile.recipes.map((r) => (
+                  <div
+                    key={r.id}
+                    className="recipe-card catalog-card"
+                    onClick={() => openRecipe(r, "author-profile")}
+                  >
+                    <div className="recipe-card-image-wrap">
+                      {r.prep_time && (
+                        <span className="time-chip">{r.prep_time}</span>
+                      )}
+                      <img
+                        src={`${BASE_URL}/images/${r.image}`}
+                        alt={r.title}
+                      />
+                    </div>
+                    <div className="card-content">
+                      <h3>{r.title}</h3>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        );
+
       default:
         return (
           <RecipeWorkspace
             recipes={serverRecipes}
             onOpenRecipe={(r) => openRecipe(r, "catalog")}
+            onOpenAuthorProfile={openAuthorProfile}
             category={category}
             setCategory={setCategory}
             sort={sort}
@@ -155,7 +256,11 @@ export default function AppLayout({ user, setUser, recipes, onLogout }) {
         {user?.role !== "admin" && (
           <button onClick={() => changePage("ai")}>AI рецепти</button>
         )}
-        <button onClick={() => changePage("profile")}>Профіль</button>
+
+        {/* Профіль приховано в сайдбарі для адміна */}
+        {user?.role !== "admin" && (
+          <button onClick={() => changePage("profile")}>Профіль</button>
+        )}
 
         {user?.role !== "admin" && (
           <button onClick={() => changePage("myRecipes")}>Мої рецепти</button>

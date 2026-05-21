@@ -29,7 +29,20 @@ function parseFlags(flags) {
   }
 }
 
-export default function RecipeView({ recipe, user, onBack, onOpenRecipe }) {
+// Функція перевірки чи є автор системним адміністратором
+const isSystemAdmin = (name) => {
+  if (!name) return true;
+  const lower = name.toLowerCase().trim();
+  return lower === "diana admin" || lower === "admin";
+};
+
+export default function RecipeView({
+  recipe,
+  user,
+  onBack,
+  onOpenRecipe,
+  onOpenAuthorProfile,
+}) {
   const [details, setDetails] = useState(recipe);
   const [comments, setComments] = useState([]);
   const [similar, setSimilar] = useState([]);
@@ -47,6 +60,8 @@ export default function RecipeView({ recipe, user, onBack, onOpenRecipe }) {
     loadRecipe();
     loadComments();
     loadSimilar();
+    // Перекидає вгору сторінки при зміні id рецепта
+    window.scrollTo({ top: 0, behavior: "instant" });
   }, [recipe.id]);
 
   const loadRecipe = async () => {
@@ -181,6 +196,25 @@ export default function RecipeView({ recipe, user, onBack, onOpenRecipe }) {
       <button className="back-btn" onClick={onBack}>
         ← Назад
       </button>
+      {user?.role === "admin" && (
+        <button
+          className="publish-btn"
+          style={{ marginLeft: "10px" }}
+          onClick={() => {
+            // Ви можете викликати модальне вікно або відкривати поля редагування.
+            // Наприклад, звичайний alert або відкриття форми.
+            const newTitle = prompt(
+              "Введіть нову назву рецепта:",
+              details.title,
+            );
+            if (newTitle) {
+              onAdminUpdate(details.id, { ...details, title: newTitle });
+            }
+          }}
+        >
+          Швидке редагування назви (Адмін)
+        </button>
+      )}
 
       <div className="recipe-layout">
         <div className="recipe-left">
@@ -192,9 +226,15 @@ export default function RecipeView({ recipe, user, onBack, onOpenRecipe }) {
 
           <h2 className="recipe-title">{details.title}</h2>
 
-          {details.authorName && (
+          {details.authorName && !isSystemAdmin(details.authorName) && (
             <div className="recipe-author">
-              Автор: <b>{details.authorName}</b>
+              Автор:{" "}
+              <b
+                onClick={() => onOpenAuthorProfile?.(details.user_id)}
+                style={{ cursor: "pointer", textDecoration: "underline" }}
+              >
+                {details.authorName}
+              </b>
             </div>
           )}
 
@@ -386,9 +426,11 @@ export default function RecipeView({ recipe, user, onBack, onOpenRecipe }) {
                     }
                     placeholder="Написати відповідь..."
                   />
-                  <button onClick={() => handleAddReply(c.id)}>
+                  <button
+                    onClick={() => handleAddReply(c.id)}
+                    className="send-btn-icon-only"
+                  >
                     <img src="/images/send.png" alt="send" />
-                    send
                   </button>
                 </div>
               )}
@@ -397,19 +439,22 @@ export default function RecipeView({ recipe, user, onBack, onOpenRecipe }) {
                 <div className="reply-list">
                   {c.replies.map((reply) => (
                     <div key={reply.id} className="reply">
-                      <img
-                        src={avatarSrc(reply.avatar)}
-                        alt="avatar"
-                        className="comment-avatar"
-                      />
-                      <div>
-                        <div className="comment-header">
-                          <b>{reply.userName}</b>
-                          <span className="comment-date">
-                            {formatDate(reply.created_at)}
-                          </span>
+                      {/* Оновлена структура для правильного позиціонування дати за CSS-класами */}
+                      <div className="comment-top">
+                        <img
+                          src={avatarSrc(reply.avatar)}
+                          alt="avatar"
+                          className="comment-avatar"
+                        />
+                        <div className="comment-info">
+                          <div className="comment-header">
+                            <b>{reply.userName}</b>
+                            <span className="comment-date">
+                              {formatDate(reply.created_at)}
+                            </span>
+                          </div>
+                          <div className="comment-text">{reply.text}</div>
                         </div>
-                        <div className="comment-text">{reply.text}</div>
                       </div>
                     </div>
                   ))}
@@ -440,9 +485,8 @@ export default function RecipeView({ recipe, user, onBack, onOpenRecipe }) {
             placeholder="Написати коментар..."
           />
 
-          <button onClick={handleAddComment}>
+          <button onClick={handleAddComment} className="send-btn-icon-only">
             <img src="/images/send.png" alt="send" />
-            send
           </button>
         </div>
       </div>

@@ -71,6 +71,9 @@ export default function AdminModeration() {
             }
           : null,
       );
+
+      // Скролимо вікно на початок при виборі рецепта
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (err) {
       console.error(err);
       showToast("Не вдалося відкрити заявку");
@@ -161,9 +164,9 @@ export default function AdminModeration() {
                   <td>{item.title}</td>
                   <td>{item.authorName}</td>
                   <td>
-                    {new Date(item.updated_at || item.created_at).toLocaleDateString(
-                      "uk-UA",
-                    )}
+                    {new Date(
+                      item.updated_at || item.created_at,
+                    ).toLocaleDateString("uk-UA")}
                   </td>
                   <td>{item.status}</td>
                   <td>{item.ai_score ? `${item.ai_score}/5` : "-"}</td>
@@ -171,10 +174,18 @@ export default function AdminModeration() {
                     <button onClick={() => openRequest(item.id)}>
                       Переглянути
                     </button>
-                    <button onClick={() => approveAdminRecipe(item.id).then(loadRequests)}>
+                    <button
+                      onClick={() =>
+                        approveAdminRecipe(item.id).then(loadRequests)
+                      }
+                    >
                       Схвалити
                     </button>
-                    <button onClick={() => rejectAdminRecipe(item.id).then(loadRequests)}>
+                    <button
+                      onClick={() =>
+                        rejectAdminRecipe(item.id).then(loadRequests)
+                      }
+                    >
                       Відхилити
                     </button>
                   </td>
@@ -191,7 +202,9 @@ export default function AdminModeration() {
               <label>Назва</label>
               <input
                 value={editForm?.title || ""}
-                onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
+                onChange={(e) =>
+                  setEditForm({ ...editForm, title: e.target.value })
+                }
               />
 
               <label>Опис</label>
@@ -255,7 +268,9 @@ export default function AdminModeration() {
               <label>Кроки</label>
               <textarea
                 value={editForm?.steps || ""}
-                onChange={(e) => setEditForm({ ...editForm, steps: e.target.value })}
+                onChange={(e) =>
+                  setEditForm({ ...editForm, steps: e.target.value })
+                }
               />
             </div>
 
@@ -263,7 +278,9 @@ export default function AdminModeration() {
               <span>{selected.category}</span>
               <span>{selected.prep_time || "Час не вказано"}</span>
               <span>
-                {selected.portions ? `${selected.portions} порц.` : "Порції не вказано"}
+                {selected.portions
+                  ? `${selected.portions} порц.`
+                  : "Порції не вказано"}
               </span>
               <span>{selected.difficulty || "easy"}</span>
             </div>
@@ -279,8 +296,12 @@ export default function AdminModeration() {
                 AI-аналіз
               </button>
               <button onClick={handleAdminSave}>Зберегти зміни</button>
-              <button onClick={() => handleDecision("approve")}>Схвалити</button>
-              <button onClick={() => handleDecision("reject")}>Відхилити</button>
+              <button onClick={() => handleDecision("approve")}>
+                Схвалити
+              </button>
+              <button onClick={() => handleDecision("reject")}>
+                Відхилити
+              </button>
             </div>
 
             {analysis && (

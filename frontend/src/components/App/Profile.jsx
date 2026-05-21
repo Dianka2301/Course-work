@@ -6,6 +6,7 @@ export default function Profile({ user, setUser }) {
   const [firstName, setFirstName] = useState(user.firstName || "");
   const [lastName, setLastName] = useState(user.lastName || "");
   const [email, setEmail] = useState(user.email || "");
+  const [bio, setBio] = useState(user.bio || ""); // Стан для біографії
 
   const [avatarFile, setAvatarFile] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -13,7 +14,6 @@ export default function Profile({ user, setUser }) {
   const [cropImage, setCropImage] = useState(null);
   const [toast, setToast] = useState(null);
 
-  //const token = localStorage.getItem("token");
   const getToken = () => localStorage.getItem("token");
 
   /* ---------------- TOAST ---------------- */
@@ -28,6 +28,7 @@ export default function Profile({ user, setUser }) {
     setFirstName(user.firstName || "");
     setLastName(user.lastName || "");
     setEmail(user.email || "");
+    setBio(user.bio || "");
   }, [user]);
 
   /* ---------------- FILE SELECT ---------------- */
@@ -53,6 +54,7 @@ export default function Profile({ user, setUser }) {
     formData.append("firstName", firstName);
     formData.append("lastName", lastName);
     formData.append("email", email);
+    formData.append("bio", bio); // Додаємо біо в запит
 
     if (avatarFile) {
       formData.append("avatar", avatarFile);
@@ -61,7 +63,6 @@ export default function Profile({ user, setUser }) {
     try {
       const res = await updateProfile(formData, getToken());
 
-      // 🔥 backend вже повертає FULL user
       setUser(res.user);
 
       localStorage.setItem("token", res.token);
@@ -76,7 +77,6 @@ export default function Profile({ user, setUser }) {
     }
   };
 
-  /* ---------------- AVATAR (FIXED LOGIC) ---------------- */
   const avatarSrc = preview || user.avatar || "/images/default-avatar.png";
 
   return (
@@ -95,6 +95,7 @@ export default function Profile({ user, setUser }) {
             onError={(e) => {
               e.target.src = "/images/default-avatar.png";
             }}
+            alt="avatar"
           />
 
           <label className="upload-btn">
@@ -108,14 +109,50 @@ export default function Profile({ user, setUser }) {
       <div className="profile-form-card">
         <h3>Редагування профілю</h3>
 
-        <input
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
-        />
+        <div className="form-field">
+          <label>Ім'я</label>
+          <input
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            placeholder="Ваше ім'я"
+          />
+        </div>
 
-        <input value={lastName} onChange={(e) => setLastName(e.target.value)} />
+        <div className="form-field">
+          <label>Прізвище</label>
+          <input
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            placeholder="Ваше прізвище"
+          />
+        </div>
 
-        <input value={email} onChange={(e) => setEmail(e.target.value)} />
+        <div className="form-field">
+          <label>Email</label>
+          <input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Ваш email"
+          />
+        </div>
+
+        <div className="form-field">
+          <label>Про себе (Біографія)</label>
+          <textarea
+            value={bio}
+            onChange={(e) => setBio(e.target.value)}
+            placeholder="Розкажіть трохи про себе..."
+            className="bio-textarea"
+            rows={4}
+            style={{
+              width: "100%",
+              padding: "10px",
+              borderRadius: "6px",
+              border: "1px solid #ccc",
+              resize: "vertical",
+            }}
+          />
+        </div>
 
         <button className="save-btn" onClick={handleSave}>
           Зберегти

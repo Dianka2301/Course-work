@@ -2,61 +2,33 @@ import React, { useState, useEffect, useRef } from "react";
 import { fetchFavorites, toggleFavorite } from "../../api/favorites.js";
 import searchIcon from "../../images/glass.jpg";
 
-export default function RecipeWorkspace({
-  recipes = [],
-  showFavorites,
-  onOpenRecipe,
-  refreshRecipes,
-}) {
-  const [favorites, setFavorites] = useState([]);
-  const [allCategories, setAllCategories] = useState(["Усі"]); // Фіксований список
-  const [selectedCategory, setSelectedCategory] = useState("Усі");
-  const [sortBy, setSortBy] = useState("default"); // Стан для сортування
-  const [loading, setLoading] = useState(true);
+const BASE_URL = "http://localhost:4000";
 
-  // 🔍 SEARCH
-  const [searchInput, setSearchInput] = useState("");
-  const [searchActive, setSearchActive] = useState(false);
-  const [search, setSearch] = useState("");
-  const scrollRef = useRef(null);
-
-  const BASE_URL = "http://localhost:4000";
-
-
-const categoryIcons = {
-  "Усі рецепти": `${BASE_URL}/images/category/all.jpg`,
-
-  Сніданки: `${BASE_URL}/images/category/breakfast.jpg`,
-
-  "Основні страви": `${BASE_URL}/images/category/main_courses.jpg`,
-
-  Супи: `${BASE_URL}/images/category/soups.jpg`,
-
-  Салати: `${BASE_URL}/images/category/salads.jpg`,
-
-  Паста: `${BASE_URL}/images/category/pasta.jpg`,
-
-  Закуски: `${BASE_URL}/images/category/snacks.jpg`,
-
-  Десерти: `${BASE_URL}/images/category/desserts.jpg`,
-
-  Випічка: `${BASE_URL}/images/category/bakery.jpg`,
-
-  "Дієтичні страви":
-    `${BASE_URL}/images/category/diet.jpg`,
-
-  "Напої та смузі":
-    `${BASE_URL}/images/category/drinks.jpg`,
-
+// Функція для перевірки чи є автор системним адміністратором
+const isSystemAdmin = (name) => {
+  if (!name) return true;
+  const lower = name.toLowerCase().trim();
+  return lower === "diana admin" || lower === "admin";
 };
 
-function RecipeCard({ recipe, isFavorite, onOpenRecipe, onToggleFavorite }) {
+function RecipeCard({
+  recipe,
+  isFavorite,
+  onOpenRecipe,
+  onToggleFavorite,
+  onOpenAuthorProfile,
+}) {
   const rating = Number(recipe.rating || 0);
 
   return (
-    <div className="recipe-card catalog-card" onClick={() => onOpenRecipe(recipe)}>
+    <div
+      className="recipe-card catalog-card"
+      onClick={() => onOpenRecipe(recipe)}
+    >
       <div className="recipe-card-image-wrap">
-        {recipe.prep_time && <span className="time-chip">{recipe.prep_time}</span>}
+        {recipe.prep_time && (
+          <span className="time-chip">{recipe.prep_time}</span>
+        )}
         <img
           src={`${BASE_URL}/images/${recipe.image}`}
           className="recipe-img"
@@ -79,9 +51,7 @@ function RecipeCard({ recipe, isFavorite, onOpenRecipe, onToggleFavorite }) {
           {recipe.difficulty && (
             <span className="difficulty-badge">{recipe.difficulty}</span>
           )}
-          {rating > 0 && (
-            <span className="rating-badge">★ {rating}</span>
-          )}
+          {rating > 0 && <span className="rating-badge">★ {rating}</span>}
         </div>
 
         <h3>{recipe.title}</h3>
@@ -98,13 +68,61 @@ function RecipeCard({ recipe, isFavorite, onOpenRecipe, onToggleFavorite }) {
             ))}
         </div>
 
-        {recipe.authorName && (
-          <div className="recipe-card-author">{recipe.authorName}</div>
+        {recipe.authorName && !isSystemAdmin(recipe.authorName) && (
+          <div
+            className="recipe-card-author"
+            onClick={(e) => {
+              e.stopPropagation(); // запобігаємо відкриттю самого рецепту при кліку на автора
+              onOpenAuthorProfile?.(recipe.user_id);
+            }}
+            style={{ cursor: "pointer", textDecoration: "underline" }}
+          >
+            {recipe.authorName}
+          </div>
         )}
       </div>
     </div>
   );
 }
+
+export default function RecipeWorkspace({
+  recipes = [],
+  showFavorites,
+  onOpenRecipe,
+  onOpenAuthorProfile,
+}) {
+  const [favorites, setFavorites] = useState([]);
+  const [allCategories, setAllCategories] = useState(["Усі"]);
+  const [selectedCategory, setSelectedCategory] = useState("Усі");
+  const [sortBy, setSortBy] = useState("default");
+  const [loading, setLoading] = useState(true);
+
+  // Стан пагінації (по 15 елементів на сторінку)
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 15;
+  // Автоматичний скрол вгору при зміні сторінки каталогу
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [currentPage]);
+
+  const [searchInput, setSearchInput] = useState("");
+  const [searchActive, setSearchActive] = useState(false);
+  const [search, setSearch] = useState("");
+  const scrollRef = useRef(null);
+
+  const categoryIcons = {
+    "Усі рецепти": `${BASE_URL}/images/category/all.jpg`,
+    Сніданки: `${BASE_URL}/images/category/breakfast.jpg`,
+    "Основні страви": `${BASE_URL}/images/category/main_courses.jpg`,
+    Супи: `${BASE_URL}/images/category/soups.jpg`,
+    Салати: `${BASE_URL}/images/category/salads.jpg`,
+    Паста: `${BASE_URL}/images/category/pasta.jpg`,
+    Закуски: `${BASE_URL}/images/category/snacks.jpg`,
+    Десерти: `${BASE_URL}/images/category/desserts.jpg`,
+    Випічка: `${BASE_URL}/images/category/bakery.jpg`,
+    "Дієтичні страви": `${BASE_URL}/images/category/diet.jpg`,
+    "Напої та смузі": `${BASE_URL}/images/category/drinks.jpg`,
+  };
 
   useEffect(() => {
     async function loadData() {
@@ -112,7 +130,6 @@ function RecipeCard({ recipe, isFavorite, onOpenRecipe, onToggleFavorite }) {
         const favs = await fetchFavorites();
         setFavorites(favs.map((f) => f.recipe_id || f.id));
 
-        // Зберігаємо повний список категорій лише один раз при першому завантаженні recipes
         if (recipes.length > 0 && allCategories.length === 1) {
           const cats = Array.from(
             new Set(recipes.map((r) => r.category || "Інші рецепти")),
@@ -127,6 +144,11 @@ function RecipeCard({ recipe, isFavorite, onOpenRecipe, onToggleFavorite }) {
     }
     loadData();
   }, [recipes]);
+
+  // Скидання на 1 сторінку при зміні фільтрів чи пошуку
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory, search, sortBy]);
 
   const handleToggleFavorite = async (recipeId) => {
     const { liked } = await toggleFavorite(recipeId);
@@ -153,7 +175,6 @@ function RecipeCard({ recipe, isFavorite, onOpenRecipe, onToggleFavorite }) {
     });
   };
 
-  // 🔥 ЛОГІКА ФІЛЬТРАЦІЇ ТА СОРТУВАННЯ
   const filteredAndSortedRecipes = recipes
     .filter((r) => {
       const matchesSearch = searchActive
@@ -170,9 +191,17 @@ function RecipeCard({ recipe, isFavorite, onOpenRecipe, onToggleFavorite }) {
     })
     .sort((a, b) => {
       if (sortBy === "rating") return (b.rating || 0) - (a.rating || 0);
-      if (sortBy === "newest") return b.id - a.id; // Припускаємо, що більший ID = новіший
+      if (sortBy === "newest") return b.id - a.id;
       return 0;
     });
+
+  // Логіка пагінації рецептів
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedRecipes = filteredAndSortedRecipes.slice(
+    startIndex,
+    startIndex + itemsPerPage,
+  );
+  const totalPages = Math.ceil(filteredAndSortedRecipes.length / itemsPerPage);
 
   if (loading) return <p>Завантаження...</p>;
 
@@ -187,7 +216,6 @@ function RecipeCard({ recipe, isFavorite, onOpenRecipe, onToggleFavorite }) {
           marginBottom: "20px",
         }}
       >
-        {/* 📂 CATEGORIES */}
         <div
           className="category-wrapper"
           style={{ flex: 1, position: "relative" }}
@@ -260,16 +288,17 @@ function RecipeCard({ recipe, isFavorite, onOpenRecipe, onToggleFavorite }) {
         </div>
       </div>
 
-      {/* 🍽 CARDS GRID */}
+      {/* Grid карт */}
       <div className="recipes-grid">
-        {filteredAndSortedRecipes.length > 0 ? (
-          filteredAndSortedRecipes.map((recipe) => (
+        {paginatedRecipes.length > 0 ? (
+          paginatedRecipes.map((recipe) => (
             <RecipeCard
               key={recipe.id}
               recipe={recipe}
               isFavorite={favorites.includes(recipe.id)}
               onOpenRecipe={onOpenRecipe}
               onToggleFavorite={handleToggleFavorite}
+              onOpenAuthorProfile={onOpenAuthorProfile}
             />
           ))
         ) : (
@@ -278,6 +307,47 @@ function RecipeCard({ recipe, isFavorite, onOpenRecipe, onToggleFavorite }) {
           </p>
         )}
       </div>
+
+      {/* Пагінація */}
+      {totalPages > 1 && (
+        <div
+          className="pagination-wrapper"
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: "10px",
+            marginTop: "30px",
+          }}
+        >
+          <button
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            className="pagination-btn"
+          >
+            ‹
+          </button>
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+            (pageNum) => (
+              <button
+                key={pageNum}
+                onClick={() => setCurrentPage(pageNum)}
+                className={`pagination-btn ${currentPage === pageNum ? "active" : ""}`}
+              >
+                {pageNum}
+              </button>
+            ),
+          )}
+          <button
+            disabled={currentPage === totalPages}
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+            className="pagination-btn"
+          >
+            ›
+          </button>
+        </div>
+      )}
     </div>
   );
 }

@@ -8,7 +8,6 @@ import {
 } from "../../api/recipes";
 import editIcon from "../../images/edit.png";
 import deleteIcon from "../../images/delete.png";
-import plusIcon from "../../images/plus.png";
 
 export default function RecipeHistory() {
   const [recipes, setRecipes] = useState([]);
@@ -135,7 +134,6 @@ export default function RecipeHistory() {
 
   /* ------------------ EDIT ------------------ */
   const handleEdit = (r) => {
-    //setForm(r);
     setForm({
       title: r.title || "",
       description: r.description || "",
@@ -158,7 +156,7 @@ export default function RecipeHistory() {
       {toast && <div className="toast">{toast}</div>}
 
       <div className="my-recipes-header">
-        <h2> Мої рецепти</h2>
+        <h2>Мої рецепти</h2>
 
         <button
           className="add-btn"
@@ -301,7 +299,9 @@ export default function RecipeHistory() {
               Завантажити фото
             </label>
 
-            {preview && <img src={preview} className="preview-img" />}
+            {preview && (
+              <img src={preview} className="preview-img" alt="preview" />
+            )}
           </div>
 
           <div className="form-actions">
@@ -323,56 +323,74 @@ export default function RecipeHistory() {
       ) : (
         <div className="recipes-grid">
           {recipes.map((r) => (
-            <div key={r.id} className="recipe-card new">
-              {/* IMAGE */}
-              <div className="image-wrap">
+            <div key={r.id} className="recipe-card catalog-card my-recipe-card">
+              {/* IMAGE WRAP (аналогічно до каталогу) */}
+              <div className="recipe-card-image-wrap">
+                {r.prep_time && (
+                  <span className="time-chip">{r.prep_time}</span>
+                )}
                 <img
                   src={r.image || "/images/placeholder.jpg"}
                   className="recipe-img"
+                  alt={r.title}
                 />
 
-                {/* ACTION BUTTONS */}
+                {/* Кнопки дій у правому кутку картинки */}
                 <div className="card-actions">
-                  <button onClick={() => handleEdit(r)} className="icon-btn">
+                  <button
+                    onClick={() => handleEdit(r)}
+                    className="icon-btn edit"
+                  >
                     <img src={editIcon} alt="edit" />
                   </button>
-
                   <button
                     onClick={() => handleDelete(r.id)}
-                    className="icon-btn"
+                    className="icon-btn delete"
                   >
                     <img src={deleteIcon} alt="delete" />
                   </button>
                 </div>
               </div>
 
-              {/* TITLE */}
-              <h3 className="recipe-title">{r.title}</h3>
-              <div className="recipe-status">
-                Статус: {r.status || "private"}
-              </div>
+              {/* CARD CONTENT */}
+              <div className="card-content">
+                <div className="recipe-card-badges">
+                  <span className="cat-badge">{r.category}</span>
+                  {r.difficulty && (
+                    <span className="difficulty-badge">{r.difficulty}</span>
+                  )}
+                  <span
+                    className={`status-badge status-${r.status || "private"}`}
+                  >
+                    {r.status || "private"}
+                  </span>
+                </div>
 
-              {/* INGREDIENT CHIPS */}
-              <div className="chips">
-                {r.ingredients
-                  ?.split("\n") // Виправляємо спліт на новий рядок
-                  .filter((item) => item.trim() !== "") // Додатково прибираємо порожні рядки, якщо вони є
-                  .slice(0, 4) // Беремо перші 4 інгредієнти для прев'ю-тегів
-                  .map((item, index) => (
-                    <span key={index} className="ingredient-tag">
-                      {item.trim()}
-                    </span>
-                  ))}
-              </div>
+                <h3>{r.title}</h3>
 
-              {r.status !== "pending" && r.status !== "approved" && (
-                <button
-                  className="publish-btn"
-                  onClick={() => handlePublish(r.id)}
-                >
-                  Опублікувати
-                </button>
-              )}
+                {/* INGREDIENT CHIPS */}
+                <div className="ingredients-wrapper">
+                  {r.ingredients
+                    ?.split("\n")
+                    .filter((item) => item.trim() !== "")
+                    .slice(0, 4)
+                    .map((item, index) => (
+                      <span key={index} className="ingredient-tag">
+                        {item.trim()}
+                      </span>
+                    ))}
+                </div>
+
+                {r.status !== "pending" && r.status !== "approved" && (
+                  <button
+                    className="publish-btn"
+                    onClick={() => handlePublish(r.id)}
+                    style={{ marginTop: "12px", width: "100%" }}
+                  >
+                    Опублікувати
+                  </button>
+                )}
+              </div>
             </div>
           ))}
         </div>
