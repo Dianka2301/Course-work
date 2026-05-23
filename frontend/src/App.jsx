@@ -62,8 +62,17 @@ export default function App() {
         path="/"
         element={
           <>
+
             {/* AUTH PAGE */}
-            {!user && <AuthPage onOpenAuth={() => setShowAuthModal(true)} />}
+            {!user && (
+              <AuthPage
+                onOpenAuth={() => setShowAuthModal(true)}
+                onLogin={(u, t) => {
+                  setUser(u);
+                  localStorage.setItem("token", t);
+                }}
+              />
+            )}
 
             {/* MAIN APP */}
             {user && (
