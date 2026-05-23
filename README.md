@@ -6,6 +6,29 @@ Food Recipe App — це сучасна кулінарна веб-платфор
 
 ---
 
+# Технологічний стек
+
+## Frontend
+- React
+- Vite
+- React Router DOM
+- HTML5
+- CSS3 (Flexbox & Grid, адаптивність)
+
+## Backend
+- Node.js
+- Express
+- better-sqlite3 (SQLite)
+- JSON Web Token (JWT)
+- bcrypt (хешування паролів)
+- Multer (завантаження файлів)
+
+## AI Integration
+- Google Generative AI (Gemini API)
+
+
+---
+
 # Основні можливості
 
 ## Профіль користувача
@@ -53,27 +76,6 @@ Food Recipe App — це сучасна кулінарна веб-платфор
 
 ---
 
-# Технологічний стек
-
-## Frontend
-- React
-- Vite
-- React Router DOM
-- HTML5
-- CSS3 (Flexbox & Grid, адаптивність)
-
-## Backend
-- Node.js
-- Express
-- better-sqlite3 (SQLite)
-- JSON Web Token (JWT)
-- Multer (завантаження файлів)
-
-## AI Integration
-- Google Generative AI (Gemini API)
-
----
-
 # Налаштування та запуск
 
 ## 1. Системні вимоги
@@ -89,33 +91,49 @@ cd backend
 npm install
 ```
 
-Створіть .env файл у backend:
+Створіть `.env` файл у backend:
 
-```PORT=4000
+```env
+PORT=4000
 JWT_SECRET=ваша_секретна_строка_jwt
-GEMINI_API_KEY=ваш_api_ключ_від_gemini```
+GEMINI_API_KEY=ваш_api_ключ_від_gemini
+```
 
 Запуск backend:
 
-```node server.cjs```
+```bash
+node server.cjs
+```
 
 Сервер буде доступний:
 
-```http://localhost:4000```
+```text
+http://localhost:4000
+```
 
-3. Frontend
-```cd frontend
+---
+
+## 3. Frontend
+
+```bash
+cd frontend
 npm install
 ```
 
-Створіть .env у frontend:
+Створіть `.env` у frontend:
 
-```VITE_API_URL=http://localhost:4000```
+```env
+VITE_API_URL=http://localhost:4000
+```
 
 Запуск frontend:
 
-```npm run dev```
+```bash
+npm run dev
+```
 
 Додаток буде доступний:
 
+```text
 http://localhost:5173
+```
