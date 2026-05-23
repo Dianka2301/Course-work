@@ -1,5 +1,5 @@
 const Database = require("better-sqlite3");
-const db = new Database("database.db");
+const db = new Database(process.env.DATABASE_PATH || "database.db");
 
 //USERS
 db.prepare(
@@ -205,7 +205,7 @@ db.prepare(
 
 const count = db.prepare("SELECT COUNT(*) as count FROM recipes").get().count;
 
-if (count === 0) {
+if (count === 0 && process.env.NODE_ENV !== "test") {
   const insert = db.prepare(`
     INSERT INTO recipes (
       title, description, ingredients, steps, portions, prep_time, difficulty, image, category, is_public, user_id, status, ai_score, ai_review, ai_confidence, ai_flags, views, updated_at

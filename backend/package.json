@@ -2,10 +2,11 @@
   "name": "food-recipe-app-backend",
   "version": "1.0.0",
   "description": "Food Recipe App server",
-  "main": "server.js",
+  "main": "server.cjs",
   "type": "commonjs",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.cjs",
+    "test": "jest --runInBand"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
@@ -19,5 +20,9 @@
     "nodemailer": "^8.0.7",
     "openai": "^6.27.0",
     "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "jest": "^30.2.0",
+    "supertest": "^7.1.4"
   }
 }
