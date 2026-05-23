@@ -127,9 +127,9 @@ export default function AdminModeration({ onRefresh }) {
                 <th>User ID</th>
                 <th>Назва</th>
                 <th>Автор</th>
-                <th>Дата заявки</th>
+                <th>Дата</th>
                 <th>Статус</th>
-                <th>ШІ</th>
+                <th>ШІ-оцінка</th>
                 <th>Дії</th>
               </tr>
             </thead>
