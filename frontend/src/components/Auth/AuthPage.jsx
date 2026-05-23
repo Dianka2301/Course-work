@@ -1,79 +1,144 @@
 import { useState } from "react";
 import AuthForm from "./AuthForm.jsx";
+import ForgotPassword from "./ForgotPassword.jsx";
 import "./Auth.css";
-import About from "./About.jsx";
 
 export default function AuthPage({ onLogin, onOpenAuth, isModal }) {
-  const [mode, setMode] = useState("login");
+  const [authMode, setAuthMode] = useState("welcome"); // "welcome" | "login" | "register"
 
-  // 🔥 MODAL
+  // 🔹 Якщо цей компонент викликається як модальне вікно (наприклад, з іншої частини сайту)
   if (isModal) {
     return (
       <div className="modal-inner">
         <div className="auth-title">Food Recipe App</div>
-
-        {/* 🔥 TABS */}
         <div className="auth-tabs">
           <button
-            className={mode === "login" ? "active" : ""}
-            onClick={() => setMode("login")}
+            className={authMode === "login" ? "active" : ""}
+            onClick={() => setAuthMode("login")}
           >
             Увійти
           </button>
-
           <button
-            className={mode === "register" ? "active" : ""}
-            onClick={() => setMode("register")}
+            className={authMode === "register" ? "active" : ""}
+            onClick={() => setAuthMode("register")}
           >
             Реєстрація
           </button>
         </div>
-
         <div className="auth-switch-wrapper">
-          <div key={mode} className="auth-switch">
-            <AuthForm mode={mode} onLogin={onLogin} />
-          </div>
+          <AuthForm
+            mode={authMode === "register" ? "register" : "login"}
+            onLogin={onLogin}
+          />
         </div>
       </div>
     );
   }
 
-  // 🔥 NORMAL PAGE
+  // 🔹 ПОВНОЕКРАННИЙ СПЛІТ-ДИЗАЙН
   return (
-    <div className="auth-container">
-      <div className="auth-header">
-        {/* 🔥 ЗАТЕМНЕННЯ */}
-        <div className="hero-overlay"></div>
-
-        <div className="header-top-row">
+    <div className="landing-wrapper">
+      {/* ЛІВА ЧАСТИНА (Світла: 3 картки можливостей) */}
+      <div className="landing-left">
+        <div className="landing-left-content">
           <div className="logo-app">Food Recipe App</div>
 
-          <div className="nav-tabs">
-            <button className="active">Про застосунок</button>
+          <div className="feature-card-item">
+            <h3>ШІ-генерація та модерація</h3>
+            <p>
+              Створюйте унікальні страви за допомогою нашого ШІ-генератора за
+              наявними продуктами. Всі рецепти проходять швидку ШІ-перевірку
+              перед публікацією.
+            </p>
+          </div>
 
-            <button className="login-btn" onClick={onOpenAuth}>
-              Вхід / Реєстрація
-            </button>
+          <div className="feature-card-item">
+            <h3>Модерація та адміністрування</h3>
+            <p>
+              Власна книга рецептів користувачів. Адміністратор приймає
+              остаточне рішення щодо публікації рецепту у загальний каталог
+              платформи.
+            </p>
+          </div>
+
+          <div className="feature-card-item">
+            <h3>Взаємодія, рейтинг та обране</h3>
+            <p>
+              Спілкуйтеся у коментарях, відповідайте на відгуки, ставте оцінки
+              та фільтруйте кулінарні коментарі за допомогою ШІ. Додавайте
+              улюблене у свій список.
+            </p>
+          </div>
+
+          <div className="landing-footer-text">
+            © 2026 Food Recipe App Team. Усі права захищені.
           </div>
         </div>
+      </div>
 
-        {/* 🔥 HERO TEXT */}
-        <div className="hero-text">
-          <h1>Щастя народжується в страві</h1>
+      {/* ПРАВА ЧАСТИНА (Темна: Welcome-текст або інтерактивні форми) */}
+      <div className="landing-right">
+        <div className="landing-right-content">
+          {authMode === "welcome" && (
+            <div className="welcome-section">
+              <h1 className="welcome-title-dark">
+                Готуй <span className="orange-highlight">розумніше</span>,<br />
+                а не складніше
+              </h1>
 
-          <p>
-            Food Recipe App — це місце, де кулінарія стає досвідом, а не просто
-            процесом.
-          </p>
+              <p className="welcome-desc-dark">
+                Перетворіть рутинне готування на задоволення. Довірте штучному
+                інтелекту пошук ідеальних страв, а собі залиште найсмачніше —
+                магію кулінарії!
+              </p>
+
+              <div className="welcome-buttons">
+                <button
+                  className="btn-orange-solid"
+                  onClick={() => setAuthMode("login")}
+                >
+                  Увійти
+                </button>
+                <button
+                  className="btn-white-link"
+                  onClick={() => setAuthMode("register")}
+                >
+                  Реєстрація →
+                </button>
+              </div>
+            </div>
+          )}
+
+          {authMode === "login" && (
+            <div className="form-slide">
+              <button
+                className="back-to-welcome-btn"
+                onClick={() => setAuthMode("welcome")}
+              >
+                ← Назад
+              </button>
+              <h2 className="form-slide-title">Вхід в акаунт</h2>
+              <AuthForm mode="login" onLogin={onLogin} />
+            </div>
+          )}
+
+          {authMode === "register" && (
+            <div className="form-slide">
+              <button
+                className="back-to-welcome-btn"
+                onClick={() => setAuthMode("welcome")}
+              >
+                ← Назад
+              </button>
+              <h2 className="form-slide-title">Реєстрація акаунта</h2>
+              <AuthForm mode="register" onLogin={onLogin} />
+            </div>
+          )}
         </div>
       </div>
 
-      <div className="auth-content">
-        <About />
-        <footer className="landing-footer">
-          © 2026 Food Recipe App Team. Усі права захищені.
-        </footer>
-      </div>
+      {/* Модальне вікно відновлення пароля */}
+      <ForgotPassword />
     </div>
   );
 }

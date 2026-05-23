@@ -3,57 +3,41 @@ import { forgotPassword, resetPassword } from "../../api/auth";
 
 export default function ForgotPassword() {
   const [isOpen, setIsOpen] = useState(false);
-
   const [step, setStep] = useState(1);
-
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
-
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-
   const [loading, setLoading] = useState(false);
-
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  /* ---------------- OPEN MODAL ---------------- */
   useEffect(() => {
     const open = () => setIsOpen(true);
-
     window.addEventListener("openForgotPassword", open);
-
     return () => {
       window.removeEventListener("openForgotPassword", open);
     };
   }, []);
 
-  /* ---------------- CLOSE MODAL ---------------- */
   const closeModal = () => {
     setIsOpen(false);
-
     setStep(1);
-
     setEmail("");
     setCode("");
     setPassword("");
     setConfirmPassword("");
-
     setError("");
     setSuccess("");
-
     setShowPassword(false);
     setShowConfirm(false);
     setLoading(false);
   };
 
-  /* ---------------- SEND CODE ---------------- */
   const handleSendCode = async (e) => {
     e.preventDefault();
-
     if (!email) return;
 
     setError("");
@@ -62,7 +46,6 @@ export default function ForgotPassword() {
 
     try {
       const res = await forgotPassword(email);
-
       if (res.error) {
         setError(res.error);
       } else {
@@ -76,10 +59,8 @@ export default function ForgotPassword() {
     }
   };
 
-  /* ---------------- RESET PASSWORD ---------------- */
   const handleResetPassword = async (e) => {
     e.preventDefault();
-
     setError("");
     setSuccess("");
 
@@ -97,12 +78,10 @@ export default function ForgotPassword() {
 
     try {
       const res = await resetPassword(email, code, password);
-
       if (res.error) {
         setError(res.error);
       } else {
         setSuccess("Пароль успішно змінено");
-
         setTimeout(() => {
           closeModal();
         }, 1200);
@@ -114,7 +93,6 @@ export default function ForgotPassword() {
     }
   };
 
-  /* ---------------- RENDER ---------------- */
   if (!isOpen) return null;
 
   return (
@@ -124,13 +102,10 @@ export default function ForgotPassword() {
           ✕
         </button>
 
-        {/* STEP 1 */}
         {step === 1 && (
           <>
             <h2>Відновлення пароля</h2>
-
             <div className="forgot-step">Крок 1 із 2: введіть email</div>
-
             <p className="forgot-text">
               Введіть електронну пошту, прив’язану до акаунта.
             </p>
@@ -139,17 +114,22 @@ export default function ForgotPassword() {
             {success && <div className="auth-success">{success}</div>}
 
             <form onSubmit={handleSendCode}>
-              <label>Email</label>
-
-              <input
-                type="email"
-                placeholder="example@gmail.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-
-              <button className="auth-btn" disabled={loading}>
+              <div className="form-field-group">
+                <label>Email</label>
+                <input
+                  type="email"
+                  className="forgot-email-input"
+                  placeholder="example@gmail.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+              <button
+                className="auth-btn"
+                style={{ marginTop: "15px" }}
+                disabled={loading}
+              >
                 {loading ? "Надсилання..." : "Надіслати код"}
               </button>
             </form>
@@ -160,71 +140,75 @@ export default function ForgotPassword() {
           </>
         )}
 
-        {/* STEP 2 */}
         {step === 2 && (
           <>
             <h2>Новий пароль</h2>
-
             <div className="forgot-step">Крок 2 із 2</div>
-
             <p className="forgot-text">
-              Код надіслано на:
-              <br />
-              <strong>{email}</strong>
+              Код надіслано на: <strong>{email}</strong>
             </p>
 
             {error && <div className="auth-error">{error}</div>}
             {success && <div className="auth-success">{success}</div>}
 
             <form onSubmit={handleResetPassword}>
-              <label>Код</label>
-              <input
-                type="text"
-                placeholder="123456"
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-                required
-              />
-
-              <label>Новий пароль</label>
-
-              <div className="password-wrapper">
+              <div className="form-field-group">
+                <label>Код</label>
                 <input
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  type="text"
+                  className="forgot-code-input" // 🔥 додано клас
+                  placeholder="123456"
+                  value={code}
+                  onChange={(e) => setCode(e.target.value)}
                   required
                 />
-
-                <button
-                  type="button"
-                  className="toggle-password"
-                  onClick={() => setShowPassword((p) => !p)}
-                >
-                  {showPassword ? "🙈" : "👁"}
-                </button>
               </div>
 
-              <label>Повтор пароля</label>
-
-              <div className="password-wrapper">
-                <input
-                  type={showConfirm ? "text" : "password"}
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
-                />
-
-                <button
-                  type="button"
-                  className="toggle-password"
-                  onClick={() => setShowConfirm((p) => !p)}
-                >
-                  {showConfirm ? "🙈" : "👁"}
-                </button>
+              <div className="form-field-group">
+                <label>Новий пароль</label>
+                <div className="password-wrapper">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    className="forgot-password-input" // 🔥 додано клас
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="toggle-password"
+                    onClick={() => setShowPassword((p) => !p)}
+                  >
+                    {showPassword ? "🙈" : "👁"}
+                  </button>
+                </div>
               </div>
 
-              <button className="auth-btn" disabled={loading}>
+              <div className="form-field-group">
+                <label>Повтор пароля</label>
+                <div className="password-wrapper">
+                  <input
+                    type={showConfirm ? "text" : "password"}
+                    className="forgot-confirm-input" // 🔥 додано клас
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="toggle-password"
+                    onClick={() => setShowConfirm((p) => !p)}
+                  >
+                    {showConfirm ? "🙈" : "👁"}
+                  </button>
+                </div>
+              </div>
+
+              <button
+                className="auth-btn"
+                style={{ marginTop: "15px" }}
+                disabled={loading}
+              >
                 {loading ? "Зміна..." : "Змінити пароль"}
               </button>
             </form>

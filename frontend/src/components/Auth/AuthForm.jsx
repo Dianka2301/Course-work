@@ -49,7 +49,7 @@ export default function AuthForm({ mode, onLogin }) {
 
       onLogin(result.user, result.token);
     } catch (err) {
-      setError(err.message || "Помилка.");
+      setError(err.message || "Помилка авторизації.");
     } finally {
       setLoading(false);
     }
@@ -57,73 +57,68 @@ export default function AuthForm({ mode, onLogin }) {
 
   return (
     <form className="auth-form" onSubmit={handleSubmit}>
-      {/* ❗ ERROR */}
       {error && <div className="auth-error">{error}</div>}
 
-      {/* 🆕 ІМ’Я + ПРІЗВИЩЕ */}
       {!isLogin && (
-        <>
-          <label>Ім’я</label>
-          <input
-            type="text"
-            placeholder="Введіть ім’я"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-            required
-          />
+        <div className="auth-form-row">
+          <div className="form-field-group">
+            <label>Ім’я</label>
+            <input
+              type="text"
+              placeholder="Ім’я"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              required
+            />
+          </div>
 
-          <label>Прізвище</label>
-          <input
-            type="text"
-            placeholder="Введіть прізвище"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-            required
-          />
-        </>
+          <div className="form-field-group">
+            <label>Прізвище</label>
+            <input
+              type="text"
+              placeholder="Прізвище"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              required
+            />
+          </div>
+        </div>
       )}
 
-      {/* 📧 EMAIL */}
-      <label>Email</label>
-      <input
-        type="email"
-        className={error?.includes("Email") ? "input-error" : ""}
-        placeholder="example@gmail.com"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-      />
-      <div className="auth-hint">Використовуйте тільки адресу @gmail.com</div>
-
-      {/* 🔑 PASSWORD */}
-      <label>Пароль</label>
-
-      <div className="password-wrapper">
+      <div className="form-field-group">
+        <label>Email</label>
         <input
-          type={showPassword ? "text" : "password"}
-          className={error?.includes("Пароль") ? "input-error" : ""}
-          placeholder="Введіть пароль"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          type="email"
+          className={error?.includes("Email") ? "input-error" : ""}
+          placeholder="example@gmail.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           required
         />
-
-        <button
-          type="button"
-          className="toggle-password"
-          onClick={() => setShowPassword((prev) => !prev)}
-        >
-          {showPassword ? (
-            <span style={{ textDecoration: "line-through" }}>👁</span>
-          ) : (
-            "👁"
-          )}
-        </button>
+        <div className="auth-hint">Лише адреси @gmail.com</div>
       </div>
 
-      {!isLogin && (
-        <div className="auth-hint">Пароль має містити мінімум 4 символи</div>
-      )}
+      <div className="form-field-group">
+        <label>Пароль</label>
+        <div className="password-wrapper">
+          <input
+            type={showPassword ? "text" : "password"}
+            className={error?.includes("Пароль") ? "input-error" : ""}
+            placeholder="Введіть пароль"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button
+            type="button"
+            className="toggle-password"
+            onClick={() => setShowPassword((prev) => !prev)}
+          >
+            {showPassword ? "👁" : "👁"}
+          </button>
+        </div>
+        {!isLogin && <div className="auth-hint">Мінімум 4 символи</div>}
+      </div>
 
       {isLogin && (
         <div className="auth-links">
@@ -138,7 +133,7 @@ export default function AuthForm({ mode, onLogin }) {
           </button>
         </div>
       )}
-      {/* 🔘 SUBMIT */}
+
       <button className="auth-btn" disabled={loading}>
         {loading ? "Зачекайте..." : isLogin ? "Увійти" : "Зареєструватися"}
       </button>
