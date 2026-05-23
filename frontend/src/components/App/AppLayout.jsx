@@ -17,6 +17,12 @@ import {
 
 const BASE_URL = "http://localhost:4000";
 
+function imageSrc(image) {
+  if (!image) return `${BASE_URL}/images/placeholder.jpg`;
+  if (image.startsWith("http")) return image;
+  return `${BASE_URL}/images/${image}`;
+}
+
 export default function AppLayout({ user, setUser, recipes, onLogout }) {
   const [page, setPage] = useState("catalog");
   const [selectedRecipe, setSelectedRecipe] = useState(null);
@@ -25,6 +31,11 @@ export default function AppLayout({ user, setUser, recipes, onLogout }) {
 
   // Стан для перегляду профілю іншого автора
   const [authorProfile, setAuthorProfile] = useState(null);
+  // Стан для збереження початкової сторінки до переходу на профіль автора
+  const [authorProfileFromPage, setAuthorProfileFromPage] = useState("catalog");
+
+  // Динамічний ключ для примусового скидання форми в "Мої рецепти" [2]
+  const [myRecipesKey, setMyRecipesKey] = useState(0);
 
   const [category, setCategory] = useState("all");
   const [sort, setSort] = useState("new");
@@ -33,9 +44,17 @@ export default function AppLayout({ user, setUser, recipes, onLogout }) {
   const [serverRecipes, setServerRecipes] = useState(recipes || []);
   const [unreadCount, setUnreadCount] = useState(0);
 
+  // Синхронізуємо локальний стан рецептів з пропом, якщо він змінюється зверху
+  useEffect(() => {
+    if (recipes) {
+      setServerRecipes(recipes);
+    }
+  }, [recipes]);
+
+  // 🔥 Додано `user` у залежності: завантажуємо рецепти заново при зміні біо профілю
   useEffect(() => {
     loadRecipes();
-  }, [category, sort]);
+  }, [category, sort, user]);
 
   useEffect(() => {
     loadUnreadCount();
@@ -64,6 +83,9 @@ export default function AppLayout({ user, setUser, recipes, onLogout }) {
   };
 
   const changePage = (newPage) => {
+    if (newPage === "myRecipes" && page === "myRecipes") {
+      setMyRecipesKey((prev) => prev + 1); // збільшуємо ключ
+    }
     setPage(newPage);
     setSelectedRecipe(null);
     setSidebarOpen(false);
@@ -85,6 +107,8 @@ export default function AppLayout({ user, setUser, recipes, onLogout }) {
   const openAuthorProfile = (authorId) => {
     const authorRecipes = serverRecipes.filter((r) => r.user_id === authorId);
     if (authorRecipes.length === 0) return;
+
+    setAuthorProfileFromPage(selectedRecipe ? fromPage : page);
 
     const firstRecipe = authorRecipes[0];
     setAuthorProfile({
@@ -120,7 +144,7 @@ export default function AppLayout({ user, setUser, recipes, onLogout }) {
           onBack={goBack}
           onOpenRecipe={(r) => openRecipe(r, fromPage)}
           onOpenAuthorProfile={openAuthorProfile}
-          onAdminUpdate={handleAdminUpdateRecipe} // Передаємо хендлер для збереження змін адміном
+          onAdminUpdate={handleAdminUpdateRecipe}
         />
       );
     }
@@ -159,19 +183,24 @@ export default function AppLayout({ user, setUser, recipes, onLogout }) {
         return <Profile user={user} setUser={setUser} />;
 
       case "myRecipes":
-        return <RecipeHistory />;
+        // 🔥 Передаємо loadRecipes як проп onRefresh
+        return <RecipeHistory key={myRecipesKey} onRefresh={loadRecipes} />;
 
       case "notifications":
         return <Notifications onChanged={loadUnreadCount} />;
 
       case "admin":
-        return <AdminModeration />;
+        // 🔥 Передаємо loadRecipes як проп onRefresh
+        return <AdminModeration onRefresh={loadRecipes} />;
 
       case "author-profile":
         if (!authorProfile) return <p>Завантаження профілю...</p>;
         return (
           <div className="author-profile-container">
-            <button className="back-btn" onClick={() => setPage(fromPage)}>
+            <button
+              className="back-btn"
+              onClick={() => setPage(authorProfileFromPage)}
+            >
               ← Назад
             </button>
             <div className="author-profile-card-layout">
@@ -209,13 +238,21 @@ export default function AppLayout({ user, setUser, recipes, onLogout }) {
                       {r.prep_time && (
                         <span className="time-chip">{r.prep_time}</span>
                       )}
-                      <img
-                        src={`${BASE_URL}/images/${r.image}`}
-                        alt={r.title}
-                      />
+                      <img src={imageSrc(r.image)} alt={r.title} />
                     </div>
                     <div className="card-content">
                       <h3>{r.title}</h3>
+                      <div className="ingredients-wrapper">
+                        {r.ingredients
+                          ?.split("\n")
+                          .filter((item) => item.trim() !== "")
+                          .slice(0, 3)
+                          .map((item, index) => (
+                            <span key={index} className="ingredient-tag">
+                              {item.trim()}
+                            </span>
+                          ))}
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -254,7 +291,7 @@ export default function AppLayout({ user, setUser, recipes, onLogout }) {
           <button onClick={() => changePage("favorites")}>Обране</button>
         )}
         {user?.role !== "admin" && (
-          <button onClick={() => changePage("ai")}>AI рецепти</button>
+          <button onClick={() => changePage("ai")}>ШІ-генератор</button>
         )}
 
         {/* Профіль приховано в сайдбарі для адміна */}

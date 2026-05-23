@@ -92,7 +92,7 @@
 }
 
 .generate-btn,
-.clear-btn {
+.clear-btn-ai {
   flex: 1;
   border: none;
   padding: 13px;
@@ -108,14 +108,14 @@
   color: white;
 }
 
-.clear-btn {
+.clear-btn-ai {
   border-radius: 20px;
   background: #8f6b50;
   color: white;
 }
 
 .generate-btn:hover,
-.clear-btn:hover {
+.clear-btn-ai:hover {
   box-shadow: 0 4px 15px rgba(66, 46, 16, 0.3);
   transform: translateY(-2px);
 }

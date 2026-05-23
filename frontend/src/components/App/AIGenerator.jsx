@@ -44,7 +44,7 @@ export default function AIGenerator({ onOpenHistory }) {
   return (
     <div className="ai-container">
       <div className="ai-generator-card">
-        <h2 className="ai-title">Recipe Generator</h2>
+        <h2 className="ai-title">Генератор рецептів</h2>
 
         <div className="input-section">
           <div className="section-header">
@@ -66,7 +66,7 @@ export default function AIGenerator({ onOpenHistory }) {
           </div>
 
           <div className="actions">
-            <button className="clear-btn" onClick={() => setIngredients([])}>
+            <button className="clear-btn-ai" onClick={() => setIngredients([])}>
               Очистити
             </button>
             <button

@@ -87,9 +87,9 @@ export default function Notifications({ onChanged }) {
                   {/* <td>{item.is_read ? "прочитано" : "нове"}</td> */}
                   <td>
                     {!item.is_read && (
-                      <button onClick={() => handleRead(item.id)}>read</button>
+                      <button onClick={() => handleRead(item.id)}>✔</button>
                     )}
-                    <button onClick={() => handleDelete(item.id)}>delete</button>
+                    <button onClick={() => handleDelete(item.id)}>🗑</button>
                   </td>
                 </tr>
               ))}

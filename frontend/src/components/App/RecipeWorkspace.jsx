@@ -81,7 +81,7 @@ function RecipeCard({
               e.stopPropagation(); // запобігаємо відкриттю самого рецепту при кліку на автора
               onOpenAuthorProfile?.(recipe.user_id);
             }}
-            style={{ cursor: "pointer", textDecoration: "underline" }}
+            style={{ cursor: "pointer" }}
           >
             {recipe.authorName}
           </div>
@@ -98,7 +98,22 @@ export default function RecipeWorkspace({
   onOpenAuthorProfile,
 }) {
   const [favorites, setFavorites] = useState([]);
-  const [allCategories, setAllCategories] = useState(["Усі рецепти"]);
+
+  // 🔥 Ініціалізуємо стан всередині вашим чітким статичним списком у правильному порядку
+  const [allCategories] = useState([
+    "Усі рецепти",
+    "Сніданки",
+    "Основні страви",
+    "Супи",
+    "Салати",
+    "Паста",
+    "Закуски",
+    "Десерти",
+    "Випічка",
+    "Дієтичні страви",
+    "Напої та смузі",
+  ]);
+
   const [selectedCategory, setSelectedCategory] = useState("Усі рецепти");
   const [sortBy, setSortBy] = useState("default");
   const [loading, setLoading] = useState(true);
@@ -136,13 +151,7 @@ export default function RecipeWorkspace({
       try {
         const favs = await fetchFavorites();
         setFavorites(favs.map((f) => f.recipe_id || f.id));
-
-        if (recipes.length > 0 && allCategories.length === 1) {
-          const cats = Array.from(
-            new Set(recipes.map((r) => r.category || "Інші рецепти")),
-          );
-          setAllCategories(["Усі рецепти", ...cats.filter((c) => c !== "Усі рецепти")]);
-        }
+        // Динамічне зчитування категорій з рецептів повністю видалено
       } catch (err) {
         console.error(err);
       } finally {

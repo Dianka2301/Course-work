@@ -75,23 +75,25 @@ export default function RecipeView({
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState("");
 
-  useEffect(() => {
-    loadRecipe();
-    loadComments();
-    loadSimilar();
-    loadFavoriteState();
-    window.scrollTo({ top: 0, behavior: "instant" });
-  }, [recipe.id]);
+useEffect(() => {
+  loadRecipe();
+  loadComments();
+  loadFavoriteState();
+  window.scrollTo({ top: 0, behavior: "instant" });
+}, [recipe.id]);
 
-  const loadRecipe = async () => {
-    try {
-      const data = await fetchRecipeDetails(recipe.id);
-      setDetails(data);
-      setAvgRating(data.rating || 0);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+const loadRecipe = async () => {
+  try {
+    const data = await fetchRecipeDetails(recipe.id);
+    setDetails(data);
+    setAvgRating(data.rating || 0);
+
+    // Передаємо свіжі дані безпосередньо у функцію схожих рецептів
+    loadSimilar(data);
+  } catch (err) {
+    console.error(err);
+  }
+};
 
   const loadComments = async () => {
     try {
@@ -111,14 +113,48 @@ export default function RecipeView({
     }
   };
 
-  const loadSimilar = async () => {
-    try {
-      const data = await fetchSimilarRecipes(recipe.id);
-      setSimilar(data);
-    } catch (err) {
-      console.error(err);
+const loadSimilar = async (freshDetails) => {
+  try {
+    const data = await fetchSimilarRecipes(recipe.id);
+
+    if (!data || data.length === 0) {
+      setSimilar([]);
+      return;
     }
-  };
+
+    const getIngredientWords = (ingredientsStr) => {
+      if (!ingredientsStr) return [];
+      return ingredientsStr
+        .toLowerCase()
+        .replace(/[0-9]|мл|гр|кг|ст|л|[\s,.;:!?()•-]/g, " ")
+        .split(" ")
+        .filter((word) => word.length > 3);
+    };
+
+    // Використовуємо свіжі дані, які ми щойно отримали з бази
+    const currentIngredients =
+      freshDetails?.ingredients || details?.ingredients || recipe.ingredients;
+    const currentWords = getIngredientWords(currentIngredients);
+
+    const filteredSimilar = data.filter((item) => {
+      if (item.id === recipe.id) return false;
+
+      const itemWords = getIngredientWords(item.ingredients);
+
+      const matchesCount = currentWords.filter((word) =>
+        itemWords.some(
+          (itemWord) => itemWord.includes(word) || word.includes(itemWord),
+        ),
+      ).length;
+
+      return matchesCount >= 3;
+    });
+
+    setSimilar(filteredSimilar);
+  } catch (err) {
+    console.error("Помилка фільтрації схожих рецептів за інгредієнтами:", err);
+  }
+};
 
   const loadFavoriteState = async () => {
     try {
@@ -202,22 +238,132 @@ export default function RecipeView({
       .split(/[\s,.;:!?()]+/)
       .filter((word) => word.length > 3);
     const uniqueRecipeWords = [...new Set(recipeWords)];
-    const kitchenWords = [
-      "інгредієнт",
-      "температур",
-      "градус",
-      "духов",
-      "сіль",
-      "цукор",
-      "борош",
-      "соус",
-      "варити",
-      "смаж",
-      "запік",
-      "хв",
-      "час",
-      "порц",
-    ];
+const kitchenWords = [
+  //  Загальні кулінарні поняття 
+  "інгредієнт",
+  "рецепт",
+  "пропорц",
+  "склад",
+  "смак",
+  "замін",
+  "альтернатив",
+  "продукт",
+
+  //  Температура, режими та обладнання 
+  "температур",
+  "градус",
+  "духов",
+  "пекти",
+  "випік",
+  "піч",
+  "плит",
+  "пательн",
+  "сковор",
+  "каструл",
+  "деко",
+  "форм",
+  "блендер",
+  "міксер",
+  "холодильн",
+  "мікрохвил",
+  "пергамент",
+  "фольг",
+  "сито",
+  "ваг",
+  "мікрохвил",
+
+  //  Процеси приготування (дієслова та дії) 
+  "варити",
+  "відвар",
+  "смаж",
+  "обсмаж",
+  "запік",
+  "запеч",
+  "туш",
+  "тушкува",
+  "наріз",
+  "різа",
+  "шинку",
+  "натир",
+  "натер",
+  "терк",
+  "збива",
+  "збити",
+  "заміс",
+  "заміш",
+  "міси",
+  "просі",
+  "змаст",
+  "змащ",
+  "додат",
+  "додас",
+  "зміш",
+  "переміш",
+  "нагрі",
+  "розігр",
+  "кип",
+  "закип",
+  "охолод",
+  "соли",
+  "посоли",
+  "процід",
+  "настоя",
+  "марину",
+  "бланшу",
+
+  //  Базові інгредієнти та основи 
+  "сіль",
+  "солі",
+  "цукор",
+  "цукр",
+  "борош",
+  "соус",
+  "олій",
+  "масл",
+  "вод",
+  "молок",
+  "яйц",
+  "яєц",
+  "вершк",
+  "спеці",
+  "приправ",
+  "перец",
+  "перц",
+  "часник",
+  "цибул",
+  "м'яс",
+  "риб",
+  "овоч",
+  "фрукт",
+  "зелен",
+  "сир",
+  "тіст",
+  "крем",
+  "шоколад",
+  "пудр",
+  "дріждж",
+  "желатин",
+  "оцет",
+  "крохмал",
+  "ваніл",
+  "сод",
+
+  //  Міри, час та порції 
+  "хв",
+  "хвил",
+  "год",
+  "минут",
+  "порц",
+  "грам",
+  " літр",
+  " мл",
+  " склян",
+  "стакан",
+  "ложк",
+  "чайн",
+  "столов",
+  " дрібк",
+];
 
     return (
       kitchenWords.filter((word) => text.includes(word)).length * 3 +
@@ -288,14 +434,12 @@ export default function RecipeView({
   };
 
   
-  // --- РЕЖИМ РЕДАГУВАННЯ ЯК НА ФОТО 1 ---
+  //  РЕЖИМ РЕДАГУВАННЯ ЯК НА ФОТО 1 
   if (isEditing) {
     return (
-      
       <div className="admin-edit-container-new">
         <div className="recipe-form-card-new">
           <div className="edit-card-header">
-            
             <h3>Редагування рецепту</h3>
           </div>
 
@@ -357,29 +501,15 @@ export default function RecipeView({
                   className="admin-category-select-new"
                 >
                   <option>Сніданки</option>
-                  <option>Салати</option>
                   <option>Основні страви</option>
                   <option>Супи</option>
-                  <option>Десерти</option>
-                  <option>Швидкі страви</option>
-                  <option>Вегетаріанські</option>
-                  <option>Національні кухні</option>
+                  <option>Салати</option>
                   <option>Паста</option>
                   <option>Закуски</option>
+                  <option>Десерти</option>
                   <option>Випічка</option>
                   <option>Дієтичні страви</option>
                   <option>Напої та смузі</option>
-                  "Усі рецепти": `${BASE_URL}/images/category/all.jpg`,
-                  Сніданки: `${BASE_URL}/images/category/breakfast.jpg`,
-                  "Основні страви": `${BASE_URL}
-                  /images/category/main_courses.jpg`, Супи: `${BASE_URL}
-                  /images/category/soups.jpg`, Салати: `${BASE_URL}
-                  /images/category/salads.jpg`, Паста: `${BASE_URL}
-                  /images/category/pasta.jpg`, Закуски: `${BASE_URL}
-                  /images/category/snacks.jpg`, Десерти: `${BASE_URL}
-                  /images/category/desserts.jpg`, Випічка: `${BASE_URL}
-                  /images/category/bakery.jpg`, "Дієтичні страви": `${BASE_URL}
-                  /images/category/diet.jpg`, "Напої та смузі
                 </select>
               </div>
 
@@ -465,7 +595,7 @@ export default function RecipeView({
     );
   }
 
-  // --- РЕЖИМ ПЕРЕГЛЯДУ (З ЦЕНТРУВАННЯМ ТА ЗМЕНШЕНИМ ФОТО) ---
+  //  РЕЖИМ ПЕРЕГЛЯДУ (З ЦЕНТРУВАННЯМ ТА ЗМЕНШЕНИМ ФОТО) 
   return (
     <div className="recipe-view">
       <button className="back-btn" onClick={onBack}>
@@ -519,7 +649,6 @@ export default function RecipeView({
           <h2
             className="recipe-title"
             style={{
-              textAlign: "center",
               width: "100%",
               marginTop: "15px",
               marginBottom: "5px",
@@ -662,12 +791,12 @@ export default function RecipeView({
       {details.ai_review && (
         <div className="public-ai-review">
           <button onClick={() => setShowAiReview((prev) => !prev)}>
-            {showAiReview ? "Згорнути AI-аналіз" : "Розгорнути AI-аналіз"}
+            {showAiReview ? "Згорнути ШІ-аналіз" : "Розгорнути ШІ-аналіз"}
           </button>
           {showAiReview && (
             <div className="public-ai-review-body">
               {details.ai_score && (
-                <strong>AI оцінка: {details.ai_score}/5</strong>
+                <strong>ШІ оцінка: {details.ai_score}/5</strong>
               )}
               <p>{details.ai_review}</p>
               {details.ai_flags && (
@@ -704,7 +833,7 @@ export default function RecipeView({
         <div className="comments-head">
           <h4>Коментарі</h4>
           <button
-            title="Можливість фільтрувати коментарі"
+            title="Фільтр коментарів — це функція, яка надає можливість відсортувати відгуки користувачів за допомогою ключових кулінарних маркерів (зокрема інгредієнтів, температури, духовки, часу чи порцій) і підтягнути на самий верх найбільш конструктивні та інформативні коментарі, що безпосередньо стосуються процесу приготування та особливостей рецепту."
             className={
               smartSortComments
                 ? "ai-comment-filter active"
@@ -712,7 +841,7 @@ export default function RecipeView({
             }
             onClick={() => setSmartSortComments((prev) => !prev)}
           >
-            AI-фільтр
+            Фільтр коментарів
           </button>
         </div>
 

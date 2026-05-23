@@ -21,7 +21,9 @@ export default function Toolbar({
           {!isAdmin && (
             <button onClick={() => setPage("favorites")}>Обране</button>
           )}
-          {!isAdmin && <button onClick={() => setPage("ai")}>AI</button>}
+          {!isAdmin && (
+            <button onClick={() => setPage("ai")}>ШІ-генератор</button>
+          )}
           {!isAdmin && (
             <button onClick={() => setPage("myRecipes")}>Мої рецепти</button>
           )}
@@ -47,7 +49,7 @@ export default function Toolbar({
             className="profile-btn-nav"
             onClick={() => setPage("profile")}
           >
-            Кабінет
+            Профіль
           </button>
         )}
 

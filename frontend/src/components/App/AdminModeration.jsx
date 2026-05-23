@@ -15,7 +15,7 @@ function imageSrc(image) {
   return `${BASE_URL}/images/${image}`;
 }
 
-export default function AdminModeration() {
+export default function AdminModeration({ onRefresh }) {
   const [requests, setRequests] = useState([]);
   const [selected, setSelected] = useState(null);
   const [analysis, setAnalysis] = useState(null);
@@ -74,11 +74,11 @@ export default function AdminModeration() {
       setLoading(true);
       const data = await analyzeAdminRecipe(selected.id);
       setAnalysis(data);
-      showToast("AI-аналіз готовий");
+      showToast("ШІ-аналіз готовий");
       loadRequests();
     } catch (err) {
       console.error(err);
-      showToast("AI-аналіз не вдався");
+      showToast("ШІ-аналіз не вдався");
     } finally {
       setLoading(false);
     }
@@ -99,6 +99,9 @@ export default function AdminModeration() {
       setSelected(null);
       setAnalysis(null);
       loadRequests();
+
+      // 🔥 Оновлюємо загальний Каталог після рішення адміна
+      onRefresh?.();
     } catch (err) {
       console.error(err);
       showToast("Дію не виконано");
@@ -126,7 +129,7 @@ export default function AdminModeration() {
                 <th>Автор</th>
                 <th>Дата заявки</th>
                 <th>Статус</th>
-                <th>AI</th>
+                <th>ШІ</th>
                 <th>Дії</th>
               </tr>
             </thead>
@@ -149,14 +152,20 @@ export default function AdminModeration() {
                     </button>
                     <button
                       onClick={() =>
-                        approveAdminRecipe(item.id).then(loadRequests)
+                        approveAdminRecipe(item.id).then(() => {
+                          loadRequests();
+                          onRefresh?.(); // 🔥 Оновлення каталогу
+                        })
                       }
                     >
                       Схвалити
                     </button>
                     <button
                       onClick={() =>
-                        rejectAdminRecipe(item.id).then(loadRequests)
+                        rejectAdminRecipe(item.id).then(() => {
+                          loadRequests();
+                          onRefresh?.(); // 🔥 Оновлення каталогу
+                        })
                       }
                     >
                       Відхилити
@@ -228,7 +237,7 @@ export default function AdminModeration() {
 
             <div className="admin-actions">
               <button onClick={handleAnalyze} disabled={loading}>
-                AI-аналіз
+                ШІ-аналіз
               </button>
               <button onClick={() => handleDecision("approve")}>
                 Схвалити
@@ -240,7 +249,7 @@ export default function AdminModeration() {
 
             {analysis && (
               <div className="ai-review-box">
-                <h4>AI-аналіз</h4>
+                <h4>ШІ-аналіз</h4>
                 <div>Оцінка: {analysis.score}/5</div>
                 <div>Впевненість: {analysis.confidence}</div>
                 <p>{analysis.review}</p>
