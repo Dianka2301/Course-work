@@ -3,6 +3,12 @@ import { fetchFavorites, toggleFavorite } from "../../api/favorites.js";
 
 const BASE_URL = "http://localhost:4000";
 
+const recipeImageSrc = (image) => {
+  if (!image) return `${BASE_URL}/images/placeholder.jpg`;
+  if (image.startsWith("http") || image.startsWith("/")) return image;
+  return `${BASE_URL}/images/${image}`;
+};
+
 // Функція перевірки системного адміністратора
 const isSystemAdmin = (name) => {
   if (!name) return true;
@@ -23,7 +29,7 @@ function FavoriteCard({ recipe, onOpenRecipe, onRemove, onOpenAuthorProfile }) {
           <span className="time-chip">{recipe.prep_time}</span>
         )}
         <img
-          src={`${BASE_URL}/images/${recipe.image}`}
+          src={recipeImageSrc(recipe.image)}
           className="recipe-img"
           alt={recipe.title}
         />

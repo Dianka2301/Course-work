@@ -24,12 +24,42 @@ export default function Profile({ user, setUser }) {
     return () => clearTimeout(t);
   }, [toast]);
 
+  // Слідкуємо за зміною користувача ззовні
   useEffect(() => {
     setFirstName(user.firstName || "");
     setLastName(user.lastName || "");
     setEmail(user.email || "");
     setBio(user.bio || "");
   }, [user]);
+
+  /* ---------------- СВІЖИЙ ЗАПИТ З БЕКЕНДУ ПРИ МОНТУВАННІ ---------------- */
+  useEffect(() => {
+    const fetchFreshProfile = async () => {
+      try {
+        const token = getToken();
+        if (!token) return;
+
+        // Робимо запит до вашого GET роутера profile.cjs
+        const res = await fetch("http://localhost:4000/api/profile", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (res.ok) {
+          const freshData = await res.json();
+          // Оновлюємо стани свіжими даними з БД
+          setUser(freshData);
+          setBio(freshData.bio || "");
+          localStorage.setItem("user", JSON.stringify(freshData));
+        }
+      } catch (err) {
+        console.error("Не вдалося завантажити свіжий профіль:", err);
+      }
+    };
+
+    fetchFreshProfile();
+  }, []);
 
   /* ---------------- FILE SELECT ---------------- */
   const handleFile = (e) => {

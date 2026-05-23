@@ -9,6 +9,14 @@ import {
 import editIcon from "../../images/edit.png";
 import deleteIcon from "../../images/delete.png";
 
+const BASE_URL = "http://localhost:4000";
+
+const recipeImageSrc = (image) => {
+  if (!image) return `${BASE_URL}/images/placeholder.jpg`;
+  if (image.startsWith("http") || image.startsWith("/")) return image;
+  return `${BASE_URL}/images/${image}`;
+};
+
 export default function RecipeHistory() {
   const [recipes, setRecipes] = useState([]);
   const [showForm, setShowForm] = useState(false);
@@ -147,7 +155,7 @@ export default function RecipeHistory() {
       difficulty: r.difficulty || "easy",
     });
     setEditingId(r.id);
-    setPreview(r.image || "");
+    setPreview(recipeImageSrc(r.image));
     setShowForm(true);
   };
 
@@ -330,7 +338,7 @@ export default function RecipeHistory() {
                   <span className="time-chip">{r.prep_time}</span>
                 )}
                 <img
-                  src={r.image || "/images/placeholder.jpg"}
+                  src={recipeImageSrc(r.image)}
                   className="recipe-img"
                   alt={r.title}
                 />

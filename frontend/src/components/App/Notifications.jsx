@@ -74,8 +74,8 @@ export default function Notifications({ onChanged }) {
             <thead>
               <tr>
                 <th>Повідомлення</th>
-                <th>Дата</th>
-                <th>Статус</th>
+                {/* <th>Дата</th> */}
+                {/* <th>Статус</th> */}
                 <th>Дії</th>
               </tr>
             </thead>
@@ -83,8 +83,8 @@ export default function Notifications({ onChanged }) {
               {items.map((item) => (
                 <tr key={item.id} className={item.is_read ? "" : "unread"}>
                   <td>{item.message}</td>
-                  <td>{new Date(item.created_at).toLocaleString("uk-UA")}</td>
-                  <td>{item.is_read ? "прочитано" : "нове"}</td>
+                  {/* <td>{new Date(item.created_at).toLocaleString("uk-UA")}</td> */}
+                  {/* <td>{item.is_read ? "прочитано" : "нове"}</td> */}
                   <td>
                     {!item.is_read && (
                       <button onClick={() => handleRead(item.id)}>read</button>

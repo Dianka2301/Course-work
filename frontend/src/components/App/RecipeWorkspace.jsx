@@ -4,6 +4,12 @@ import searchIcon from "../../images/glass.jpg";
 
 const BASE_URL = "http://localhost:4000";
 
+const recipeImageSrc = (image) => {
+  if (!image) return `${BASE_URL}/images/placeholder.jpg`;
+  if (image.startsWith("http") || image.startsWith("/")) return image;
+  return `${BASE_URL}/images/${image}`;
+};
+
 // Функція для перевірки чи є автор системним адміністратором
 const isSystemAdmin = (name) => {
   if (!name) return true;
@@ -30,7 +36,7 @@ function RecipeCard({
           <span className="time-chip">{recipe.prep_time}</span>
         )}
         <img
-          src={`${BASE_URL}/images/${recipe.image}`}
+          src={recipeImageSrc(recipe.image)}
           className="recipe-img"
           alt={recipe.title}
         />
@@ -293,7 +299,7 @@ export default function RecipeWorkspace({
           </button>
           {searchActive && (
             <button className="clear-btn" onClick={resetSearch}>
-              Очистити
+              ✕
             </button>
           )}
         </div>

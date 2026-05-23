@@ -6,6 +6,7 @@ import {
   fetchSimilarRecipes,
   publishRecipe,
 } from "../../api/recipes";
+import { fetchFavorites, toggleFavorite } from "../../api/favorites";
 
 const BASE_URL = "http://localhost:4000";
 
@@ -56,6 +57,7 @@ export default function RecipeView({
   const [publishing, setPublishing] = useState(false);
   const [smartSortComments, setSmartSortComments] = useState(false);
   const [showAiReview, setShowAiReview] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   // Стан для редагування адміном
   const [isEditing, setIsEditing] = useState(false);
@@ -77,6 +79,7 @@ export default function RecipeView({
     loadRecipe();
     loadComments();
     loadSimilar();
+    loadFavoriteState();
     window.scrollTo({ top: 0, behavior: "instant" });
   }, [recipe.id]);
 
@@ -112,6 +115,24 @@ export default function RecipeView({
     try {
       const data = await fetchSimilarRecipes(recipe.id);
       setSimilar(data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const loadFavoriteState = async () => {
+    try {
+      const data = await fetchFavorites();
+      setIsFavorite(data.some((item) => (item.recipe_id || item.id) === recipe.id));
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleToggleFavorite = async () => {
+    try {
+      const data = await toggleFavorite(recipe.id);
+      setIsFavorite(data.liked);
     } catch (err) {
       console.error(err);
     }
@@ -180,6 +201,7 @@ export default function RecipeView({
       .toLowerCase()
       .split(/[\s,.;:!?()]+/)
       .filter((word) => word.length > 3);
+    const uniqueRecipeWords = [...new Set(recipeWords)];
     const kitchenWords = [
       "інгредієнт",
       "температур",
@@ -199,7 +221,8 @@ export default function RecipeView({
 
     return (
       kitchenWords.filter((word) => text.includes(word)).length * 3 +
-      recipeWords.filter((word) => text.includes(word)).length
+      uniqueRecipeWords.filter((word) => text.includes(word)).length * 2 +
+      (comment.rating || 0)
     );
   };
 
@@ -482,6 +505,15 @@ export default function RecipeView({
               borderRadius: "12px",
             }} // Зменшено головне фото
           />
+
+          {user?.role !== "admin" && (
+            <button
+              className="fav-btn bookmark-btn heart-btn recipe-view-fav-btn"
+              onClick={handleToggleFavorite}
+            >
+              {isFavorite ? "❤️" : "🤍"}
+            </button>
+          )}
 
           {/* Назва по центру */}
           <h2

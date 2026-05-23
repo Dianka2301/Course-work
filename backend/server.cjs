@@ -97,6 +97,7 @@ function mapRecipe(row) {
     authorAvatar: row.avatar
       ? `http://localhost:4000/uploads/${row.avatar}`
       : null,
+    bio: row.bio || "",
   };
 }
 
@@ -155,6 +156,7 @@ app.get("/api/recipes", (req, res) => {
         u.first_name,
         u.last_name,
         u.avatar,
+        u.bio,
         ROUND(AVG(c.rating), 1) as rating,
         COUNT(c.rating) as rating_count
       FROM recipes r
@@ -200,6 +202,7 @@ app.get("/api/recipes/:id", (req, res) => {
           u.first_name,
           u.last_name,
           u.avatar,
+          u.bio,
           ROUND(AVG(rt.rating), 1) as rating,
           COUNT(rt.rating) as rating_count
         FROM recipes r
@@ -231,18 +234,24 @@ app.get("/api/recipes/:id/similar", (req, res) => {
       return res.status(404).json({ error: "Рецепт не знайдено" });
     }
 
+    const normalizeIngredient = (item) =>
+      item
+        .toLowerCase()
+        .replace(/[0-9]+([.,][0-9]+)?/g, "")
+        .replace(/\b(г|гр|кг|мл|л|шт|ч\.?\s*л\.?|ст\.?\s*л\.?|склянка|склянки|за смаком)\b/g, "")
+        .trim();
+
     const sourceIngredients = new Set(
       (recipe.ingredients || "")
-        .toLowerCase()
         .split(/[\n,.;]+/)
-        .map((item) => item.trim())
+        .map(normalizeIngredient)
         .filter((item) => item.length > 2),
     );
 
     const candidates = db
       .prepare(
         `
-        SELECT r.*, u.first_name, u.last_name, u.avatar
+        SELECT r.*, u.first_name, u.last_name, u.avatar, u.bio
         FROM recipes r
         LEFT JOIN users u ON u.id = r.user_id
         WHERE r.id != ?
@@ -255,25 +264,18 @@ app.get("/api/recipes/:id/similar", (req, res) => {
     const similar = candidates
       .map((candidate) => {
         const ingredients = (candidate.ingredients || "")
-          .toLowerCase()
           .split(/[\n,.;]+/)
-          .map((item) => item.trim())
+          .map(normalizeIngredient)
           .filter((item) => item.length > 2);
 
-        const shared = ingredients.filter((item) =>
-          Array.from(sourceIngredients).some(
-            (source) => source.includes(item) || item.includes(source),
-          ),
-        );
-
-        const categoryScore = candidate.category === recipe.category ? 1 : 0;
+        const shared = ingredients.filter((item) => sourceIngredients.has(item));
 
         return {
           ...mapRecipe(candidate),
-          shared_count: shared.length + categoryScore,
+          shared_count: shared.length,
         };
       })
-      .filter((candidate) => candidate.shared_count > 0)
+      .filter((candidate) => candidate.shared_count >= 2)
       .sort((a, b) => b.shared_count - a.shared_count)
       .slice(0, 4);
 
