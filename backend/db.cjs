@@ -195,7 +195,7 @@ db.prepare(
   FOREIGN KEY (recipe_id) REFERENCES recipes(id)
   ) `,
 ).run();
-/* один рейтинг на рецепт від одного користувача */
+
 db.prepare(
   ` 
   CREATE UNIQUE INDEX IF NOT EXISTS unique_user_recipe_rating 
