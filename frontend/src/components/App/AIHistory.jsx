@@ -90,7 +90,7 @@ export default function AIHistory({ onBack }) {
                     <MacroPanel recipe={recipe} />
 
                     <ul>
-                      {recipe.steps?.slice(0, 3).map((step, i) => (
+                      {recipe.steps?.map((step, i) => (
                         <li key={i}>{step}</li>
                       ))}
                     </ul>

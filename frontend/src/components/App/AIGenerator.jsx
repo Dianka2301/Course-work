@@ -114,14 +114,34 @@ export default function AIGenerator({ onOpenHistory }) {
 
               <p className="recipe-desc">{res.description}</p>
 
-              <div className="macros-container">
-                <div className="macro-item">
-                  <strong>🔥 {res.calories}</strong>
+              <div className="macro-panel">
+                <div className="calorie-ring">
+                  <span>{res.calories}</span>
+                  <small>ккал</small>
                 </div>
-                <div className="macro-details">
-                  <span>Б: {res.macros.p}</span>
-                  <span>Ж: {res.macros.f}</span>
-                  <span>В: {res.macros.c}</span>
+
+                <div className="macro-bars">
+                  <div>
+                    <span>
+                      <b>{res.macros.p}</b>
+                    </span>
+                    <span>білки</span>
+                    <i className="protein"></i>
+                  </div>
+                  <div>
+                    <span>
+                      <b>{res.macros.f}</b>
+                    </span>
+                    <span>жири</span>
+                    <i className="fat"></i>
+                  </div>
+                  <div>
+                    <span>
+                      <b>{res.macros.c}</b>
+                    </span>
+                    <span>вуглеводи</span>
+                    <i className="carbs"></i>
+                  </div>
                 </div>
               </div>
 
