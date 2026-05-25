@@ -610,7 +610,7 @@ h3 {
   font-size: 14px;
 }
 
-.publish-btn {
+.publish-btn, .publish-own-btn {
   margin: 12px;
   padding: 9px 12px;
   border: 0;
@@ -745,6 +745,7 @@ h3 {
 .fav-btn,
 .icon-btn,
 .publish-btn,
+.publish-own-btn,
 .back-btn,
 .comment-box button,
 .reply-box button,
@@ -1844,7 +1845,8 @@ h3 {
 /* 🔙 кнопка */
 /* 👥 СПІЛЬНІ СТИЛІ ДЛЯ ОБОХ КНОПОК */
 .back-btn,
-.publish-btn {
+.publish-btn, 
+.publish-own-btn {
   background: #e6d3bd;
   border: none;
   padding: 8px 16px;
@@ -1864,10 +1866,10 @@ h3 {
   min-width: 130px; 
 
   /* 🎯 ЦЕНТРУВАННЯ: */
-  display: block !important;       /* Дозволяє марджинам auto працювати */
-  margin-left: auto !important;    /* Однаковий відступ зліва */
-  margin-right: auto !important;   /* Однакова відстань справа */
-  margin-bottom: 20px;             /* Твій поточний відступ знизу */
+  /*display: block !important;       /* Дозволяє марджинам auto працювати */
+  /*margin-left: auto !important;    /* Однаковий відступ зліва */
+ /* margin-right: auto !important;   /* Однакова відстань справа */
+ /* margin-bottom: 20px;  */           /* Твій поточний відступ знизу */
 }
 
 /* 👥 ХОВЕРИ */
@@ -1875,7 +1877,23 @@ h3 {
 .publish-btn:hover {
   background: #d8bfa3;
 }
+.publish-own-btn {
+  color: #000000;
+  flex: none !important; 
+  width: max-content !important; 
+  min-width: 130px; 
 
+  /* 🎯 ЦЕНТРУВАННЯ: */
+  display: block !important;       /* Дозволяє марджинам auto працювати */
+  margin-left: auto !important;
+ margin-right: auto !important; 
+ margin-bottom: 20px; 
+}
+
+
+.publish-own-btn:hover {
+  background: #d8bfa3;
+}
 
 
 /* фото */

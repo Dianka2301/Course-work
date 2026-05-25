@@ -37,7 +37,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-/* ------------------ GET PROFILE ------------------ */
 router.get("/", auth, (req, res) => {
   const user = db
     .prepare(
@@ -65,7 +64,6 @@ router.get("/", auth, (req, res) => {
   });
 });
 
-/* ------------------ UPDATE PROFILE ------------------ */
 router.put("/", auth, upload.single("avatar"), (req, res) => {
   const { firstName, lastName, email, bio } = req.body;
 
@@ -80,7 +78,6 @@ router.put("/", auth, upload.single("avatar"), (req, res) => {
   const avatarFile = req.file;
   const newAvatar = avatarFile ? avatarFile.filename : currentUser.avatar;
 
-  // Використовуємо bio, якщо воно надіслане (навіть якщо порожнє), інакше залишаємо старе
   const updatedBio = bio !== undefined ? bio : currentUser.bio;
 
   db.prepare(

@@ -47,7 +47,7 @@ router.post("/register", async (req, res) => {
       .run(email, hashed, firstName, lastName);
 
     const user = {
-      id: result.lastInsertRowid, // ✅ ТЕПЕР ПРАВИЛЬНО
+      id: result.lastInsertRowid,
       email,
       firstName,
       lastName,
@@ -131,7 +131,6 @@ const upload = multer({
   },
 });
 
-/* ------------------ AUTH MIDDLEWARE ------------------ */
 function auth(req, res, next) {
   const token = req.headers.authorization?.split(" ")[1];
 

@@ -419,7 +419,7 @@ export default function RecipeHistory({ onRefresh }) {
 
                     {r.status !== "pending" && r.status !== "approved" && (
                       <button
-                        className="publish-btn"
+                        className="publish-own-btn"
                         onClick={() => handlePublish(r.id)}
                         style={{ marginTop: "12px", width: "100%" }}
                       >

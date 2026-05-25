@@ -9,23 +9,26 @@ dotenv.config({ path: path.resolve(__dirname, ".env") });
 
 const JWT_SECRET = process.env.JWT_SECRET || "secret_key";
 
-function getUserId(req) {
+// Сувора та безпечна перевірка авторизації (як у вашому profile.cjs) [4]
+function auth(req, res, next) {
   const token = req.headers.authorization?.split(" ")[1];
 
   if (!token) {
-    return req.session?.userId || 1;
+    console.warn("Попередження: Токен не знайдено у запиті до Обраного!");
+    return res.status(401).json({ error: "No token provided" });
   }
 
   try {
-    return jwt.verify(token, JWT_SECRET).id;
-  } catch {
-    return req.session?.userId || 1;
+    req.user = jwt.verify(token, JWT_SECRET);
+    next();
+  } catch (err) {
+    console.error("Помилка верифікації токена в favorites.cjs:", err.message);
+    return res.status(401).json({ error: "Invalid token" });
   }
 }
 
-// Отримати всі обрані рецепти користувача
-router.get("/", (req, res) => {
-  const userId = getUserId(req);
+router.get("/", auth, (req, res) => {
+  const userId = req.user.id; 
 
   try {
     const rows = db
@@ -49,7 +52,6 @@ router.get("/", (req, res) => {
       )
       .all(userId);
 
-    // Повертаємо масив (може бути пустий)
     res.json(
       Array.isArray(rows)
         ? rows.map((row) => ({
@@ -62,14 +64,12 @@ router.get("/", (req, res) => {
     );
   } catch (err) {
     console.error(err);
-    // Повертаємо порожній масив замість помилки
     res.json([]);
   }
 });
 
-// Додати/видалити рецепт з обраного (toggle)
-router.post("/", (req, res) => {
-  const userId = getUserId(req);
+router.post("/", auth, (req, res) => {
+  const userId = req.user.id; 
   const { recipeId } = req.body;
 
   if (!recipeId) {
@@ -91,11 +91,9 @@ router.post("/", (req, res) => {
 
     let liked;
     if (exists) {
-      // видалити
       db.prepare("DELETE FROM favorites WHERE id = ?").run(exists.id);
       liked = false;
     } else {
-      // додати
       db.prepare(
         "INSERT INTO favorites (user_id, recipe_id) VALUES (?, ?)",
       ).run(userId, recipeId);
