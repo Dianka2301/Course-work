@@ -49,18 +49,17 @@ h3 {
   font-weight: 700;
 }
 
-/* 🔹 ГЛОБАЛЬНІ */
 * {
   box-sizing: border-box;
 }
 
-/* 🔹 ОСНОВНИЙ LAYOUT */
+
 .app-layout {
   display: flex;
   min-height: 100vh;
 }
 
-/* 🔹 SIDEBAR */
+
 .sidebar {
   display: none;
   width: 250px;
@@ -82,7 +81,7 @@ h3 {
   margin-bottom: 20px;
 }
 
-/* 🔹 КНОПКИ МЕНЮ */
+
 .sidebar button {
   background: none;
   border: none;
@@ -98,13 +97,13 @@ h3 {
   transform: translateX(5px);
 }
 
-/* 🔹 ВИЙТИ */
+
 .sidebar .logout {
   margin-top: auto;
   color: red;
 }
 
-/* 🔹 КОНТЕНТ */
+
 .main-content {
   flex: 1;
   display: flex;
@@ -112,7 +111,7 @@ h3 {
   overflow: visible;
 }
 
-/* 🔹 TOPBAR */
+
 .toolbar {
   /*position: sticky;*/
   top: 15px;
@@ -120,8 +119,8 @@ h3 {
   right: 15px;
   height: 80px;
   margin: 15px;
-  background: rgba(162, 118, 69, 0.8); /* Напівпрозорий основний колір */
-  backdrop-filter: blur(12px); /* Ефект розмиття фону */
+  background: rgba(162, 118, 69, 0.8); 
+  backdrop-filter: blur(12px); 
   -webkit-backdrop-filter: blur(12px);
   display: flex;
   justify-content: space-between;
@@ -148,7 +147,7 @@ h3 {
   opacity: 0.8;
 }
 
-/* BURGER */
+
 .burger {
   display: none;
   font-size: 22px;
@@ -158,7 +157,7 @@ h3 {
   color: white;
 }
 
-/* OVERLAY */
+
 .overlay {
   position: fixed;
   inset: 0;
@@ -166,13 +165,11 @@ h3 {
   z-index: 5;
 }
 
-/* 🔹 ОСНОВНА ОБЛАСТЬ */
 .main-content > div:not(.toolbar) {
   padding: 20px;
   overflow-y: auto;
 }
 
-/* 🔹 ЦЕНТР (для loading) */
 .center {
   height: 100vh;
   display: flex;
@@ -184,7 +181,7 @@ h3 {
 .toolbar-left {
   font-size: 16px;
   display: flex;
-  align-items: center; /* 🔥 вирівнює лого + меню */
+  align-items: center; 
   gap: 20px;
 }
 
@@ -193,7 +190,6 @@ h3 {
   color: #555;
 }
 
-/* 🔥 SEARCH BAR */
 .search-bar {
   display: flex;
   gap: 10px;
@@ -218,7 +214,6 @@ h3 {
   color: white;
 }
 
-/* 🔥 CATEGORIES */
 .category-row {
   display: flex;
   gap: 10px;
@@ -240,14 +235,12 @@ h3 {
   border: none;
 }
 
-/* 🔥 GRID */
 .recipes-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
 }
 
-/* 🔥 CARD */
 
 .recipe-card {
   background: rgba(162, 118, 69, 0.8);
@@ -270,7 +263,7 @@ h3 {
   border-radius: 12px;
 }
 
-/* 🔥 PILL STYLE (ОВАЛИ) */
+
 .pill {
   display: inline-block;
   padding: 5px 10px;
@@ -290,22 +283,12 @@ h3 {
   opacity: 0.8;
 }
 
-/* 🔥 CATEGORY TAG */
 .category-tag {
   margin-top: 5px;
   font-size: 11px;
   color: #777;
 }
 
-/* 🔥 BACK BUTTON */
-/*.back-btn {
-  margin-bottom: 10px;
-  padding: 8px 12px;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  background: #c1a585;
-}*/
 
 .fav-btn {
   position: absolute;
@@ -320,7 +303,7 @@ h3 {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* FORM */
+
 .form-group {
   display: flex;
   flex-direction: column;
@@ -345,12 +328,11 @@ h3 {
   border-color: #a27645;
 }
 
-/* SAVE BUTTON */
 .profile-actions {
   margin-top: 20px;
 }
 
-/* ================= PROFILE (SAAS STYLE) ================= */
+
 
 .profile-wrapper {
   display: flex;
@@ -359,7 +341,7 @@ h3 {
   align-items: flex-start;
 }
 
-/* LEFT CARD */
+
 .profile-card {
   width: 280px;
   background: white;
@@ -369,7 +351,6 @@ h3 {
   text-align: center;
 }
 
-/* AVATAR */
 .avatar-box {
   display: flex;
   flex-direction: column;
@@ -386,7 +367,7 @@ h3 {
   border: 3px solid rgba(162, 118, 69, 0.8);
 }
 
-/* UPLOAD BUTTON */
+
 .upload-btn {
   background: rgba(162, 118, 69, 0.8);
   color: white;
@@ -402,7 +383,7 @@ h3 {
   background: rgba(156, 99, 35, 0.8);
 }
 
-/* RIGHT CARD */
+
 .profile-form-card {
   flex: 1;
   background: white;
@@ -411,7 +392,7 @@ h3 {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
-/* FORM */
+
 .profile-form-card input {
   width: 100%;
   padding: 12px;
@@ -425,7 +406,7 @@ h3 {
   border-color: #a27645;
 }
 
-/* SAVE BUTTON */
+
 .save-btn {
   background: rgba(162, 118, 69, 0.8);
   color: white;
@@ -443,8 +424,6 @@ h3 {
 }
 
 
-
-/* 📱 TABLET */
 @media (max-width: 768px) {
   .profile-wrapper {
     flex-direction: column;
@@ -467,7 +446,6 @@ h3 {
   }
 }
 
-/* 📱 PHONES */
 @media (max-width: 480px) {
   .profile-wrapper {
     padding: 15px;
@@ -701,7 +679,6 @@ h3 {
   }
 }
 
-/* ===== final responsive/layout cleanup ===== */
 .main-content {
   min-width: 0;
 }
@@ -973,14 +950,12 @@ h3 {
     .recipe-meta-grid {
         display: grid;
 
-        /* 👇 три елементи в ряд */
        grid-template-columns: repeat(3, minmax(80px, 1fr));
 
         gap: 10px;
     }
 }
 
-/* ===== final requested recipe UI pass ===== */
 .catalog-page,
 .favorites-page {
   padding: 22px;
@@ -1141,9 +1116,7 @@ h3 {
   box-shadow: 0 6px 14px rgba(61, 45, 30, 0.1);
 }
 
-/*.cat-item.active .cat-circle {
-  border-color: #4c7a5a;
-}*/
+
 
 .cat-item.active .cat-name {
   color: #c1ab7b;
@@ -1372,7 +1345,6 @@ h3 {
   }
 }
 
-/* ===== final navigation/notifications pass ===== */
 .toolbar {
   min-width: 0;
 }
@@ -1587,7 +1559,6 @@ h3 {
   }
 }
 
-/* ===== absolute last overrides for mobile conflicts ===== */
 .recipes-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
 }
@@ -1613,11 +1584,10 @@ h3 {
     padding: 0 34px;
   }
    .cat-item {
-    flex: 0 0 calc(25% - 6px) !important; /* 4 елементи в ряду */
+    flex: 0 0 calc(25% - 6px) !important; 
     min-width: 52px !important;
   }
 
-  /* Робимо кожне коло трохи компактнішим */
   .cat-circle {
     width: 42px !important;
     height: 42px !important;
@@ -1702,8 +1672,6 @@ h3 {
   }
 }
 
-/* NAV LINKS (DESKTOP) */
-/* Навігація в тулбарі */
 .nav-links {
   display: flex;
   gap: 30px;
@@ -1730,7 +1698,6 @@ h3 {
   transform: translateY(-3px);
 }
 
-/* Активний пункт (підкреслення як на фото) */
 .nav-links button.active::after {
   content: "";
   position: absolute;
@@ -1765,14 +1732,12 @@ h3 {
   filter: brightness(1.1);
 }
 
-/* FEATURES GRID */
 .features-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 20px;
 }
 
-/* CARD */
 .feature-card {
   background: #fff;
   padding: 20px;
@@ -1797,28 +1762,27 @@ h3 {
   margin: 0;
 }
 
-/* Контейнер для інгредієнтів */
 .ingredients-wrapper {
   display: flex;
-  flex-wrap: wrap; /* Дозволяє переносити теги на новий рядок */
-  gap: 8px; /* Відстань між овалами */
+  flex-wrap: wrap; 
+  gap: 8px; 
   margin-top: 10px;
 }
 
-/* Стиль самого овального інгредієнта */
+
 .ingredient-tag {
   background: rgba(
     255,
     255,
     255,
     0.2
-  ); /* Напівпрозорий білий (під стиль glassmorphism) */
+  ); 
   color: white;
   padding: 4px 12px;
-  border-radius: 20px; /* Робить прямокутник овальним */
+  border-radius: 20px; 
   font-size: 12px;
   border: 1px solid rgba(255, 255, 255, 0.3);
-  white-space: nowrap; /* Щоб назва не розривалася всередині овалу */
+  white-space: nowrap; 
   transition: 0.2s;
 }
 
@@ -1842,8 +1806,6 @@ h3 {
   font-family: "Segoe UI", sans-serif;
 }
 
-/* 🔙 кнопка */
-/* 👥 СПІЛЬНІ СТИЛІ ДЛЯ ОБОХ КНОПОК */
 .back-btn,
 .publish-btn, 
 .publish-own-btn {
@@ -1855,7 +1817,7 @@ h3 {
   margin-bottom: 20px;
   transition: 0.3s;
   
-  font-weight: 600; /* Трохи додамо виразності тексту */
+  font-weight: 600; 
   font-size: 14px;
 }
 
@@ -1864,15 +1826,8 @@ h3 {
   flex: none !important; 
   width: max-content !important; 
   min-width: 130px; 
-
-  /* 🎯 ЦЕНТРУВАННЯ: */
-  /*display: block !important;       /* Дозволяє марджинам auto працювати */
-  /*margin-left: auto !important;    /* Однаковий відступ зліва */
- /* margin-right: auto !important;   /* Однакова відстань справа */
- /* margin-bottom: 20px;  */           /* Твій поточний відступ знизу */
 }
 
-/* 👥 ХОВЕРИ */
 .back-btn:hover,
 .publish-btn:hover {
   background: #d8bfa3;
@@ -1883,8 +1838,7 @@ h3 {
   width: max-content !important; 
   min-width: 130px; 
 
-  /* 🎯 ЦЕНТРУВАННЯ: */
-  display: block !important;       /* Дозволяє марджинам auto працювати */
+  display: block !important;    
   margin-left: auto !important;
  margin-right: auto !important; 
  margin-bottom: 20px; 
@@ -1896,32 +1850,29 @@ h3 {
 }
 
 
-/* фото */
 .recipe-view-img {
   width: 100%;
-  max-width: 380px; /* було 520px */
-  height: 250px; /* було 350px */
+  max-width: 380px; 
+  height: 250px; 
   border-radius: 20px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   transition: transform 0.4s;
   margin-top: 10px;
   margin-left: -10px;
 
-  object-fit: cover; /* щоб фото гарно обрізалось */
+  object-fit: cover; 
 }
 
 .recipe-view-img:hover {
   transform: scale(1.03);
 }
 
-/* назва */
 .recipe-title {
   margin-top: 15px;
   font-size: 26px;
   font-weight: 600;
 }
 
-/* ⭐ рейтинг */
 .rating-box {
   margin-top: 10px;
   text-align: center;
@@ -1945,31 +1896,25 @@ h3 {
   color: #555;
 }
 
-/* 📦 LAYOUT */
 .recipe-layout {
     display: grid;
 
-    /* Ліва колонка нормальної ширини */
     grid-template-columns: 420px minmax(0, 1fr);
 
-    /* Менший відступ між колонками */
     gap: 40px;
 
     width: 100%;
 
-    /* Контент стане ширшим */
     max-width: 1600px;
 
-    /* Контейнер зміститься трохи вліво */
     margin: 0 auto;
 
     align-items: start;
 
-    /* Майже без бокових відступів */
     padding: 0 30px;
 }
 
-/* 🖼 LEFT */
+
 .recipe-left {
     display: flex;
     flex-direction: column;
@@ -1981,78 +1926,62 @@ h3 {
     box-sizing: border-box;
 
     padding: 15px 10px;
-        /* 👇 трохи вправо */
+
     margin-left: 100px;
 }
 
-/* 📄 RIGHT */
 .recipe-right {
     display: flex;
     flex-direction: column;
-    /* 👇 трохи вправо */
+
     margin-left: -70px;
     gap: 24px;
 
     width: 100%;
 }
 
-/* ==========================================
-   📱 АДАПТИВНИЙ CSS ДЛЯ СТОРІНКИ РЕЦЕПТУ
-   ========================================== */
-
-/* 1. 🖥️ КРАСИВИЙ ПЕРЕХІД ДЛЯ СЕРЕДНІХ ЕКРАНІВ (Планшети / Нетбуки) */
 @media (max-width: 1200px) {
   .recipe-layout {
-    /* Зменшуємо ліву колонку з 420px до 320px, щоб усе вмістилося */
     grid-template-columns: 320px minmax(0, 1fr);
     gap: 30px;
     padding: 0 20px;
   }
 
   .recipe-left {
-    /* Зменшуємо десктопний зсув вдвічі, щоб блок не притискався до правої колони */
     margin-left: 40px !important; 
   }
 
   .recipe-right {
-    /* Повертаємо ближче до норми */
     margin-left: 0 !important; 
   }
 }
 
-/* 2. tablet ПЛАНШЕТИ В ПОРТРЕТНОМУ РЕЖИМІ (менше 992px) */
 @media (max-width: 992px) {
   .recipe-layout {
-    /* Перебудовуємо гріди в один стовпчик: спочатку LEFT (фото), під ним RIGHT (інфо) */
     grid-template-columns: 1fr !important; 
     gap: 25px;
     padding: 0 20px;
   }
 
   .recipe-left {
-    /* Повністю обнуляємо десктопний марджин. Тепер блок стоїть ідеально по центру */
     margin-left: 0 !important; 
     padding: 10px 0;
   }
 
   .recipe-right {
-    /* Обнуляємо від'ємний марджин, щоб текст не залазив на лівий край екрана */
     margin-left: 0 !important; 
     gap: 20px;
   }
   
-  /* Порада: якщо всередині .recipe-left є велика картинка, 
-     робимо її адаптивною, щоб вона не ламала екран */
   .recipe-left img {
     max-width: 100% !important;
     height: auto !important;
   }
 }
 
-/* 3. 📱 МОБІЛЬНІ ТЕЛЕФОНИ (менше 576px) */
 @media (max-width: 576px) {
   .recipe-layout {
-    padding: 0 15px; /* Мінімальні відступи по краях екрана смартфона */
+    padding: 0 15px; 
     gap: 20px;
   }
 
@@ -2061,7 +1990,6 @@ h3 {
   }
 }
 
-/* 📦 секції (оці "бежеві рамки") */
 .section {
   background: #f3e5d7;
   padding: 20px;
@@ -2074,12 +2002,10 @@ h3 {
   transform: translateY(-3px);
 }
 
-/* заголовки */
 .section h4 {
   margin-bottom: 10px;
 }
 
-/* інгредієнти */
 .ingredients-list {
   display: flex;
   flex-direction: column;
@@ -2093,7 +2019,6 @@ h3 {
   margin-top: 7px;
 }
 
-/* 💬 COMMENTS */
 .comments {
   margin-top: 40px;
   background: #f3e5d7;
@@ -2101,25 +2026,18 @@ h3 {
   border-radius: 16px;
 }
 
-/* ================= CUSTOM TOOLTIP FOR COMMENTS FILTER (Кастомна підказка ШІ-фільтру) ================= */
-
-/* Робимо кнопку базою для абсолютного позиціонування підказки */
 .ai-comment-filter {
-  position: relative; /* Обов'язково */
+  position: relative; 
 }
 
-/* Спливаюче віконце з текстом підказки */
 .ai-comment-filter::after {
   content: attr(data-tooltip); 
   position: absolute;
-  bottom: 130%; /* Над кнопкою */
-  
-  /* ЗМІНЕНО: Притискаємо до правого краю кнопки, щоб не вилазило вправо */
+  bottom: 130%;
   right: 0; 
   left: auto;
-  transform: translateY(10px) scale(0.9); /* Початковий зсув вниз для анімації */
+  transform: translateY(10px) scale(0.9);
   
-  /* Колірна гама */
   background-color: #362a1c; 
   border: 1px solid #b37a4e;
   color: #faf6f0; 
@@ -2130,9 +2048,8 @@ h3 {
   font-weight: normal;
   line-height: 1.45;
   
-  /* Ширина */
   width: 260px; 
-  max-width: 80vw; /* Щоб на мобільних не було ширше за екран */
+  max-width: 80vw; 
   white-space: normal;
   text-align: left;
   
@@ -2140,19 +2057,16 @@ h3 {
   pointer-events: none; 
   z-index: 100;
   
-  /* Анімація */
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
 }
 
-/* Маленький акуратний трикутник-стрілочка під віконцем */
 .ai-comment-filter::before {
   content: "";
   position: absolute;
   bottom: 118%;
   
-  /* ЗМІНЕНО: Стрілочка тепер теж зсунута вправо (під край кнопки) */
   right: 15px; 
   left: auto;
   transform: scale(0.9);
@@ -2169,15 +2083,13 @@ h3 {
   transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
 }
 
-/* Ефект наведення курсора */
 .ai-comment-filter:hover::after,
 .ai-comment-filter:hover::before {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0) scale(1); /* Плавний виліт вгору */
+  transform: translateY(0) scale(1); 
 }
 
-/* список */
 .comment-list {
   margin-bottom: 15px;
 }
@@ -2225,7 +2137,7 @@ h3 {
   display: flex;
   gap: 2px;
   font-size: 14px;
-  color: #f5a623; /* золото */
+  color: #f5a623; 
   margin-bottom: 6px;
 }
 
@@ -2240,7 +2152,6 @@ h3 {
   flex: 1;
 }
 
-/* поле вводу */
 .comment-box {
   display: flex;
   gap: 10px;
@@ -2306,8 +2217,8 @@ h3 {
   font-weight: 600;
 }
 .plus-symbol {
-  font-size: 1.5rem; /* Робимо плюс більшим */
-  line-height: 1; /* Щоб не розпирав кнопку по висоті */
+  font-size: 1.5rem;
+  line-height: 1; 
   font-weight: bold;
 }
 
@@ -2378,14 +2289,12 @@ h3 {
   opacity: 0.7;
 }
 
-/* GRID */
 .recipes-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 20px;
 }
 
-/* CARD */
 .recipe-card.new {
   background: #c89d6d;
   border-radius: 18px;
@@ -2397,12 +2306,10 @@ h3 {
   transform: scale(1.03);
 }
 
-/* IMAGE WRAP */
 .image-wrap {
   position: relative;
 }
 
-/* IMAGE */
 .recipe-img {
   width: 100%;
   height: 200px;
@@ -2410,7 +2317,6 @@ h3 {
   border-radius: 14px;
 }
 
-/* ACTIONS */
 .card-actions {
   position: absolute;
   top: 8px;
@@ -2434,14 +2340,12 @@ h3 {
   cursor: pointer;
 }
 
-/* TITLE */
 .recipe-title {
   color: rgb(8, 8, 8);
   margin-top: 10px;
   font-size: 16px;
 }
 
-/* CHIPS */
 .chips {
   display: flex;
   flex-wrap: wrap;
@@ -2473,10 +2377,10 @@ h3 {
 
   opacity: 0.95;
 }
-/* Ряд категорій */
+
 .category-row-new {
   display: flex;
-  gap: 30px; /* Трохи збільшив відступ */
+  gap: 30px; 
   overflow-x: auto;
   padding: 20px 10px;
   margin-bottom: 25px;
@@ -2509,7 +2413,6 @@ h3 {
   background: #f3f3f3;
 }
 
-/* Окремий елемент категорії */
 .cat-item {
   display: flex;
   flex-direction: column;
@@ -2519,7 +2422,6 @@ h3 {
   min-width: 90px;
   transition: all 0.2s ease;
 
-  /* Прибираємо стандартні рамки, якщо це button */
   border: none;
   background: none;
   outline: none;
@@ -2530,37 +2432,27 @@ h3 {
   transform: translateY(-3px);
 }
 
-/* Кругла рамка для іконки */
 .cat-circle {
   width: 75px;
   height: 75px;
   border-radius: 50%;
-
-  /* Світлий димчастий фон як у зразку */
   background: #f4f4f7;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  /* Важливо для круглої форми */
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* Тінь робимо ледь помітною */
-  /*box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);*/
 }
 
 
-
-/* Активний стан (Жовте коло) */
 .cat-item.active .cat-circle {
-  /*background: rgba(219, 159, 91, 0.8); */
   box-shadow: 0 8px 20px rgba(31, 30, 27, 0.35);
   opacity: 1;
 }
 
-/* Стиль тексту */
 .cat-name {
   font-size: 14px;
   font-weight: 500;
@@ -2572,10 +2464,6 @@ h3 {
   color: #000;
   font-weight: 700;
 }
-
-/* =========================================================
-   RECIPE FORM (FIXED LAYOUT)
-   ========================================================= */
 
 .recipe-form {
   display: grid;
@@ -2599,9 +2487,6 @@ h3 {
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
 }
 
-/* =========================================================
-   LEFT SIDE (PHOTO)
-   ========================================================= */
 
 .upload-box {
   grid-area: photo;
@@ -2616,7 +2501,6 @@ h3 {
   display: none;
 }
 
-/* PHOTO FRAME */
 .upload-box::before {
   content: "Фото";
 
@@ -2687,9 +2571,6 @@ h3 {
   filter: brightness(1.04);
 }
 
-/* =========================================================
-   RIGHT SIDE FIELDS (ORDER FIXED)
-   ========================================================= */
 
 .recipe-form input,
 .recipe-form textarea {
@@ -2731,16 +2612,11 @@ h3 {
   line-height: 1.6;
 }
 
-/* group fields */
 .form-fields {
   grid-area: fields;
   display: flex;
   flex-direction: column;
 }
-
-/* =========================================================
-   CHECKBOX
-   ========================================================= */
 
 .checkbox {
   grid-area: checkbox;
@@ -2760,9 +2636,6 @@ h3 {
   accent-color: #b5834f;
 }
 
-/* =========================================================
-   ACTIONS
-   ========================================================= */
 
 .form-actions {
   grid-area: actions;
@@ -2789,7 +2662,6 @@ h3 {
   transition: 0.25s;
 }
 
-/* ADD */
 .form-actions button:first-child {
   background: linear-gradient(135deg, #c49a6c, #a27645);
   color: white;
@@ -2802,7 +2674,7 @@ h3 {
   filter: brightness(1.05);
 }
 
-/* CANCEL */
+
 .form-actions button:last-child {
   background: rgba(196, 154, 108, 0.1);
   border: 1px solid rgba(196, 154, 108, 0.18);
@@ -2814,9 +2686,6 @@ h3 {
   background: rgba(196, 154, 108, 0.16);
 }
 
-/* =========================================================
-   MOBILE (STACKED EXACT ORDER)
-   ========================================================= */
 
 @media (max-width: 768px) {
   .recipe-form {
@@ -2865,16 +2734,10 @@ h3 {
   }
 }
 
-/* ================= RECIPE VIEW RESPONSIVE ================= */
-/* ============================================================
-   RESPONSIVE DESIGN (ADAPTIVE)
-   ============================================================ */
 
-/* 🔹 ПЛАНШЕТИ (До 1024px) */
 @media (max-width: 1024px) {
-  /* Твої поточні стилі для сітки та перегляду */
   .recipes-grid {
-    grid-template-columns: repeat(2, 1fr); /* 2 картки в ряд */
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .recipe-view {
@@ -2885,62 +2748,56 @@ h3 {
     gap: 20px;
   }
 
-  /* Виправлення налізання навігації */
   .nav-links {
-    gap: 12px;         /* Зменшили відступ між посиланнями, було 15px */
+    gap: 12px;        
     margin-left: 20px;  
     margin-right: 20px;
   }
 
   .nav-links a {
-    font-size: 14px;   /* Трохи зменшуємо шрифт самих посилань для компактності */
-    padding: 6px 8px;  /* Компактніші клікабельні зони */
+    font-size: 14px;   
+    padding: 6px 8px;
   }
 
-  /* Захист правої панелі від стискання */
   .toolbar-right {
-    flex-shrink: 0 !important; /* Забороняє навігації «налізати» та стискати праве меню */
+    flex-shrink: 0 !important; 
     display: flex;
     align-items: center;
     gap: 10px;
   }
 
-  /* Адаптивні стилі для кнопки виходу */
+ 
   .logout-btn {
-    padding: 6px 12px !important; /* Робимо кнопку акуратнішою та меншою */
-    font-size: 13px !important;    /* Зменшуємо розмір тексту кнопки виходу */
-    min-height: auto !important;   /* Скидаємо фіксовану десктопну висоту, якщо вона заважає */
-    white-space: nowrap;          /* Забороняємо переносы тексту всередині кнопки */
+    padding: 6px 12px !important; 
+    font-size: 13px !important; 
+    min-height: auto !important;   
+    white-space: nowrap;     
   }
 }
 
-/* 🔹 МОБІЛЬНІ ПРИСТРОЇ (До 768px) */
 @media (max-width: 768px) {
-  /* Sidebar */
   .sidebar {
     display: flex;
     position: fixed;
     top: 0;
     left: 0;
-    width: 280px; /* Трохи ширше для зручності */
+    width: 280px;
     height: 100%;
-    /* Ефект скла: колір #a27645 з прозорістю + розмиття */
     background: rgba(162, 118, 69, 0.8);
     backdrop-filter: blur(10px);
     z-index: 1000;
     padding: 30px 20px;
     box-shadow: 10px 0 30px rgba(0, 0, 0, 0.3);
 
-    transform: translateX(-105%); /* Ховаємо трохи далі за край */
+    transform: translateX(-105%);
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    border-radius: 0 20px 20px 0; /* Закруглення правого краю */
+    border-radius: 0 20px 20px 0; 
   }
 
   .sidebar.open {
     transform: translateX(0);
   }
 
-  /* Заголовок всередині сайдбару */
   .sidebar h2 {
     color: #fdfae6;
     font-size: 1.5rem;
@@ -2950,13 +2807,12 @@ h3 {
     text-align: center;
   }
 
-  /* Стилізація кнопок у сайдбарі */
   .sidebar button {
     font-size: 1.03rem;
     padding: 15px 20px;
     margin-bottom: 8px;
     background: rgba(255, 255, 255, 0.05);
-    border-left: 4px solid transparent; /* Для ефекту активної кнопки */
+    border-left: 4px solid transparent; 
     display: flex;
     align-items: center;
     gap: 12px;
@@ -2971,7 +2827,6 @@ h3 {
     border-left: 4px solid #fdfae6;
   }
 
-  /* Кнопка виходу */
   .sidebar .logout {
     margin-top: auto;
     background: rgba(255, 0, 0, 0.1);
@@ -2989,8 +2844,6 @@ h3 {
     border-left-color: transparent;
   }
 
-  /* Додамо плавне затемнення фону при відкритті сайдбару */
-  /* Додай цей клас в JS до тегу body або зроби окремий div overlay */
   .sidebar-overlay {
     position: fixed;
     top: 0;
@@ -3028,7 +2881,6 @@ h3 {
     font-weight: 500;
   }
 
-  /* Стиль сокета зі скріншота image_2c23d0.png */
   .theme-socket {
     width: 60px;
     height: 30px;
@@ -3037,8 +2889,7 @@ h3 {
     cursor: pointer;
     position: relative;
 
-    /* Ефект втиснутої кнопки */
-    background: #2a1f14; /* Темніший за фон сайдбару */
+    background: #2a1f14; 
     box-shadow:
       inset -2px -2px 5px rgba(255, 255, 255, 0.05),
       inset 3px 3px 7px rgba(0, 0, 0, 0.5);
@@ -3059,13 +2910,9 @@ h3 {
     justify-content: center;
     font-size: 0.8rem;
     transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-
-    /* Рух іконки в залежності від теми */
-    /*transform: ${isDarkMode ? 'translateX(28px)' : 'translateX(0)'};*/
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
   }
 
-  /* Toolbar */
   .toolbar {
     padding: 0 20px;
     height: 70px;
@@ -3082,14 +2929,14 @@ h3 {
   }
 
   .logout-sidebar-btn {
-    margin-top: auto; /* Ця магія штовхає кнопку в самий низ */
+    margin-top: auto; 
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 12px;
 
     padding: 15px;
-    background: rgba(255, 71, 71, 0.1) !important; /* Напівпрозорий червоний */
+    background: rgba(255, 71, 71, 0.1) !important; 
     color: #ff4747 !important;
     border: 1px solid rgba(255, 71, 71, 0.2) !important;
     border-radius: 12px;
@@ -3105,31 +2952,27 @@ h3 {
     box-shadow: 0 4px 12px rgba(255, 71, 71, 0.3);
   }
 
-  /* Стиль іконки виходу */
   .logout-icon {
     font-size: 1.2rem;
     line-height: 1;
   }
 
-  /* Якщо використовуєш img замість символу */
   .logout-sidebar-btn img {
     width: 20px;
     height: 20px;
-    filter: invert(30%) sepia(100%) saturate(500%) hue-rotate(320deg); /* Робить картинку червоною */
+    filter: invert(30%) sepia(100%) saturate(500%) hue-rotate(320deg); 
   }
 
   .logout-sidebar-btn:hover img {
-    filter: brightness(0) invert(1); /* Робить картинку білою при ховері */
+    filter: brightness(0) invert(1);
   }
 
-  /* Grid */
   .recipes-grid {
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   }
 
-  /* Сторінка Рецепта (Перехід в одну колонку) */
   .recipe-layout {
-    grid-template-columns: 1fr; /* Фото зверху, текст знизу */
+    grid-template-columns: 1fr; 
   }
 
   .recipe-left {
@@ -3141,7 +2984,6 @@ h3 {
     height: 250px;
   }
 
-  /* Профіль */
   .profile-wrapper {
     flex-direction: column;
     padding: 20px;
@@ -3153,13 +2995,11 @@ h3 {
     width: 100%;
   }
 
-  /* Features */
   .features-grid {
     grid-template-columns: 1fr;
   }
 }
 
-/* 🔹 МАЛЕНЬКІ СМАРТФОНИ (До 480px) */
 @media (max-width: 480px) {
   .toolbar {
     margin: 10px;
@@ -3172,7 +3012,7 @@ h3 {
   }
 
   .recipes-grid {
-    grid-template-columns: 1fr; /* 1 картка на весь екран */
+    grid-template-columns: 1fr; 
   }
 
   .recipe-view {
@@ -3199,47 +3039,39 @@ h3 {
 
   .comment-box {
     display: flex !important;
-    flex-direction: row !important; /* Ставимо в один рядок */
-    
-    /* МУЛЬТІ-ФІКС: Вирівнюємо інпут та кнопку ідеально по центру по вертикалі */
+    flex-direction: row !important; 
     align-items: center !important; 
     
-    gap: 10px !important; /* Відступ між полем та кнопкою літачка */
+    gap: 10px !important; 
     width: 100% !important;
     box-sizing: border-box;
   }
 
-  /* ⌨️ САМЕ ПОЛЕ ВВЕДЕННЯ (Щоб воно займало весь вільний простір) */
   .comment-box input,
   .comment-box textarea {
-    flex: 1 !important; /* Поле забирає всю ширину, крім кнопки */
+    flex: 1 !important; 
     min-width: 0 !important;
     box-sizing: border-box;
   }
 
-  /* 🔘 КНОПКА-ЛІТАЧОК (Зменшуємо та рівняємо по висоті) */
   .comment-box button {
-    flex: none !important; /* Забороняємо змінювати ширину */
+    flex: none !important; 
     
-    /* Налаштовуємо акуратні фіксовані розміри під висоту інпута */
     width: 42px !important;
     height: 42px !important;
     
-    padding: 0 !important; /* Обнуляємо внутрішні падінги, бо є чітка висота */
+    padding: 0 !important;
     
-    /* Робимо її гарною круглою, як на сучасних мобільних інтерфейсах */
     border-radius: 50% !important; 
     
-    /* Центруємо іконку літачка строго посередині круга */
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
     
-    margin: 0 !important; /* Скидаємо будь-які старі марджини */
+    margin: 0 !important; 
     cursor: pointer;
   }
 
-  /* Якщо іконка всередині кнопки занадто велика чи маленька */
   .comment-box button img,
   .comment-box button svg {
     width: 18px !important;
@@ -3272,7 +3104,6 @@ h3 {
   }
 }
 
-/* 🔹 ВИПРАВЛЕННЯ ДЛЯ ПЕЙДЖІНГУ ТА ФОРМ (Z-INDEX) */
 .cropper-overlay {
   z-index: 2000;
 }
@@ -3285,7 +3116,6 @@ h3 {
   text-align: center;
 }
 
-/* WRAPPER */
 .category-wrapper {
   display: flex;
   align-items: center;
@@ -3294,7 +3124,6 @@ h3 {
   position: relative;
 }
 
-/* SCROLL AREA */
 .category-row-new {
   display: flex;
   gap: 30px;
@@ -3310,7 +3139,6 @@ h3 {
   display: none;
 }
 
-/* ARROW BUTTONS */
 .scroll-btn {
   background: white;
   border: none;
@@ -3339,7 +3167,6 @@ h3 {
   margin-right: 5px;
 }
 
-/* CATEGORY ITEM */
 .cat-item {
   display: flex;
   flex-direction: column;
@@ -3374,35 +3201,32 @@ h3 {
 @media (max-width: 768px) {
     .category-wrapper {
     gap: 5px;
-    padding: 0 34px; /* Залишаємо відступи для стрілочок <> */
+    padding: 0 34px;
   }
 
   .category-row-new {
-    gap: 6px !important; /* Мінімальний проміжок між колами */
+    gap: 6px !important; 
     display: flex !important;
     justify-content: space-between !important;
   }
 
-  /* Динамічний розрахунок: ~16% ширини дозволяє помістити до 5-6 категорій на екрані */
   .cat-item {
     flex: 0 0 calc(16.6% - 5px) !important; 
     min-width: 58px !important;
     max-width: 80px !important;
   }
 
-  /* Трохи зменшуємо самі кола категорій */
   .cat-circle {
     width: 46px !important;
     height: 46px !important;
   }
 
-  /* Оптимізуємо текст під колами */
   .cat-name {
     font-size: 11px !important;
     text-align: center;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis; /* Якщо назва задовга, вона акуратно скорочується крапками */
+    text-overflow: ellipsis; 
   }
 
   .cat-circle {
@@ -3436,11 +3260,10 @@ h3 {
   }
 
   .scroll-btn {
-    display: none; /* на дуже малих екранах ховаємо стрілки */
+    display: none;
   }
 }
 
-/* final-last override: keep requested grid and category arrows */
 .recipes-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
 }
@@ -3467,44 +3290,41 @@ h3 {
   }
 }
 
-/* 1. Вирівнювання ПІБ автора у картках до самого низу контейнера */
 .catalog-card {
   display: flex;
   flex-direction: column;
-  height: 100%; /* забезпечує однакову висоту карток */
+  height: 100%; 
 }
 
 .catalog-card .card-content {
   display: flex;
   flex-direction: column;
-  flex-grow: 1; /* дозволяє контенту заповнювати вільний простір */
+  flex-grow: 1; 
 }
 
 .catalog-card .recipe-card-author {
-  margin-top: auto; /* притискає ПІБ автора до самого низу контейнера */
+  margin-top: auto;
   padding-top: 7px;
   font-size: 14px;
   color: rgb(88, 76, 76);
 }
 
-/* 2. Приховування стрілочок <> та налаштування горизонтального скролу для великих екранів (1100px+) */
 @media (min-width: 1100px) {
   .category-wrapper .scroll-btn {
-    display: none !important; /* приховуємо стрілочки */
+    display: none !important; 
   }
 
   .category-row-new {
-    overflow-x: auto !important; /* дозволяємо горизонтальний скрол */
-    -ms-overflow-style: none; /* для Internet Explorer та Edge */
-    scrollbar-width: none; /* для Firefox */
+    overflow-x: auto !important;
+    -ms-overflow-style: none; 
+    scrollbar-width: none; 
   }
 
   .category-row-new::-webkit-scrollbar {
-    display: none; /* приховуємо скролбар для Chrome, Safari та Opera */
+    display: none; 
   }
 }
 
-/* 3. Приховування тулбару на телефонах (менше 768px зазвичай) */
 @media (max-width: 768px) {
   .toolbar {
     display: flex !important; 
@@ -3514,20 +3334,17 @@ h3 {
     background-color:rgba(162, 118, 69, 0.8);
     border-bottom: 1px solid #eadfd2;
     box-sizing: border-box;
-    height: 56px; /* фіксована зручна висота */
+    height: 56px; 
   }
 
-  /* Повністю приховуємо навігаційні кнопки посередині */
   .toolbar .nav-links {
     display: none !important;
   }
 
-  /* Повністю приховуємо праву частину (сповіщення, кабінет, кнопку вийти) */
   .toolbar .toolbar-right {
     display: none !important;
   }
 
-  /* Залишаємо видимими тільки бургер та логотип */
   .toolbar .toolbar-left {
     display: flex !important;
     align-items: center;
@@ -3552,7 +3369,6 @@ h3 {
   }
 }
 
-/* 4. Фіксація правої панелі перегляду заявки для адміна (sticky panel) */
 .admin-grid {
   display: flex;
   gap: 20px;
@@ -3567,47 +3383,42 @@ h3 {
   width: 450px;
   position: -webkit-sticky;
   position: sticky;
-  top: 20px; /* панель прикріплюється до верхнього краю екрану при скролі */
+  top: 20px; 
   max-height: calc(100vh - 40px);
-  overflow-y: auto; /* дозволяє скролити саму панель детального перегляду */
+  overflow-y: auto; 
   background: #fff;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* 5. Стилізація прямокутного фото автора, біографії та публікацій */
 .author-profile-container {
   padding: 20px;
 }
 
-/* Основний контейнер картки автора */
 .author-profile-card-layout {
   display: flex;
-  flex-direction: column; /* Для мобільних за замовчуванням */
+  flex-direction: column;
   gap: 32px;
-  background-color: #fcf8ee; /* Теплий кремовий беж, як на фото */
+  background-color: #fcf8ee;
   padding: 40px;
   box-sizing: border-box;
   width: 100%;
 }
 
-/* Контейнер для фото (ліва частина) */
 .author-left-rect-avatar {
   width: 100%;
-  aspect-ratio: 4 / 3; /* Співвідношення сторін для прямокутного фото */
+  aspect-ratio: 4 / 3; 
   overflow: hidden;
 }
 
-/* Стилі для самого зображення */
 .author-left-rect-avatar img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Щоб фото не стискалося, а красиво заповнювало простір */
+  object-fit: cover;
   object-position: center;
 }
 
-/* Блок з текстом (права частина) */
 .author-right-info {
   display: flex;
   flex-direction: column;
@@ -3615,55 +3426,50 @@ h3 {
   flex: 1;
 }
 
-/* Ім'я автора (Пончіта Весельська) */
 .author-right-info h2 {
-  font-family: 'Helvetica Neue', Arial, sans-serif; /* Замініть на ваш шрифт, якщо є конкретний */
-  font-size: 2.5rem; /* Великий акцентний заголовок */
-  font-weight: 400; /* Не занадто жирний */
+  font-family: 'Helvetica Neue', Arial, sans-serif; 
+  font-size: 2.5rem;
+  font-weight: 400; 
   color: #2b2b2b;
   margin: 0 0 16px 0;
   text-align: left;
 }
 @media (max-width: 768px) {
-  /* При адаптиві — по центру */
   .author-right-info h2 {
     text-align: center !important;
-    font-size: 2rem; /* Невеличка порада: на мобілках краще трохи зменшити розмір заголовка */
+    font-size: 2rem; 
     margin: 0 0 12px 0;
   }
 }
 
-/* Секція з біографією та описом */
 .author-bio-section p {
   font-family: Arial, sans-serif;
   font-size: 1rem;
-  line-height: 1.6; /* Комфортна висота рядка для читання */
+  line-height: 1.6;
   color: #4a4a4a;
   margin: 0;
-  white-space: pre-line; /* Зберігає переноси рядків, якщо вони є в БД */
+  white-space: pre-line; 
 }
 
-/* Медіа-запит для десктопних екранів (планшети та ПК) */
 @media (min-width: 768px) {
   .author-profile-card-layout {
-    flex-direction: row; /* Розгортаємо в рядок на великих екранах */
+    flex-direction: row; 
     align-items: flex-start;
-    padding: 60px 80px; /* Більші відступи, як у оригіналі */
+    padding: 60px 80px; 
   }
 
   .author-left-rect-avatar {
-    width: 35%; /* Ліва частина займає 35% ширини */
-    max-width: 400px; /* Обмежуємо максимальну ширину фото */
-    aspect-ratio: auto; /* Скасовуємо фіксоване співвідношення для десктопу */
-    height: 320px; /* Фіксована висота, як на макеті */
+    width: 35%; 
+    max-width: 400px; 
+    aspect-ratio: auto; 
+    height: 320px;
   }
   
   .author-right-info {
-    padding-top: 10px; /* Невеликий відступ зверху, щоб вирівняти з фото */
+    padding-top: 10px;
   }
 }
 
-/* 6. Кнопка відправки коментаря без тексту */
 .send-btn-icon-only {
   background: none;
   border: none;
@@ -3676,15 +3482,12 @@ h3 {
   height: 24px;
 }
 
-/* ================= TOOLBAR BUTTONS (Стилізація кнопок сповіщення та кабінету) ================= */
-
 .toolbar-right {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-/* Квадратна кнопка сповіщень з тонкою рамкою */
 .notifications-nav-btn {
   position: relative;
   display: flex;
@@ -3693,7 +3496,7 @@ h3 {
   width: 38px;
   height: 38px;
   background: #f8f2ea;
-  border: 2px solid #f8f2ea; /* Ніжна бежева рамка */
+  border: 2px solid #f8f2ea; 
   border-radius: 13px;
   cursor: pointer;
   padding: 0;
@@ -3709,12 +3512,11 @@ h3 {
   height: 24px;
 }
 
-/* Круглий жовтий бейдж кількості сповіщень, що перекриває кнопку знизу-ліворуч */
 .notifications-nav-btn span {
   position: absolute;
   bottom: -6px;
   left: -10px;
-  background-color: #e5d18c; /* Жовтий колір з вашого скріншоту */
+  background-color: #e5d18c; 
   color: #333;
   font-size: 12px;
   font-weight: bold;
@@ -3727,13 +3529,12 @@ h3 {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Кнопка "Кабінет" (профіль) */
 .profile-btn-nav {
   display: flex;
   align-items: center;
   gap: 3px;
   background: #f8f2ea;
-  border: 2px solid #f8f2ea; /* Ніжна бежева рамка */
+  border: 2px solid #f8f2ea;
   border-radius: 14px;
   padding: 7px 10px;
   font-size: 16px;
@@ -3749,7 +3550,6 @@ h3 {
   background: #faf7f2;
 }
 
-/* Додавання іконки користувача перед текстом Кабінет */
 .profile-btn-nav::before {
   content: "";
   display: inline-block;
@@ -3760,7 +3560,6 @@ h3 {
   background-repeat: no-repeat;
 }
 
-/* ================= PAGINATION BUTTONS (Пагінація як на скріншоті) ================= */
 
 .pagination-wrapper {
   display: flex;
@@ -3774,9 +3573,9 @@ h3 {
 .pagination-btn {
   width: 36px;
   height: 36px;
-  border-radius: 50% !important; /* Круглі кнопки */
+  border-radius: 50% !important;
   border: none;
-  background-color: #f0f0f0; /* Сірі круги */
+  background-color: #f0f0f0;
   color: #333;
   font-size: 14px;
   font-weight: 500;
@@ -3792,14 +3591,12 @@ h3 {
   background-color: #e2e2e2;
 }
 
-/* Активна кнопка (жовта/бежева) */
 .pagination-btn.active {
-  background-color: #eadfd2 !important; /* Колір вашої теми */
+  background-color: #eadfd2 !important;
   color: #333;
   font-weight: bold;
 }
 
-/* Неактивні стрілочки */
 .pagination-btn:disabled {
   opacity: 0.3;
   cursor: not-allowed;
@@ -3808,19 +3605,18 @@ h3 {
 }
 @media (max-width: 480px) {
   .pagination-wrapper {
-    gap: 4px; /* Менший проміжок між кнопками на телефонах */
-    margin-top: 20px; /* Зменшений верхній відступ */
-    flex-wrap: wrap; /* Запобігає поламці інтерфейсу, якщо сторінок дуже багато */
+    gap: 4px; 
+    margin-top: 20px; 
+    flex-wrap: wrap;
   }
 
   .pagination-btn {
-    width: 30px; /* Компактніший розмір кнопок */
+    width: 30px; 
     height: 30px;
-    font-size: 12px; /* Менший розмір шрифту */
+    font-size: 12px; 
   }
 }
 
-/* ================= MOBILE CATEGORIES (Відображення 3-4 категорій на телефонах) ================= */
 
 @media (max-width: 480px) {
   .category-row-new {
@@ -3829,7 +3625,7 @@ h3 {
   }
 
   .cat-item {
-    flex: 0 0 22% !important; /* Розподіл місця, щоб помістилося 4 штуки */
+    flex: 0 0 22% !important; 
     min-width: 60px !important;
   }
 
@@ -3843,8 +3639,6 @@ h3 {
   }
 }
 
-/* ================= RECIPE VIEW CORRECT ALIGNMENT (Вирівнювання тексту та мета-гріду ліворуч) ================= */
-
 .recipe-left {
   display: flex;
   flex-direction: column;
@@ -3852,9 +3646,9 @@ h3 {
   background: #fff;
   border: 1px solid #eadfd2;
   border-radius: 12px;
-  padding: 10px; /* було 14px */
+  padding: 10px;
 
-  max-width: 420px; /* можна обмежити */
+  max-width: 420px;
 }
 
 .recipe-title {
@@ -3869,11 +3663,9 @@ h3 {
   width: 100% !important;
   display: flex;
   flex-direction: row;
-  justify-content: flex-start !important; /* Щоб іконки та текст йшли вліво */
+  justify-content: flex-start !important;
   gap: 15px;
 }
-
-/* ================= MY RECIPES STATUS BADGE (Статус внизу картки "Мої рецепти") ================= */
 
 .my-recipe-card .status-badge {
   display: inline-flex;
@@ -3940,57 +3732,46 @@ h3 {
     line-height: normal !important;
 }
 
-/* 1. Робимо плашку відповіді базою для відліку координат */
 .reply {
-    position: relative !important; /* Обов'язково! Щоб дата не улетіла на весь екран */
-    /* Твої поточні стилі відповіді (background, padding, border-radius) залишаються */
+    position: relative !important; 
 }
 
-/* 2. Позиціонуємо блок заголовка */
 .reply .comment-header {
-    display: block !important; /* Скидаємо флекс, він нам більше не заважатиме */
+    display: block !important; 
     width: 100% !important;
 }
 
-/* 3. ЖОРСТКИЙ ФІКС ДЛЯ ДАТИ (Абсолютне прибиття в кут) */
 .reply .comment-date {
     position: absolute !important;
+    top: 14px !important;  
+    right: 20px !important; 
     
-    /* Координати відліку від верхнього правого кутка плашки відповіді */
-    top: 14px !important;   /* Підбери вище/нижче, щоб було симетрично імені */
-    right: 20px !important; /* Відступ від правого краю плашки */
-    
-    /* Стилізація */
     font-size: 11px;
     color: gray;
-    white-space: nowrap !important; /* Забороняємо перенос */
+    white-space: nowrap !important; 
 }
-
-/* AI-фільтр підказка при наведенні */
 .ai-comment-filter {
   cursor: pointer;
 }
 
-/* Центрування гріду властивостей у RecipeView */
 .recipe-meta-grid {
   display: flex !important;
-  justify-content: center !important; /* Центрує час, порції, складність */
+  justify-content: center !important; 
   align-items: center;
   gap: 15px;
   width: 100% !important;
 }
 
-/* Контейнер редагування як на фото 1 (кремовий дизайн) */
 .admin-edit-container-new {
   padding: 24px;
-  background-color: #faf3ea; /* Світло-кремовий теплий фон */
+  background-color: #faf3ea; 
   border-radius: 16px;
   border: 1px solid #eadfd2;
   margin-top: 15px;
 }
 
 .recipe-form-card-new {
-  background-color: #fdfcf9; /* Фонова підкладка карти */
+  background-color: #fdfcf9;
   padding: 30px;
   border-radius: 14px;
   border: 1px solid #eadfd2;
@@ -4005,13 +3786,11 @@ h3 {
   padding-bottom: 10px;
 }
 
-/* Макет форми: два стовпці */
 .recipe-form-layout-new {
   display: flex;
   gap: 30px;
 }
 
-/* Ліва колонка з фото */
 .form-left-col-new {
   flex: 0 0 200px;
   display: flex;
@@ -4035,10 +3814,9 @@ h3 {
   object-fit: cover;
 }
 
-/* Кнопка "Завантажити фото" (коричневий стиль як на фото 1) */
 .admin-upload-btn-new {
   margin-top: 12px;
-  background-color: #b88e5d; /* Світло-коричнева бронзова кнопка */
+  background-color: #b88e5d; 
   color: #fff;
   border-radius: 20px;
   padding: 8px 16px;
@@ -4054,7 +3832,6 @@ h3 {
   background-color: #a07849;
 }
 
-/* Права колонка з полями */
 .form-right-col-new {
   flex: 1;
   display: flex;
@@ -4080,7 +3857,7 @@ h3 {
   width: 100%;
   padding: 12px 16px;
   border: 1px solid #eadfd2;
-  border-radius: 12px; /* Закруглені краї як на фото 1 */
+  border-radius: 12px; 
   background-color: #fff;
   font-size: 14px;
   color: #333;
@@ -4091,10 +3868,9 @@ h3 {
   resize: vertical;
 }
 
-/* Компактний вибір категорії */
 .admin-category-select-new {
   width: 100%;
-  max-width: 300px; /* Зменшений розмір випадаючого списку */
+  max-width: 300px; 
   padding: 10px 14px;
   border-radius: 12px;
   border: 1px solid #eadfd2;
@@ -4104,7 +3880,6 @@ h3 {
   cursor: pointer;
 }
 
-/* Рядок: Час, Порції, Складність */
 .form-sub-row-new {
   display: flex;
   gap: 15px;
@@ -4126,41 +3901,38 @@ h3 {
   cursor: pointer;
 }
 
-/* 📦 НИЖНІ КНОПКИ З РОЗДІЛЮВАЧЕМ */
 .form-actions-new {
   display: flex !important;
-  flex-direction: row !important; /* Фіксуємо в один рядок */
-  justify-content: flex-end !important; /* Центруємо кнопки по горизонталі */
-  align-items: center !important;     /* Забороняємо кнопкам розтягуватися по висоті */
-  gap: 16px;                      /* Приємна відстань між кнопками */
+  flex-direction: row !important; 
+  justify-content: flex-end !important; 
+  align-items: center !important;    
+  gap: 16px;                     
   margin-top: 30px;
-  border-top: 1px solid #eadfd2;  /* Лінія-розділювач */
+  border-top: 1px solid #eadfd2; 
   padding-top: 20px;
-  width: 100%;                    /* Рядок займає всю ширину картки для повноцінної лінії */
+  width: 100%;                    
   box-sizing: border-box;
 }
 
-/* Стилі для самих кнопок всередині цього контейнера */
 .form-actions-new button {
-  flex: none !important;          /* Забороняємо кнопкам розтискати макет */
-  width: max-content !important;  /* Ширина чітко під розмір тексту + падінги */
+  flex: none !important;          
+  width: max-content !important; 
   
-  /* Задаємо збалансовані межі ширини, як у генераторі */
   min-width: 120px;
   max-width: 150px;
   
   padding: 10px 20px;
   font-size: 14px;
   font-weight: 600;
-  border-radius: 12px;            /* Акуратні фірмові кути */
-  white-space: nowrap;            /* Забороняємо переноси тексту */
+  border-radius: 12px;            
+  white-space: nowrap;            
   cursor: pointer;
   transition: all 0.2s ease;
 }
 .btn-save-new {
   flex: 1;
   max-width: 350px;
-  background-color: #b88e5d; /* Коричнева кнопка Зберегти */
+  background-color: #b88e5d; 
   color: #fff;
   border: none;
   border-radius: 12px;
@@ -4180,7 +3952,7 @@ h3 {
   max-width: 350px;
   background-color: #fdfcf9;
   color: #715e49;
-  border: 1px solid #eadfd2; /* Контурна рамка кнопки Скасувати */
+  border: 1px solid #eadfd2; 
   border-radius: 12px;
   padding: 14px;
   font-size: 16px;
@@ -4203,7 +3975,6 @@ h3 {
   }
 }
 
-/* ================= RECIPE CREATION: IMAGE PREVIEW ADAPTIVE (Мої рецепти: Адаптив прев'ю зображення) ================= */
 
 .upload-box {
   grid-area: photo;
@@ -4214,87 +3985,74 @@ h3 {
   width: 100%;
 }
 
-/* Обмежуємо розміри прев'ю картинки, щоб вона не накладалась на інший текст */
 .upload-box .preview-img {
   max-width: 100%;
-  max-height: 180px; /* Фіксуємо висоту */
-  object-fit: contain; /* Картинка масштабується правильно без спотворень */
+  max-height: 180px; 
+  object-fit: contain; 
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
 }
 
-/* ================= MOBILE ADAPTIVE FORM PUSH DOWN (Адаптив для форми на телефонах) ================= */
 
 @media (max-width: 480px) {
   .recipe-form {
     display: flex;
-    flex-direction: column !important; /* На мобільних все стає в один стовпчик */
+    flex-direction: column !important; 
     gap: 15px;
   }
 
   .recipe-form input,
   .recipe-form textarea {
     font-size: 14px;
-    padding: 10px !important; /* Зменшений внутрішній відступ на маленьких екранах */
+    padding: 10px !important; 
   }
 
   .upload-box {
-    margin-top: 15px; /* Штовхаємо блок завантаження вниз від попередніх полів */
+    margin-top: 15px; 
   }
 }
 
-/* ================= COMPACT ACTIONS BUTTONS (Менші кнопки Зберегти/Скасувати) ================= */
-/* 📦 КОНТЕЙНЕР ДЛЯ КНОПОК */
 .form-actions {
   grid-area: actions;
   display: flex !important;
-  flex-direction: row !important; /* Строго в один горизонтальний рядок */
-  gap: 12px;                      /* Відстань між кнопками */
+  flex-direction: row !important; 
+  gap: 12px;                   
   margin-top: 15px;
   
-  /* МАГІЯ ТУТ: */
-  justify-content: flex-end;        /* Центруємо кнопки всередині картки */
-  align-items: center;            /* Забороняємо кнопкам розтягуватися по висоті */
+  justify-content: flex-end;   
+  align-items: center;           
   width: 100%;
 }
 
-/* 🔘 САМИ КНОПКИ */
 .form-actions button {
-  /* Забороняємо кнопкам розтискати макет або реагувати на флекс-роздмухування */
   flex: none !important;
   
-  /* Кнопка стискається строго під довжину свого слова + падінги */
   width: max-content !important; 
   
-  /* Обмежуємо мінімальну та максимальну ширину, щоб вони були акуратними */
   min-width: 120px; 
   max-width: 150px; 
   
   padding: 10px 16px;
   font-size: 14px;
   font-weight: 600;
-  border-radius: 12px; /* М'які фірмові кути */
-  white-space: nowrap; /* Забороняємо переносы слів */
+  border-radius: 12px; 
+  white-space: nowrap; 
   cursor: pointer;
 }
 
-/* ================= SLEEK & COMPACT CATEGORIES WINDOWS (Компактний select) ================= */
 
 .sort-select, 
 .recipe-form select {
     width: 100% !important;
     max-width: 260px;
     
-    /* 1. ВИРІВНЮЄМО ВИСОТУ ТА ПАДІНГИ ЯК В ІНПУТАХ */
-    height: 48px !important; /* Робимо чітку комфортну висоту, як у сусідніх полів */
-    box-sizing: border-box;  /* Захищає висоту від роздування падінгами */
-    padding: 10px 35px 10px 16px; /* Збільшений лівий та правий падінг для балансу тексту */
+    height: 48px !important; 
+    box-sizing: border-box;  
+    padding: 10px 35px 10px 16px;
     
-    /* 2. НАЛАШТОВУЄМО М'ЯКІ КУТИ */
     border: 1px solid #dacdbd;
-    border-radius: 16px !important; /* Ставимо 16px, щоб кути були круглими, як у "Час" і "Порції" */
+    border-radius: 16px !important; 
     
-    /* 3. ОНОВЛЕНА СТРІЛОЧКА ТА ЇЇ ЦЕНТРУВАННЯ ПО ВЕРТИКАЛІ (50%) */
     background: 
         linear-gradient(45deg, transparent 50%, #826a55 50%), 
         linear-gradient(135deg, #826a55 50%, transparent 50%), 
@@ -4307,16 +4065,13 @@ h3 {
     background-repeat: no-repeat;
     
     appearance: none;
-    -webkit-appearance: none; /* Фікс для відображення в Safari */
+    -webkit-appearance: none; 
     
-    /* 4. ШРИФТ ТА КОЛІР */
     color: #4c3d32;
-    font-weight: 600; /* Зробив 600, щоб текст виглядав акуратніше, як в інпутах */
-    font-size: 14px;  /* Трохи збільшили шрифт, щоб зрівняти з іншими полями */
+    font-weight: 600;
+    font-size: 14px;
     outline: none;
 }
-
-/* ================= CATALOG FILTER & SEARCH IMPROVED (Покращений пошук та фільтри) ================= */
 
 .catalog-filter-row {
   display: flex;
@@ -4324,21 +4079,20 @@ h3 {
   align-items: center;
   gap: 20px;
   margin-bottom: 20px;
-  flex-wrap: wrap; /* Дозволяє красиво переноситись на нові рядки при потребі */
+  flex-wrap: wrap; 
 }
 
-/* Робимо пошук меншим, щоб фільтру залишити більше місця */
 .search-bar {
   display: flex;
   gap: 8px;
   flex: 1;
-  max-width: 48%; /* Пошуковий блок займає до 48% ширини */
+  max-width: 48%;
   min-width: 260px;
 }
 
 .search-bar input {
   flex: 1;
-  padding: 8px 12px; /* Компактніший інпут пошуку */
+  padding: 8px 12px; 
   border-radius: 20px;
   border: 1px solid #ddd;
   outline: none;
@@ -4357,20 +4111,18 @@ h3 {
   justify-content: center;
 }
 
-/* Менша кнопка очищення */
 .clear-btn {
   border: none;
-  padding: 6px 10px; /* Компактніші відступи */
+  padding: 6px 10px;
   border-radius: 20px;
   cursor: pointer;
   color: white;
-  font-size: 11px; /* Менший шрифт */
+  font-size: 11px; 
 }
 
-/* Блок фільтру має більше простору */
 .sort-box {
   flex: 1;
-  max-width: 300px; /* Збільшуємо максимальну доступну ширину для фільтру */
+  max-width: 300px; 
   display: flex;
   justify-content: flex-end;
 }
@@ -4381,8 +4133,6 @@ h3 {
   align-items: center;
 }
 
-/* Контейнер для всього пошукового рядка */
-/* Контейнер для всього пошукового рядка */
 .catalog-filter-row .search-bar {
     display: flex;
     align-items: center;
@@ -4392,14 +4142,12 @@ h3 {
     min-width: 1360px;
     background: #fff;
     
-    /* 1. ЗАОКРУГЛЕННЯ КУТІВ (робимо плавніші кути) */
-    border-radius: 12px; /* Якщо хочеш повністю круглу «капсулу», постав 24px */
-    border: 1px solid #eadfd2; /* Ніжний бежевий бордер, як на інших блоках */
+    border-radius: 12px;
+    border: 1px solid #eadfd2; 
     padding: 0 14px;
     box-sizing: border-box;
 }
 
-/* Саме поле введення */
 .catalog-filter-row .search-bar input {
     flex: 1;
     min-width: 0;
@@ -4407,31 +4155,27 @@ h3 {
     outline: none;
     font-size: 14px;
     padding: 10px 4px;
-    color: #333; /* Колір тексту, який вводить користувач */
+    color: #333; 
 }
 
-/* 2. СІРИЙ ТЕКСТ-ПІДКАЗКА (Placeholder) */
-/* Для сучасних браузерів (Chrome, Safari, Edge, Firefox) */
 .catalog-filter-row .search-bar input::placeholder {
-    color: #9a9a9a; /* Гарний стриманий сірий колір */
-    opacity: 1;     /* Гарантує, що Firefox не зробить його занадто блідим */
+    color: #9a9a9a; 
+    opacity: 1;   
 }
 
-/* Додатково для старіших версій Safari/iOS, якщо знадобиться */
 .catalog-filter-row .search-bar input::-webkit-input-placeholder {
     color: #9a9a9a;
 }
 
-/* Іконки: і лупа, і хрестик отримують однакові залізобетонні розміри */
 .catalog-filter-row .search-bar .search-icon, 
 .catalog-filter-row .search-bar .clear-icon,
 .catalog-filter-row .search-bar button { 
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 32px;                /* Фіксована однакова ширина */
-    height: 32px;               /* Фіксована однакова висота */
-    flex-shrink: 0;             /* Забороняє іконкам стискатися, коли мало місця */
+    width: 32px;                
+    height: 32px;             
+    flex-shrink: 0;          
     background: none;
     border: none;
     padding: 0;
@@ -4440,9 +4184,8 @@ h3 {
     padding-left: 10px;
 }
 
-/* Якщо всередині кнопок/іконок є теги img, зрівнюємо їх */
 .catalog-filter-row .search-bar img {
-    width: 18px;                /* Розмір самих картинок всередині однаковий */
+    width: 18px;               
     height: 11px;
     object-fit: contain;
 }
@@ -4466,36 +4209,30 @@ h3 {
   margin-top: 10px;
   text-align: center !important;
 }
-/* 🔴 ГОЛОВНИЙ КОНТЕЙНЕР (Батько, всередині якого лежить картинка і ця кнопка) */
-/* Переконайся, що у твого лівого блоку або обгортки фото є цей стиль: */
+
 .recipe-card-image-wrap,
 .recipe-left {
-  position: relative !important; /* Робимо блок базою для відліку координат кнопки */
+  position: relative !important;
 }
 
-/* 💜 ОНОВЛЕНА КНОПКА УЛЮБЛЕНОГО (Прибиваємо в куток фотографії) */
 .recipe-view-fav-btn {
-  /* 1. ПОЗИЦІОНУВАННЯ (замість static ставимо absolute) */
   position: absolute !important;
   top: 20px !important;
   right: 20px !important;
-  z-index: 10; /* Гарантує, що кнопка буде ПОВЕРХ картинки, а не під нею */
+  z-index: 10; 
   
-  /* 2. РОЗМІРИ */
   width: 28px !important;
   height: 28px !important;
   min-height: 28px !important;
   padding: 0 !important;
-  margin: 0 !important; /* Скидаємо твій старий "10px auto 6px" */
+  margin: 0 !important;
   
-  /* 3. СТИЛІЗАЦІЯ (Копіюємо фірмовий вигляд .bookmark-btn) */
   border-radius: 4px !important;
   background: #d0b99f !important;
   color: #8f8f9f !important;
-  border: none !important; /* Прибираємо дефолтну рамку кнопки */
+  border: none !important; 
   cursor: pointer;
   
-  /* 4. ВИРІВНЮВАННЯ ІКОНКИ (Сердечка) СТРОГО ПО ЦЕНТРУ КНОПКИ */
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -4505,10 +4242,10 @@ h3 {
   transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
-/* Ефект легкого наведення для краси */
+
 .recipe-view-fav-btn:hover {
   transform: scale(1.05);
-  background: #c2aa8f !important; /* Трохи темніший беж при наведенні */
+  background: #c2aa8f !important; 
 }
 
 .recipe-form .upload-box {
@@ -4538,38 +4275,36 @@ h3 {
   width: 230px !important;
   max-width: 100%;
 }
-/* Адаптивність для планшетів та смартфонів */
+
 @media (max-width: 768px) {
     .catalog-filter-row .search-bar {
-        max-width: 100% !important; /* Дозволяємо розтягуватися на всю доступну ширину екрана */
-        min-width: 0;                /* Скидаємо обмеження мінімальної ширини, щоб не було горизонтального скролу */
-        width: 100%;                 /* Займає 100% ширини мобільного контейнера */
-        gap: 6px;                    /* Трохи зменшуємо відступи між іконками, щоб зекономити місце */
+        max-width: 100% !important;
+        min-width: 0;               
+        width: 100%;               
+        gap: 6px;                 
     }
 
     .catalog-filter-row .search-bar input {
-        font-size: 13px;             /* Трохи менший шрифт, щоб текст не обрізався */
-        padding: 6px 2px;            /* Компактніші внутрішні відступи */
+        font-size: 13px;            
+        padding: 6px 2px;           
     }
 
-    /* Якщо потрібно, щоб самі іконки на маленьких екранах теж стали делікатнішими */
     .catalog-filter-row .search-bar .search-icon, 
     .catalog-filter-row .search-bar .clear-icon,
     .catalog-filter-row .search-bar button { 
-        width: 28px;                 /* Було 32px */
-        height: 28px;                /* Було 32px */
+        width: 28px;            
+        height: 28px;           
     }
 
     .catalog-filter-row .search-bar img {
-        width: 15px;                 /* Було 18px */
+        width: 15px;            
         height: 15px;
     }
 }
 
-/* Екстремально маленькі екрани (застарілі або дуже малі смартфони) */
 @media (max-width: 360px) {
     .catalog-filter-row .search-bar {
-        padding: 4px 6px;            /* Робимо загальну обгортку максимально компактною */
+        padding: 4px 6px;   
     }
     
     .catalog-filter-row .search-bar input {
@@ -4577,45 +4312,41 @@ h3 {
     }
 }
 @media (max-width: 768px) {
-  /* 1. Налаштовуємо батьківський рядок, щоб елементи падали один під одного */
     .catalog-filter-row {
         display: flex;
-        flex-direction: column; /* Елементи строго один під одним */
-        gap: 16px;              /* Фіксований відступ між пошуком і селектом */
+        flex-direction: column; 
+        gap: 16px;     
         width: 100%;
         box-sizing: border-box;
     }
 
-    /* Пошуковий рядок (головна обгортка) */
     .catalog-filter-row .search-bar {
         display: flex !important;
-        flex-direction: row !important; /* ЗАБОРОНЯЄМО елементам всередині падати на новий рядок */
+        flex-direction: row !important;
         align-items: center !important;
         width: 100% !important;
         max-width: 100% !important;
         min-width: 0 !important;
-        height: 44px; /* Задаємо чітку фіксовану висоту для всього поля */
-        padding: 0 12px; /* Внутрішні відступи для іконок */
+        height: 44px;
+        padding: 0 12px;
         box-sizing: border-box;
     }
 
-    /* Текстове поле всередині пошуку */
     .catalog-filter-row .search-bar input {
-        flex: 1 !important;     /* Забирає весь вільний простір, відштовхуючи хрестик вправо */
-        min-width: 0 !important; /* Дозволяє тексту стискатися на маленьких екранах */
+        flex: 1 !important;
+        min-width: 0 !important;
         height: 100%;
         font-size: 14px;
         border: none;
         outline: none;
-        padding: 0 8px; /* Відступи по боках від тексту */
+        padding: 0 8px; 
     }
 
-    /* Селект сортування */
     .catalog-filter-row .sort-select, 
     .recipe-form select {
         width: 100% !important;
         max-width: 100% !important;
-        margin-top: 0; /* Обнуляємо марджин, бо за відступ тепер відповідає gap батька */
+        margin-top: 0; 
         min-height: 40px;
         box-sizing: border-box;
     }
@@ -4689,35 +4420,31 @@ h3 {
   }
 }
 
-/* Головна обгортка слайдера */
 .category-wrapper {
     position: relative;
     width: 100%;
     display: flex;
     align-items: center;
     box-sizing: border-box;
-    padding: 10px 40px; /* Місце зліва і справа для стрілочок */
+    padding: 10px 40px;
 }
 
-/* Стрічка з категоріями */
 .category-row-new {
     display: flex !important;
-    gap: 16px !important;            /* Робимо невеликий відступ, щоб вміщалося більше іконок */
+    gap: 16px !important;     
     width: 100%;
-    overflow-x: auto !important;      /* Дозволяємо горизонтальний скрол */
-    scrollbar-width: none !important;   /* Ховаємо скролбар у Firefox */
-    -ms-overflow-style: none !important;/* Ховаємо скролбар у IE */
+    overflow-x: auto !important;   
+    scrollbar-width: none !important;  
+    -ms-overflow-style: none !important;
     scroll-behavior: smooth;
-    justify-content: center;          /* Центруємо іконки, якщо їх мало і вони влазять */
+    justify-content: center; 
     margin-bottom: 0px;
 }
 
-/* Ховаємо скролбар для Chrome, Safari та iOS */
 .category-row-new::-webkit-scrollbar {
     display: none !important;
 }
 
-/* Сама кнопка категорії (елемент списку) */
 .cat-item {
     display: flex;
     flex-direction: column;
@@ -4726,15 +4453,14 @@ h3 {
     border: none;
     padding: 0;
     cursor: pointer;
-    flex-shrink: 0 !important;        /* Забороняємо іконкам деформуватися в овали */
-    width: 70px;                      /* Компактна ширина для мобільних */
+    flex-shrink: 0 !important;       
+    width: 70px;                      
     gap: 6px;
 }
 
-/* Кругла обгортка для картинки */
 .cat-circle {
-    width: 72px;                      /* Збільшили з 56px до 72px */
-    height: 72px;                     /* Збільшили з 56px до 72px */
+    width: 72px;                   
+    height: 72px;                   
     border-radius: 50%;
     overflow: hidden;
     background: #fdfdfd;
@@ -4748,26 +4474,24 @@ h3 {
     object-fit: cover;
 }
 
-/* Текст під іконкою */
 .cat-name {
-    font-size: 13px;                  /* Трохи збільшили шрифт (з 12px), щоб пасував до нової картинки */
+    font-size: 13px;                
     color: #555;
     font-weight: 700;
     text-align: center;
-    white-space: nowrap;              /* Забороняємо переноси слів */
-    margin-top: 6px;                  /* Додав невеликий відступ між кружечком і текстом */
+    white-space: nowrap;             
+    margin-top: 6px;                 
 }
 
-/* Стиль активної (вибраної) категорії */
 .cat-item.active .cat-circle {
-    transform: scale(1.08);           /* Зробив ефект збільшення при кліку трохи виразнішим */
+    transform: scale(1.08);         
 }
 
 .cat-item.active .cat-name {
     color: #c19b79;
     font-weight: 700;
 }
-/* Кнопки прокрутки (стрілочки) */
+
 .scroll-btn {
     position: absolute;
     top: 50%;
@@ -4792,7 +4516,6 @@ h3 {
     background: #fdfaf6;
 }
 
-/* Позиціонуємо ліву та праву стрілочки строго по краях */
 .scroll-btn.left {
     left: 0px;
 }
@@ -4801,32 +4524,29 @@ h3 {
     right: 0px;
 }
 
-/* Адаптивні коригування для екранів типу iPhone */
 @media (max-width: 480px) {
     .category-wrapper {
-        padding: 5px 35px;            /* Робимо відступи компактнішими */
+        padding: 5px 35px;          
     }
     
     .category-row-new {
-        gap: 12px !important;         /* Ще трохи щільніше іконки на маленьких екранах */
-        justify-content: flex-start !important; /* Якщо іконки не влазять, скрол почнеться красиво зліва */
+        gap: 12px !important;        
+        justify-content: flex-start !important; 
     }
 }
 
-/* Контейнер сітки для рецептів автора */
 .author-recipes-section .recipes-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); /* Гнучка сітка */
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 24px;
     margin-top: 20px;
 }
 
-/* Сама картка рецепту */
 .author-recipes-section .recipe-card {
     background: #fff;
     border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(61, 45, 30, 0.05); /* Легка фірмова тінь */
+    box-shadow: 0 4px 12px rgba(61, 45, 30, 0.05); 
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     display: flex;
@@ -4839,29 +4559,25 @@ h3 {
     box-shadow: 0 8px 20px rgba(61, 45, 30, 0.1);
 }
 
-/* 🖼 ОБГОРТКА КАРТИНКИ (Тут ми її зменшуємо) */
-/* 🖼 ОБГОРТКА КАРТИНКИ (Збільшуємо висоту тут) */
 .author-recipes-section .recipe-card-image-wrap {
     position: relative;
     width: 100%;
-    height: 350px; /* Збільшено з 180px до 230px для більшого акценту на фото */
+    height: 350px;
     overflow: hidden;
     background-color: #f7f7f7;
 }
 
-/* Стилі для самої картинки (вона слухняно займе всі 230px висоти) */
 .author-recipes-section .recipe-card-image-wrap img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Картинка не деформується і красиво заповнить нову висоту */
+    object-fit: cover; 
     transition: transform 0.3s ease;
 }
 
 .author-recipes-section .recipe-card:hover .recipe-card-image-wrap img {
-    transform: scale(1.03); /* Легкий ефект наведення */
+    transform: scale(1.03);
 }
 
-/* Текстовий контент картки (Назва рецепту) */
 .author-recipes-section .card-content {
     padding: 14px 16px;
     display: flex;
@@ -4876,14 +4592,11 @@ h3 {
     color: #333;
     margin: 0;
     line-height: 1.4;
-    /* Обрізання довгого тексту до 2 рядків, щоб картки були однієї висоти */
     display: -webkit-box;
-    /*-webkit-line-clamp: 2*/;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
 
-/* Плашка з часом (якщо є) */
 .author-recipes-section .time-chip {
     position: absolute;
     top: 10px;
@@ -4898,26 +4611,21 @@ h3 {
     box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
-/* Блок профілю автора (верхня велика картка) */
 .author-profile-card-layout, 
 .admin-edit-container-new .recipe-form-card-new {
     background: #ffffff;
     border-radius: 24px;
-    /* М'яка тінь з колірним відтінком твого інтерфейсу */
     box-shadow: 0 10px 30px rgba(130, 106, 85, 0.06), 0 1px 3px rgba(130, 106, 85, 0.02);
 }
 
-/* Картки рецептів у сітці автора */
 .author-recipes-section .recipe-card {
     background: #ffffff;
     border-radius: 16px;
     overflow: hidden;
-    /* Трохи компактніша тінь для менших карток */
     box-shadow: 0 6px 18px rgba(130, 106, 85, 0.05);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* Ефект при наведенні на картку */
 .author-recipes-section .recipe-card:hover {
     transform: translateY(-4px);
     box-shadow: 0 12px 24px rgba(130, 106, 85, 0.1);

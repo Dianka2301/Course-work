@@ -32,7 +32,7 @@ export default function Toolbar({
       </div>
 
       <div className="toolbar-right">
-        {/* Сповіщення (тільки для користувачів) */}
+    
         {!isAdmin && (
           <button
             className="notifications-nav-btn"
@@ -43,7 +43,7 @@ export default function Toolbar({
           </button>
         )}
 
-        {/* Вкладка Профіль/Кабінет (тільки для користувачів) */}
+   
         {!isAdmin && (
           <button
             className="profile-btn-nav"

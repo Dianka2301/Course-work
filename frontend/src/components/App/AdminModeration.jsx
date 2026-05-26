@@ -59,7 +59,6 @@ export default function AdminModeration({ onRefresh }) {
           : null,
       );
 
-      // Скролимо вікно на початок при виборі рецепта
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (err) {
       console.error(err);
@@ -100,7 +99,6 @@ export default function AdminModeration({ onRefresh }) {
       setAnalysis(null);
       loadRequests();
 
-      // 🔥 Оновлюємо загальний Каталог після рішення адміна
       onRefresh?.();
     } catch (err) {
       console.error(err);
@@ -154,7 +152,7 @@ export default function AdminModeration({ onRefresh }) {
                       onClick={() =>
                         approveAdminRecipe(item.id).then(() => {
                           loadRequests();
-                          onRefresh?.(); // 🔥 Оновлення каталогу
+                          onRefresh?.(); 
                         })
                       }
                     >
@@ -164,7 +162,7 @@ export default function AdminModeration({ onRefresh }) {
                       onClick={() =>
                         rejectAdminRecipe(item.id).then(() => {
                           loadRequests();
-                          onRefresh?.(); // 🔥 Оновлення каталогу
+                          onRefresh?.(); 
                         })
                       }
                     >

@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import Cropper from "react-easy-crop";
 
-/* ------------------ helper: crop image ------------------ */
+
 function createImage(url) {
   return new Promise((resolve, reject) => {
     const img = new Image();
@@ -17,7 +17,7 @@ async function getCroppedImg(imageSrc, crop) {
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
 
-  const size = 300; // output size (square)
+  const size = 300; 
   canvas.width = size;
   canvas.height = size;
 
@@ -40,7 +40,6 @@ async function getCroppedImg(imageSrc, crop) {
   });
 }
 
-/* ------------------ COMPONENT ------------------ */
 export default function AvatarCropper({ image, onCancel, onSave }) {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
@@ -63,7 +62,6 @@ export default function AvatarCropper({ image, onCancel, onSave }) {
   return (
     <div className="cropper-overlay">
       <div className="cropper-container">
-        {/* CROPPER */}
         <div className="cropper-area">
           <Cropper
             image={image}
@@ -76,7 +74,6 @@ export default function AvatarCropper({ image, onCancel, onSave }) {
           />
         </div>
 
-        {/* CONTROLS */}
         <div className="cropper-controls">
           <input
             type="range"

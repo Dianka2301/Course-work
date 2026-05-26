@@ -26,7 +26,6 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// 🔥 РЕЄСТРАЦІЯ
 router.post("/register", async (req, res) => {
   const { email, password, firstName, lastName } = req.body;
 
@@ -63,7 +62,6 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// 🔥 ЛОГІН
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
@@ -102,7 +100,6 @@ router.post("/login", async (req, res) => {
   }
 });
 
-/* ------------------ UPLOAD CONFIG ------------------ */
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const dir = path.join(__dirname, "uploads");
@@ -182,7 +179,6 @@ router.get("/verify", (req, res) => {
   }
 });
 
-// 🔥 SEND RESET CODE
 router.post("/forgot-password", async (req, res) => {
   const { email } = req.body;
 
@@ -202,7 +198,6 @@ router.post("/forgot-password", async (req, res) => {
     });
   }
 
-  // видаляємо старі коди
   db.prepare(`
     DELETE FROM password_resets
     WHERE email = ?
@@ -262,7 +257,6 @@ await transporter.sendMail({
   
 });
 
-// 🔥 RESET PASSWORD WITH CODE
 router.post("/reset-password", async (req, res) => {
   const { email, code, password } = req.body;
 

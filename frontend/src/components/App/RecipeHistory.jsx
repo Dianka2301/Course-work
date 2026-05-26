@@ -17,7 +17,6 @@ const recipeImageSrc = (image) => {
   return `${BASE_URL}/images/${image}`;
 };
 
-// Приймаємо проп onRefresh з батьківського компонента
 export default function RecipeHistory({ onRefresh }) {
   const [recipes, setRecipes] = useState([]);
   const [showForm, setShowForm] = useState(false);
@@ -50,7 +49,7 @@ export default function RecipeHistory({ onRefresh }) {
     setTimeout(() => setToast(""), 2000);
   };
 
-  /* ------------------ LOAD ------------------ */
+
   useEffect(() => {
     setLoading(true);
 
@@ -60,7 +59,7 @@ export default function RecipeHistory({ onRefresh }) {
       .finally(() => setLoading(false));
   }, [page]);
 
-  /* ------------------ IMAGE ------------------ */
+
   const handleImage = (file) => {
     setImageFile(file);
     setPreview(URL.createObjectURL(file));
@@ -81,7 +80,6 @@ export default function RecipeHistory({ onRefresh }) {
     return data.url;
   };
 
-  /* ------------------ SAVE ------------------ */
   const handleSubmit = async () => {
     if (!form.title.trim()) return;
 
@@ -122,16 +120,14 @@ export default function RecipeHistory({ onRefresh }) {
 
     showToast(editingId ? "Оновлено!" : "Створено!");
 
-    // 🔥 Миттєво оновлюємо Каталог
     onRefresh?.();
   };
 
-  /* ------------------ DELETE ------------------ */
   const handleDelete = async (id) => {
     setRecipes(recipes.filter((r) => r.id !== id));
     await deleteRecipe(id);
     showToast("Видалено");
-    // 🔥 Миттєво оновлюємо Каталог
+
     onRefresh?.();
   };
 
@@ -140,7 +136,7 @@ export default function RecipeHistory({ onRefresh }) {
       await publishRecipe(id);
       showToast("Заявку на публікацію надіслано");
       fetchMyRecipes(page, limit).then((data) => setRecipes(data.data || []));
-      // 🔥 Миттєво оновлюємо Каталог
+
       onRefresh?.();
     } catch (err) {
       console.error(err);
@@ -148,7 +144,6 @@ export default function RecipeHistory({ onRefresh }) {
     }
   };
 
-  /* ------------------ EDIT ------------------ */
   const handleEdit = (r) => {
     setForm({
       title: r.title || "",
@@ -172,7 +167,7 @@ export default function RecipeHistory({ onRefresh }) {
       {toast && <div className="toast">{toast}</div>}
 
       {showForm ? (
-        /* РЕЖИМ СТВОРЕННЯ / РЕДАГУВАННЯ РЕЦЕПТУ */
+
         <div className="recipe-form-container" style={{ width: "100%" }}>
           <button
             className="back-btn"
@@ -313,7 +308,7 @@ export default function RecipeHistory({ onRefresh }) {
           </div>
         </div>
       ) : (
-        /* РЕЖИМ ВІДОБРАЖЕННЯ СПИСКУ РЕЦЕПТІВ */
+        
         <>
           <div className="my-recipes-header">
             <h2>Мої рецепти</h2>
@@ -360,7 +355,6 @@ export default function RecipeHistory({ onRefresh }) {
                   key={r.id}
                   className="recipe-card catalog-card my-recipe-card"
                 >
-                  {/* IMAGE WRAP (аналогічно до каталогу) */}
                   <div className="recipe-card-image-wrap">
                     {r.prep_time && (
                       <span className="time-chip">{r.prep_time}</span>
@@ -371,7 +365,6 @@ export default function RecipeHistory({ onRefresh }) {
                       alt={r.title}
                     />
 
-                    {/* Кнопки дій у правому кутку картинки */}
                     <div className="card-actions">
                       <button
                         onClick={() => handleEdit(r)}
@@ -388,7 +381,6 @@ export default function RecipeHistory({ onRefresh }) {
                     </div>
                   </div>
 
-                  {/* CARD CONTENT */}
                   <div className="card-content">
                     <div className="recipe-card-badges">
                       <span className="cat-badge">{r.category}</span>
@@ -404,7 +396,6 @@ export default function RecipeHistory({ onRefresh }) {
 
                     <h3>{r.title}</h3>
 
-                    {/* INGREDIENT CHIPS */}
                     <div className="ingredients-wrapper">
                       {r.ingredients
                         ?.split("\n")

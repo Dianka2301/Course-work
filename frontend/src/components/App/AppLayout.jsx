@@ -29,12 +29,11 @@ export default function AppLayout({ user, setUser, recipes, onLogout }) {
   const [fromPage, setFromPage] = useState("catalog");
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // Стан для перегляду профілю іншого автора
   const [authorProfile, setAuthorProfile] = useState(null);
-  // Стан для збереження початкової сторінки до переходу на профіль автора
+
   const [authorProfileFromPage, setAuthorProfileFromPage] = useState("catalog");
 
-  // Динамічний ключ для примусового скидання форми в "Мої рецепти" [2]
+
   const [myRecipesKey, setMyRecipesKey] = useState(0);
 
   const [category, setCategory] = useState("all");
@@ -44,14 +43,14 @@ export default function AppLayout({ user, setUser, recipes, onLogout }) {
   const [serverRecipes, setServerRecipes] = useState(recipes || []);
   const [unreadCount, setUnreadCount] = useState(0);
 
-  // Синхронізуємо локальний стан рецептів з пропом, якщо він змінюється зверху
+  
   useEffect(() => {
     if (recipes) {
       setServerRecipes(recipes);
     }
   }, [recipes]);
 
-  // 🔥 Додано `user` у залежності: завантажуємо рецепти заново при зміні біо профілю
+
   useEffect(() => {
     loadRecipes();
   }, [category, sort, user]);
@@ -84,7 +83,7 @@ export default function AppLayout({ user, setUser, recipes, onLogout }) {
 
   const changePage = (newPage) => {
     if (newPage === "myRecipes" && page === "myRecipes") {
-      setMyRecipesKey((prev) => prev + 1); // збільшуємо ключ
+      setMyRecipesKey((prev) => prev + 1); 
     }
     setPage(newPage);
     setSelectedRecipe(null);
@@ -103,7 +102,7 @@ export default function AppLayout({ user, setUser, recipes, onLogout }) {
     setPage(fromPage);
   };
 
-  // Відкрити публічний профіль автора
+
   const openAuthorProfile = (authorId) => {
     const authorRecipes = serverRecipes.filter((r) => r.user_id === authorId);
     if (authorRecipes.length === 0) return;
@@ -122,7 +121,6 @@ export default function AppLayout({ user, setUser, recipes, onLogout }) {
     setSelectedRecipe(null);
   };
 
-  // Збереження змін адміном прямо з каталогу
   const handleAdminUpdateRecipe = async (recipeId, updatedData) => {
     try {
       await updateAdminRecipe(recipeId, updatedData);
@@ -183,14 +181,12 @@ export default function AppLayout({ user, setUser, recipes, onLogout }) {
         return <Profile user={user} setUser={setUser} />;
 
       case "myRecipes":
-        // 🔥 Передаємо loadRecipes як проп onRefresh
         return <RecipeHistory key={myRecipesKey} onRefresh={loadRecipes} />;
 
       case "notifications":
         return <Notifications onChanged={loadUnreadCount} />;
 
       case "admin":
-        // 🔥 Передаємо loadRecipes як проп onRefresh
         return <AdminModeration onRefresh={loadRecipes} />;
 
       case "author-profile":
@@ -294,7 +290,7 @@ export default function AppLayout({ user, setUser, recipes, onLogout }) {
           <button onClick={() => changePage("ai")}>ШІ-генератор</button>
         )}
 
-        {/* Профіль приховано в сайдбарі для адміна */}
+
         {user?.role !== "admin" && (
           <button onClick={() => changePage("profile")}>Профіль</button>
         )}

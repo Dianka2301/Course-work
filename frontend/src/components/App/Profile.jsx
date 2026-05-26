@@ -6,7 +6,7 @@ export default function Profile({ user, setUser }) {
   const [firstName, setFirstName] = useState(user.firstName || "");
   const [lastName, setLastName] = useState(user.lastName || "");
   const [email, setEmail] = useState(user.email || "");
-  const [bio, setBio] = useState(user.bio || ""); // Стан для біографії
+  const [bio, setBio] = useState(user.bio || ""); 
 
   const [avatarFile, setAvatarFile] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -16,7 +16,6 @@ export default function Profile({ user, setUser }) {
 
   const getToken = () => localStorage.getItem("token");
 
-  /* ---------------- TOAST ---------------- */
   useEffect(() => {
     if (!toast) return;
 
@@ -24,7 +23,6 @@ export default function Profile({ user, setUser }) {
     return () => clearTimeout(t);
   }, [toast]);
 
-  // Слідкуємо за зміною користувача ззовні
   useEffect(() => {
     setFirstName(user.firstName || "");
     setLastName(user.lastName || "");
@@ -32,14 +30,12 @@ export default function Profile({ user, setUser }) {
     setBio(user.bio || "");
   }, [user]);
 
-  /* ---------------- СВІЖИЙ ЗАПИТ З БЕКЕНДУ ПРИ МОНТУВАННІ ---------------- */
   useEffect(() => {
     const fetchFreshProfile = async () => {
       try {
         const token = getToken();
         if (!token) return;
 
-        // Робимо запит до вашого GET роутера profile.cjs
         const res = await fetch("http://localhost:4000/api/profile", {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -48,7 +44,6 @@ export default function Profile({ user, setUser }) {
 
         if (res.ok) {
           const freshData = await res.json();
-          // Оновлюємо стани свіжими даними з БД
           setUser(freshData);
           setBio(freshData.bio || "");
           localStorage.setItem("user", JSON.stringify(freshData));
@@ -61,7 +56,6 @@ export default function Profile({ user, setUser }) {
     fetchFreshProfile();
   }, []);
 
-  /* ---------------- FILE SELECT ---------------- */
   const handleFile = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -77,14 +71,13 @@ export default function Profile({ user, setUser }) {
     e.target.value = "";
   };
 
-  /* ---------------- SAVE ---------------- */
   const handleSave = async () => {
     const formData = new FormData();
 
     formData.append("firstName", firstName);
     formData.append("lastName", lastName);
     formData.append("email", email);
-    formData.append("bio", bio); // Додаємо біо в запит
+    formData.append("bio", bio); 
 
     if (avatarFile) {
       formData.append("avatar", avatarFile);
@@ -111,10 +104,8 @@ export default function Profile({ user, setUser }) {
 
   return (
     <div className="profile-wrapper">
-      {/* TOAST */}
       {toast && <div className="toast">{toast}</div>}
 
-      {/* LEFT */}
       <div className="profile-card">
         <h3>Фото профілю</h3>
 
@@ -135,7 +126,6 @@ export default function Profile({ user, setUser }) {
         </div>
       </div>
 
-      {/* RIGHT */}
       <div className="profile-form-card">
         <h3>Редагування профілю</h3>
 
@@ -189,7 +179,6 @@ export default function Profile({ user, setUser }) {
         </button>
       </div>
 
-      {/* CROPPER */}
       {cropImage && (
         <AvatarCropper
           image={cropImage}

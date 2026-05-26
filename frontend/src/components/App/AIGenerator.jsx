@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { generateAIRecipes } from "../../api/recipes"; // Шлях до вашого api файлу
+import { generateAIRecipes } from "../../api/recipes"; 
 import "./AIGenerator.css";
 
 export default function AIGenerator({ onOpenHistory }) {
@@ -9,7 +9,6 @@ export default function AIGenerator({ onOpenHistory }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // Додавання інгредієнта в список
   const addIngredient = () => {
     if (inputValue.trim() && !ingredients.includes(inputValue.trim())) {
       setIngredients([...ingredients, inputValue.trim()]);

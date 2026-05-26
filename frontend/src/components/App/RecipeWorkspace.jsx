@@ -10,7 +10,6 @@ const recipeImageSrc = (image) => {
   return `${BASE_URL}/images/${image}`;
 };
 
-// Функція для перевірки чи є автор системним адміністратором
 const isSystemAdmin = (name) => {
   if (!name) return true;
   const lower = name.toLowerCase().trim();
@@ -78,7 +77,7 @@ function RecipeCard({
           <div
             className="recipe-card-author"
             onClick={(e) => {
-              e.stopPropagation(); // запобігаємо відкриттю самого рецепту при кліку на автора
+              e.stopPropagation(); 
               onOpenAuthorProfile?.(recipe.user_id);
             }}
             style={{ cursor: "pointer" }}
@@ -99,7 +98,7 @@ export default function RecipeWorkspace({
 }) {
   const [favorites, setFavorites] = useState([]);
 
-  // 🔥 Ініціалізуємо стан всередині вашим чітким статичним списком у правильному порядку
+  
   const [allCategories] = useState([
     "Усі рецепти",
     "Сніданки",
@@ -118,11 +117,10 @@ export default function RecipeWorkspace({
   const [sortBy, setSortBy] = useState("default");
   const [loading, setLoading] = useState(true);
 
-  // Стан пагінації (по 15 елементів на сторінку)
+
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 15;
 
-  // Автоматичний скрол вгору при зміні сторінки каталогу
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
   }, [currentPage]);
@@ -151,7 +149,7 @@ export default function RecipeWorkspace({
       try {
         const favs = await fetchFavorites();
         setFavorites(favs.map((f) => f.recipe_id || f.id));
-        // Динамічне зчитування категорій з рецептів повністю видалено
+
       } catch (err) {
         console.error(err);
       } finally {
@@ -161,7 +159,7 @@ export default function RecipeWorkspace({
     loadData();
   }, [recipes]);
 
-  // Скидання на 1 сторінку при зміні фільтрів чи пошуку
+
   useEffect(() => {
     setCurrentPage(1);
   }, [selectedCategory, search, sortBy]);
@@ -191,7 +189,6 @@ export default function RecipeWorkspace({
     });
   };
 
-  // Вага для складності при сортуванні
   const difficultyWeights = {
     easy: 1,
     medium: 2,
@@ -216,14 +213,13 @@ export default function RecipeWorkspace({
       if (sortBy === "rating") return (b.rating || 0) - (a.rating || 0);
       if (sortBy === "newest") return b.id - a.id;
 
-      // Сортування за легкістю
+
       if (sortBy === "difficulty_easy") {
         const weightA = difficultyWeights[a.difficulty?.toLowerCase()] || 1;
         const weightB = difficultyWeights[b.difficulty?.toLowerCase()] || 1;
         return weightA - weightB;
       }
 
-      // Сортування за складністю
       if (sortBy === "difficulty_hard") {
         const weightA = difficultyWeights[a.difficulty?.toLowerCase()] || 1;
         const weightB = difficultyWeights[b.difficulty?.toLowerCase()] || 1;
@@ -233,7 +229,6 @@ export default function RecipeWorkspace({
       return 0;
     });
 
-  // Логіка пагінації рецептів
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedRecipes = filteredAndSortedRecipes.slice(
     startIndex,
@@ -322,7 +317,7 @@ export default function RecipeWorkspace({
             <option value="default">Сортувати за...</option>
             <option value="rating">Найкращий рейтинг</option>
             <option value="newest">Найновіші</option>
-            {/* Додані опції сортування за складністю */}
+    
             <option value="difficulty_easy">Складність: спочатку легкі</option>
             <option value="difficulty_hard">
               Складність: спочатку складні
@@ -331,7 +326,7 @@ export default function RecipeWorkspace({
         </div>
       </div>
 
-      {/* Grid карт */}
+
       <div className="recipes-grid">
         {paginatedRecipes.length > 0 ? (
           paginatedRecipes.map((recipe) => (
@@ -351,7 +346,6 @@ export default function RecipeWorkspace({
         )}
       </div>
 
-      {/* Пагінація */}
       {totalPages > 1 && (
         <div
           className="pagination-wrapper"

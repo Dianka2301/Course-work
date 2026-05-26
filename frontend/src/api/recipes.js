@@ -1,11 +1,6 @@
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000/api";
 
-/* ------------------ ALL RECIPES ------------------ */
-/*export async function fetchRecipes() {
-  const res = await fetch(`${API_URL}/recipes`);
-  if (!res.ok) throw new Error("Помилка при отриманні рецептів");
-  return res.json();
-}*/
+
 export async function fetchRecipes(category = "all", sort = "new") {
   const res = await fetch(
     `${API_URL}/recipes?category=${category}&sort=${sort}`,
@@ -27,11 +22,10 @@ export async function fetchSimilarRecipes(id) {
   return res.json();
 }
 
-/* ------------------ MY RECIPES ------------------ */
 export async function fetchMyRecipes(page = 1, limit = 6) {
   const token = localStorage.getItem("token");
 
-  console.log("TOKEN:", token); // 🔥 ДОДАЙ ДЛЯ ПЕРЕВІРКИ
+  console.log("TOKEN:", token); 
 
   const res = await fetch(`${API_URL}/my-recipes?page=${page}&limit=${limit}`, {
     headers: token ? { Authorization: `Bearer ${token}` } : {},
@@ -41,10 +35,9 @@ export async function fetchMyRecipes(page = 1, limit = 6) {
   return res.json();
 }
 
-/* ------------------ RATING ------------------ */
 export async function rateRecipe(recipeId, rating) {
   const res = await fetch(`${API_URL}/recipes/${recipeId}/rating`, {
-    // ❗ без /api
+
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -57,12 +50,10 @@ export async function rateRecipe(recipeId, rating) {
   return res.json();
 }
 
-/* ------------------ CREATE ------------------ */
 export async function createRecipe(data) {
   const token = localStorage.getItem("token");
 
   const res = await fetch(`${API_URL}/my-recipes`, {
-    // ❗ без /api
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -74,12 +65,10 @@ export async function createRecipe(data) {
   return res.json();
 }
 
-/* ------------------ UPDATE ------------------ */
 export async function updateRecipe(id, data) {
   const token = localStorage.getItem("token");
 
   const res = await fetch(`${API_URL}/my-recipes/${id}`, {
-    // ❗ без /api
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -91,12 +80,10 @@ export async function updateRecipe(id, data) {
   return res.json();
 }
 
-/* ------------------ DELETE ------------------ */
 export async function deleteRecipe(id) {
   const token = localStorage.getItem("token");
 
   const res = await fetch(`${API_URL}/my-recipes/${id}`, {
-    // ❗ без /api
     method: "DELETE",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -286,7 +273,6 @@ export async function deleteAllNotifications() {
   return res.json();
 }
 
-/* ------------------ AI GENERATION (SECURE) ------------------ */
 export async function generateAIRecipes(ingredients) {
   const token = localStorage.getItem("token"); 
 
@@ -303,7 +289,6 @@ export async function generateAIRecipes(ingredients) {
   return res.json();
 }
 
-/* ------------------ AI HISTORY ------------------ */
 
 export async function fetchAIHistory() {
   const token = localStorage.getItem("token");

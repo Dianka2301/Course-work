@@ -9,7 +9,6 @@ const JWT_SECRET = process.env.JWT_SECRET || "secret_key";
 
 const BASE_URL = "http://localhost:4000";
 
-/* ------------------ AUTH ------------------ */
 function auth(req, res, next) {
   const token = req.headers.authorization?.split(" ")[1];
 
@@ -23,7 +22,6 @@ function auth(req, res, next) {
   }
 }
 
-/* ------------------ MULTER ------------------ */
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, path.join(__dirname, "uploads"));

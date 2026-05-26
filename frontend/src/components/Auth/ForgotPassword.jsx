@@ -156,7 +156,7 @@ export default function ForgotPassword() {
                 <label>Код</label>
                 <input
                   type="text"
-                  className="forgot-code-input" // 🔥 додано клас
+                  className="forgot-code-input" 
                   placeholder="123456"
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
@@ -169,7 +169,7 @@ export default function ForgotPassword() {
                 <div className="password-wrapper">
                   <input
                     type={showPassword ? "text" : "password"}
-                    className="forgot-password-input" // 🔥 додано клас
+                    className="forgot-password-input" 
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
@@ -189,7 +189,7 @@ export default function ForgotPassword() {
                 <div className="password-wrapper">
                   <input
                     type={showConfirm ? "text" : "password"}
-                    className="forgot-confirm-input" // 🔥 додано клас
+                    className="forgot-confirm-input"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required

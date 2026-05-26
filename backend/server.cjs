@@ -3,34 +3,28 @@ const cors = require("cors");
 const path = require("path");
 const dotenv = require("dotenv");
 const fs = require("fs");
-/*const OpenAI = require("openai");*/
 const multer = require("multer");
 
 const authRoutes = require("./auth.cjs");
 const favoritesRoutes = require("./favorites.cjs");
-const profileRoutes = require("./profile.cjs"); // 🔥 FIX: ДОДАНО
+const profileRoutes = require("./profile.cjs"); 
 const { generateRecipesFromAI, analyzeRecipeWithAI } = require("./gemini.cjs");
 const db = require("./db.cjs");
 
-//dotenv.config({ path: path.join(__dirname, "../.env") });
-//dotenv.config();
 dotenv.config({
   path: path.resolve(__dirname, ".env"),
   quiet: process.env.NODE_ENV === "test",
 });
 
-//console.log("API KEY LOADED:", !!process.env.OPENAI_API_KEY);
 
 const app = express();
 
-/* ------------------ UPLOAD FOLDER ------------------ */
 const uploadDir = path.join(__dirname, "uploads");
 
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
 }
 
-/* ------------------ CORS ------------------ */
 app.use(
   cors({
     origin: "http://localhost:5173",
@@ -38,7 +32,6 @@ app.use(
   }),
 );
 
-/* ------------------ BODY ------------------ */
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -104,51 +97,18 @@ function mapRecipe(row) {
   };
 }
 
-/* ------------------ STATIC ------------------ */
 app.use("/images", express.static(path.join(__dirname, "images")));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-/* ------------------ OPENAI ------------------ */
-/*const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});*/
-
-/* ------------------ ROUTES ------------------ */
 app.use("/api/auth", authRoutes);
 app.use("/api/favorites", favoritesRoutes);
 
-/* 🔥 PROFILE ROUTE FIX */
 app.use("/api/profile", profileRoutes);
 
-/* ------------------ HEALTH ------------------ */
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok" });
 });
 
-/* ------------------ RECIPES ------------------ */
-/*app.get("/api/recipes", (req, res) => {
-  try {
-    const recipes = db
-      .prepare(
-        `
-        SELECT 
-          r.*,
-          ROUND(AVG(c.rating), 1) as rating,
-          COUNT(c.rating) as rating_count
-        FROM recipes r
-        LEFT JOIN comments c ON r.id = c.recipe_id
-        GROUP BY r.id
-        ORDER BY r.created_at DESC
-      `,
-      )
-      .all();
-
-    res.json(recipes);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Помилка при отриманні рецептів" });
-  }
-});*/
 app.get("/api/recipes", (req, res) => {
   try {
     const { category = "all", sort = "new" } = req.query;
@@ -289,7 +249,6 @@ app.get("/api/recipes/:id/similar", (req, res) => {
   }
 });
 
-/* ------------------ AI GENERATION ------------------ */
 app.post("/api/recipes/generate", authMiddleware, async (req, res) => {
   try {
     const { ingredients } = req.body;
@@ -329,7 +288,6 @@ app.post("/api/recipes/generate", authMiddleware, async (req, res) => {
   }
 });
 
-/* ------------------ AI HISTORY ------------------ */
 
 app.get("/api/ai-history", authMiddleware, (req, res) => {
   try {
@@ -487,7 +445,6 @@ app.post("/api/recipes/:id/rating", (req, res) => {
   }
 });
 
-/* ------------------ MY RECIPES ------------------ */
 app.get("/api/my-recipes", authMiddleware, (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -533,7 +490,6 @@ app.get("/api/my-recipes", authMiddleware, (req, res) => {
   }
 });
 
-/* ------------------ CREATE MY RECIPE ------------------ */
 app.post("/api/my-recipes", authMiddleware, (req, res) => {
   try {
     const {
@@ -739,7 +695,6 @@ app.delete("/api/my-recipes/:id", authMiddleware, (req, res) => {
   }
 });
 
-/* ------------------ ADMIN MODERATION ------------------ */
 app.get("/api/admin/recipe-requests", adminMiddleware, (req, res) => {
   try {
     const rows = db
@@ -970,7 +925,6 @@ app.put("/api/admin/recipes/:id", adminMiddleware, (req, res) => {
   }
 });
 
-/* ------------------ NOTIFICATIONS ------------------ */
 app.get("/api/notifications", authMiddleware, (req, res) => {
   try {
     const rows = db
@@ -1083,7 +1037,6 @@ app.post("/api/upload", upload.single("image"), (req, res) => {
   });
 });
 
-/* ------------------ START ------------------ */
 const PORT = process.env.PORT || 4000;
 
 if (process.env.NODE_ENV !== "test") {

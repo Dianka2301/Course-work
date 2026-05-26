@@ -6,7 +6,7 @@ import "./Auth.css";
 export default function AuthPage({ onLogin, onOpenAuth, isModal }) {
   const [authMode, setAuthMode] = useState("welcome"); // "welcome" | "login" | "register"
 
-  // 🔹 Якщо цей компонент викликається як модальне вікно (наприклад, з іншої частини сайту)
+
   if (isModal) {
     return (
       <div className="modal-inner">
@@ -35,10 +35,10 @@ export default function AuthPage({ onLogin, onOpenAuth, isModal }) {
     );
   }
 
-  // 🔹 ПОВНОЕКРАННИЙ СПЛІТ-ДИЗАЙН
+
   return (
     <div className="landing-wrapper">
-      {/* ЛІВА ЧАСТИНА (Світла: 3 картки можливостей) */}
+
       <div className="landing-left">
         <div className="landing-left-content">
           <div className="logo-app">Food Recipe App</div>
@@ -76,7 +76,7 @@ export default function AuthPage({ onLogin, onOpenAuth, isModal }) {
         </div>
       </div>
 
-      {/* ПРАВА ЧАСТИНА (Темна: Welcome-текст або інтерактивні форми) */}
+   
       <div className="landing-right">
         <div className="landing-right-content">
           {authMode === "welcome" && (
@@ -137,7 +137,7 @@ export default function AuthPage({ onLogin, onOpenAuth, isModal }) {
         </div>
       </div>
 
-      {/* Модальне вікно відновлення пароля */}
+   
       <ForgotPassword />
     </div>
   );

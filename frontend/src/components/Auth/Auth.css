@@ -1,8 +1,4 @@
-/* ==========================================================================
-   WARM BEIGE & COCOA PLATFORM THEME (Тема: Теплий беж та Шоколад)
-   ========================================================================== */
 
-/* ================= FULL SCREEN SPLIT WRAPPER ================= */
 .landing-wrapper {
   display: flex;
   flex-direction: row;
@@ -12,7 +8,7 @@
   padding: 0;
   overflow: hidden;
   box-sizing: border-box;
-  background: linear-gradient(135deg, #fdfbf7 0%, #f5ede3 100%); /* Ніжний бежево-пісочний градієнт */
+  background: linear-gradient(135deg, #fdfbf7 0%, #f5ede3 100%); 
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
@@ -24,10 +20,9 @@
   }
 }
 
-/* ================= LEFT SIDE (LIGHT BEIGE CONTENT PANEL) ================= */
 .landing-left {
   flex: 1;
-  background-color: #fdfbf7; /* Світлий теплий крем */
+  background-color: #fdfbf7; 
   display: flex;
   align-items: center;
   justify-content: center;
@@ -44,27 +39,24 @@
   gap: 20px;
 }
 
-/* Елегантний логотип */
 .logo-app {
   font-size: 22px;
   font-weight: 800;
-  color: #3b2c1d; /* Глибокий шоколадний */
+  color: #3b2c1d; 
   margin-bottom: 20px;
   display: flex;
   align-items: center;
   gap: 10px;
   letter-spacing: 0.5px;
-  text-transform: uppercase; /* Верхній регістр для строгості */
+  text-transform: uppercase; 
 }
 
-/* Символічна іконка кулінарії перед логотипом */
 .logo-app::before {
   font-size: 22px;
 }
 
-/* Картка можливості у ніжних лляних тонах */
 .feature-card-item {
-  background-color: #faf6f0; /* Світлий льон */
+  background-color: #faf6f0;
   border: 1px solid #eadfd2;
   border-radius: 18px;
   padding: 20px;
@@ -79,14 +71,14 @@
 
 .feature-card-item h3 {
   font-size: 16px;
-  color: #8c5e38; /* Теплий горіхово-коричневий відтінок */
+  color: #8c5e38; 
   font-weight: bold;
   margin: 0 0 8px 0;
 }
 
 .feature-card-item p {
   font-size: 13px;
-  color: #5c4a37; /* М'який кавовий колір тексту */
+  color: #5c4a37; 
   line-height: 1.5;
   margin: 0;
 }
@@ -103,10 +95,9 @@
   }
 }
 
-/* ================= RIGHT SIDE (DARK ESPRESSO PREMIUM PANEL) ================= */
 .landing-right {
   flex: 1;
-  background-color: #362a1c; /* Шляхетний темно-шоколадний фон */
+  background-color: #362a1c;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -128,7 +119,6 @@
   }
 }
 
-/* Великий заголовок */
 .welcome-title-dark {
   font-size: 46px;
   line-height: 1.15;
@@ -138,20 +128,17 @@
   letter-spacing: -0.5px;
 }
 
-/* Тепла теракота/кориця замість помаранчевого */
 .orange-highlight {
-  color: #d99152; /* Світло-теракотовий акцент */
+  color: #d99152; 
 }
 
-/* Опис на темному фоні */
 .welcome-desc-dark {
   font-size: 16px;
-  color: #c9bdae; /* Пастельний пісочний текст */
+  color: #c9bdae; 
   line-height: 1.6;
   margin: 0 0 35px 0;
 }
 
-/* Кнопки на темному фоні */
 .welcome-buttons {
   display: flex;
   align-items: center;
@@ -159,7 +146,7 @@
 }
 
 .btn-orange-solid {
-  background-color: #b37a4e; /* Солідна теракотова кнопка */
+  background-color: #b37a4e; 
   color: #ffffff;
   border: none;
   border-radius: 12px;
@@ -190,7 +177,6 @@
   text-decoration: underline;
 }
 
-/* ================= DARK STYLES FOR FORMS (Форма під темний фон) ================= */
 .landing-right .form-slide-title {
   color: #ffffff;
 }
@@ -200,14 +186,13 @@
 }
 
 .landing-right label {
-  color: #c9bdae; /* Пісочні лейбли */
+  color: #c9bdae; 
 }
 
-/* Темні кавові інпути */
 .landing-right input[type="text"],
 .landing-right input[type="email"],
 .landing-right input[type="password"] {
-  background-color: #463725 !important; /* М'який кавовий колір */
+  background-color: #463725 !important; 
   border: 1.5px solid #544330 !important;
   color: #ffffff !important;
   border-radius: 10px;
@@ -215,7 +200,7 @@
 }
 
 .landing-right input:focus {
-  border-color: #d99152 !important; /* Теракотова рамка при кліку */
+  border-color: #d99152 !important; 
 }
 
 .landing-right .auth-hint {
@@ -230,7 +215,6 @@
   color: #d99152;
 }
 
-/* Теракотова кнопка відправки */
 .landing-right .auth-btn {
   background-color: #b37a4e;
 }
@@ -239,14 +223,13 @@
   background-color: #9c663d;
 }
 
-/* ================= GENERAL FORGOT PASSWORD MODAL STYLE ================= */
 .forgot-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(54, 42, 28, 0.5); /* Шоколадне затемнення */
+  background-color: rgba(54, 42, 28, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -296,7 +279,6 @@
   margin: 0 0 20px 0;
 }
 
-/* Світлі форми всередині модального вікна відновлення */
 .forgot-modal label {
   color: #5c4a37;
   font-weight: bold;
@@ -350,15 +332,10 @@
   margin-bottom: 10px;
 }
 
-/* ==========================================================================
-   СТИЛІ ФОРМ ТА ВІДНОВЛЕННЯ ПАРОЛЯ (Тема: Теплий беж та Шоколад)
-   ========================================================================== */
-
-/* Кнопка "← Назад" перед формами */
 .back-to-welcome-btn {
   background: none;
   border: none;
-  color: #d99152; /* Світла тепла теракота */
+  color: #d99152; 
   font-size: 14px;
   font-weight: bold;
   cursor: pointer;
@@ -373,7 +350,6 @@
   text-decoration: underline;
 }
 
-/* Заголовки "Вхід в акаунт" та "Реєстрація акаунта" */
 .form-slide-title {
   font-size: 24px;
   color: #ffffff;
@@ -381,20 +357,17 @@
   margin: 0 0 20px 0;
 }
 
-/* Загальний контейнер форми */
 .auth-form {
   display: flex;
   flex-direction: column;
   gap: 14px;
 }
 
-/* Рядок для імені та прізвища при реєстрації */
 .auth-form-row {
   display: flex;
   gap: 12px;
 }
 
-/* Група підпису та поля вводу */
 .form-field-group {
   display: flex;
   flex-direction: column;
@@ -402,18 +375,15 @@
   flex: 1;
 }
 
-/* ================= FORGOT PASSWORD INPUTS STYLE (Стилі для нових класів відновлення) ================= */
-
-/* Згрупований селектор для всіх полів вводу всередині модального вікна відновлення */
 .forgot-email-input,
 .forgot-code-input,
 .forgot-password-input,
 .forgot-confirm-input {
   width: 100%;
   padding: 12px 14px;
-  background-color: #ffffff !important; /* Чистий білий фон полів */
-  border: 1.5px solid #eadfd2 !important; /* Ніжно-бежева рамка */
-  color: #3b2c1d !important; /* Шоколадний колір тексту вводу */
+  background-color: #ffffff !important; 
+  border: 1.5px solid #eadfd2 !important; 
+  color: #3b2c1d !important; 
   border-radius: 10px;
   font-size: 14px;
   box-sizing: border-box;
@@ -421,32 +391,27 @@
   transition: border-color 0.2s ease;
 }
 
-/* Ефект підсвічування при виборі будь-якого поля */
 .forgot-email-input:focus,
 .forgot-code-input:focus,
 .forgot-password-input:focus,
 .forgot-confirm-input:focus {
-  border-color: #b37a4e !important; /* Теракотова підсвітка рамки */
+  border-color: #b37a4e !important; 
 }
 
 
-
-
-/* Текстові підписи до полів вводу (Email, Пароль...) */
 .form-field-group label,
 .forgot-modal label {
   font-size: 13px;
-  color: #c9bdae; /* Ніжний пісочний */
+  color: #c9bdae; 
   font-weight: 600;
 }
 
-/* Стилізація текстових інпутів на темній панелі */
 .landing-right input[type="text"],
 .landing-right input[type="email"],
 .landing-right input[type="password"] {
   width: 100%;
   padding: 12px 14px;
-  background-color: #463725 !important; /* Кавовий */
+  background-color: #463725 !important;
   border: 1.5px solid #544330 !important;
   color: #ffffff !important;
   border-radius: 10px;
@@ -457,17 +422,15 @@
 }
 
 .landing-right input:focus {
-  border-color: #d99152 !important; /* Теракотова підсвітка при виборі */
+  border-color: #d99152 !important; 
 }
 
-/* Текст підказок (Лише адреси @gmail.com, Мінімум 4 символи) */
 .auth-hint {
   font-size: 11px;
-  color: #a3917d; /* Світлий кавово-сірий */
+  color: #a3917d; 
   margin-top: 2px;
 }
 
-/* Обертка пароля для кнопки ока */
 .password-wrapper {
   position: relative;
   display: flex;
@@ -479,7 +442,6 @@
   padding-right: 40px !important;
 }
 
-/* Кнопка "Око" (👁) */
 .toggle-password {
   position: absolute;
   right: 12px;
@@ -494,7 +456,6 @@
   padding: 0;
 }
 
-/* Блок посилань "Забули пароль?" */
 .auth-links {
   display: flex;
   justify-content: flex-end;
@@ -516,9 +477,8 @@
   text-decoration: underline;
 }
 
-/* Головні кнопки відправки форми (Увійти, Зареєструватися) */
 .auth-btn {
-  background-color: #b37a4e; /* Теплий теракотовий колір */
+  background-color: #b37a4e; 
   color: #ffffff;
   border: none;
   border-radius: 10px;
@@ -536,32 +496,26 @@
   background-color: #9c663d;
 }
 
-/* ================= СТИЛІ МОДАЛЬНОГО ВІКНА ВІДНОВЛЕННЯ ПАРОЛЯ ================= */
-
-/* Заголовок "Відновлення пароля" */
 .forgot-modal h2 {
   font-size: 20px;
   margin: 0 0 8px 0;
-  color: #3b2c1d; /* Глибокий шоколадний */
+  color: #3b2c1d; 
 }
 
-/* "Крок 1 із 2: введіть email" */
 .forgot-step {
   font-size: 12px;
-  color: #8c5e38; /* Бронзовий */
+  color: #8c5e38; 
   font-weight: bold;
   margin-bottom: 12px;
 }
 
-/* Описовий текст відновлення */
 .forgot-text {
   font-size: 13px;
-  color: #6e5a47; /* Кавовий */
+  color: #6e5a47; 
   line-height: 1.5;
   margin: 0 0 20px 0;
 }
 
-/* Світле оформлення полів вводу всередині білого модального вікна */
 .forgot-modal label {
   color: #5c4a37 !important;
   font-weight: bold;
@@ -585,7 +539,7 @@
   background-color: #9c663d !important;
 }
 
-/* Посилання "Назад до входу" та "Назад" у модальному вікні */
+
 .forgot-back, 
 .forgot-resend {
   background: none;
@@ -613,26 +567,21 @@
   font-weight: normal;
 }
 
-/* ==========================================================================
-   ADAPTIVE LAYOUT FOR TABLETS & PHONES (Адаптивні стилі під мобільні та планшети)
-   ========================================================================== */
 
-/* 🔹 ПЛАНШЕТИ ТА МОБІЛЬНІ ПРИСТРОЇ (до 850px) */
 @media (max-width: 850px) {
   .landing-wrapper {
-    flex-direction: column-reverse; /* 🔥 column-reverse міняє панелі місцями: темна стає вгорі, світла внизу */
+    flex-direction: column-reverse; 
     overflow-y: auto;
     height: auto;
     min-height: 100vh;
   }
 
-  /* Ліва світла панель (картки) — ТЕПЕР ОПИНЯЄТЬСЯ ВНИЗУ */
   .landing-left {
     flex: none;
     width: 100%;
     padding: 40px 24px;
     border-right: none;
-    border-top: 1px solid #eadfd2; /* Гарна верхня розділова лінія між панелями */
+    border-top: 1px solid #eadfd2; 
   }
 
   .landing-left-content {
@@ -640,7 +589,6 @@
     margin: 0 auto;
   }
 
-  /* Права темна панель (форми та welcome-текст) — ТЕПЕР ОПИНЯЄТЬСЯ ВГОРІ */
   .landing-right {
     flex: none;
     width: 100%;
@@ -654,15 +602,12 @@
   }
 }
 
-/* 🔹 СМАРТФОНИ (до 480px) */
 @media (max-width: 480px) {
-  /* Зменшуємо внутрішні відступи */
   .landing-left,
   .landing-right {
     padding: 30px 16px;
   }
 
-  /* Зменшуємо заголовок на телефонах */
   .welcome-title-dark {
     font-size: 32px !important;
     line-height: 1.2 !important;
@@ -674,10 +619,9 @@
     margin-bottom: 25px !important;
   }
 
-  /* Стек кнопок на телефонах */
   .welcome-buttons {
     flex-direction: column;
-    align-items: stretch !important; /* Кнопки розширюються на всю ширину */
+    align-items: stretch !important; 
     width: 100%;
     gap: 12px !important;
   }
@@ -690,19 +634,16 @@
     box-sizing: border-box;
   }
 
-  /* Зменшуємо заголовки форм */
   .form-slide-title {
     font-size: 20px !important;
     margin-bottom: 15px !important;
   }
 
-  /* Поля "Ім'я" та "Прізвище" стають одне під одним на маленьких екранах */
   .auth-form-row {
     flex-direction: column;
     gap: 12px !important;
   }
 
-  /* Адаптивність модального вікна відновлення пароля */
   .forgot-modal {
     margin: 15px;
     padding: 24px 16px !important;

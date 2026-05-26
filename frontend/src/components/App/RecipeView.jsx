@@ -30,7 +30,6 @@ function parseFlags(flags) {
   }
 }
 
-// Функція перевірки чи є автор системним адміністратором
 const isSystemAdmin = (name) => {
   if (!name) return true;
   const lower = name.toLowerCase().trim();
@@ -59,7 +58,6 @@ export default function RecipeView({
   const [showAiReview, setShowAiReview] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
 
-  // Стан для редагування адміном
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({
     title: "",
@@ -88,7 +86,6 @@ const loadRecipe = async () => {
     setDetails(data);
     setAvgRating(data.rating || 0);
 
-    // Передаємо свіжі дані безпосередньо у функцію схожих рецептів
     loadSimilar(data);
   } catch (err) {
     console.error(err);
@@ -131,7 +128,6 @@ const loadSimilar = async (freshDetails) => {
         .filter((word) => word.length > 3);
     };
 
-    // Використовуємо свіжі дані, які ми щойно отримали з бази
     const currentIngredients =
       freshDetails?.ingredients || details?.ingredients || recipe.ingredients;
     const currentWords = getIngredientWords(currentIngredients);
@@ -376,7 +372,6 @@ const kitchenWords = [
     ? [...comments].sort((a, b) => commentRelevance(b) - commentRelevance(a))
     : comments;
 
-  // Режим редагування (копіювання даних у форму)
   const handleStartEditing = () => {
     setEditForm({
       title: details.title || "",
@@ -434,7 +429,7 @@ const kitchenWords = [
   };
 
   
-  //  РЕЖИМ РЕДАГУВАННЯ ЯК НА ФОТО 1 
+
   if (isEditing) {
     return (
       <div className="admin-edit-container-new">
@@ -444,7 +439,7 @@ const kitchenWords = [
           </div>
 
           <div className="recipe-form-layout-new">
-            {/* Ліва колонка: прямокутне фото та кнопка */}
+
             <div className="form-left-col-new">
               <div className="image-preview-box-new">
                 <img src={imagePreview} alt="preview" />
@@ -464,7 +459,6 @@ const kitchenWords = [
               </label>
             </div>
 
-            {/* Права колонка: поля введення */}
             <div className="form-right-col-new">
               <div className="form-group-new">
                 <label>Назва рецепту</label>
@@ -490,7 +484,7 @@ const kitchenWords = [
                 />
               </div>
 
-              {/* Зменшений вибір категорії */}
+        
               <div className="form-group-new">
                 <label>Категорія</label>
                 <select
@@ -513,7 +507,6 @@ const kitchenWords = [
                 </select>
               </div>
 
-              {/* Рядок: Час, Порції, Складність */}
               <div className="form-sub-row-new">
                 <div className="form-group-new flex-1">
                   <label>Час</label>
@@ -578,7 +571,6 @@ const kitchenWords = [
             </div>
           </div>
 
-          {/* Кнопки дії як на фото 1 */}
           <div className="form-actions-new">
             <button className="btn-save-new" onClick={handleSaveEdit}>
               Зберегти
@@ -595,7 +587,6 @@ const kitchenWords = [
     );
   }
 
-  //  РЕЖИМ ПЕРЕГЛЯДУ (З ЦЕНТРУВАННЯМ ТА ЗМЕНШЕНИМ ФОТО) 
   return (
     <div className="recipe-view">
       <button className="back-btn" onClick={onBack}>
@@ -613,7 +604,7 @@ const kitchenWords = [
       )}
 
       <div className="recipe-layout">
-        {/* Центрація фото, назви, зірочок */}
+   
         <div
           className="recipe-left"
           style={{
@@ -633,7 +624,7 @@ const kitchenWords = [
               margin: "0 auto",
               display: "block",
               borderRadius: "12px",
-            }} // Зменшено головне фото
+            }} 
           />
 
           {user?.role !== "admin" && (
@@ -645,7 +636,6 @@ const kitchenWords = [
             </button>
           )}
 
-          {/* Назва по центру */}
           <h2
             className="recipe-title"
             style={{
@@ -692,9 +682,6 @@ const kitchenWords = [
             <div className="recipe-status-badge">Очікує схвалення адміна</div>
           )}
 
-          {/* Рейтинг по центру із зірочками */}
-
-          {/* Властивості по центру */}
           <div
             className="recipe-meta-grid"
             style={{

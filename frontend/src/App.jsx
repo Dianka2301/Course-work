@@ -12,7 +12,6 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [showAuthModal, setShowAuthModal] = useState(false);
 
-  // 🔥 перевірка токена при старті
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -33,7 +32,6 @@ export default function App() {
       .finally(() => setLoading(false));
   }, []);
 
-  // 🔥 завантаження рецептів після логіну
   useEffect(() => {
     const openForgot = () => setShowAuthModal(false);
 
@@ -63,7 +61,6 @@ export default function App() {
         element={
           <>
 
-            {/* AUTH PAGE */}
             {!user && (
               <AuthPage
                 onOpenAuth={() => setShowAuthModal(true)}
@@ -74,7 +71,6 @@ export default function App() {
               />
             )}
 
-            {/* MAIN APP */}
             {user && (
               <AppLayout
                 user={user}
@@ -88,7 +84,6 @@ export default function App() {
               />
             )}
 
-            {/* MODAL LOGIN */}
             {showAuthModal && (
               <div className="modal-overlay">
                 <div className="modal">
@@ -106,7 +101,7 @@ export default function App() {
                       localStorage.setItem("token", t);
                       setShowAuthModal(false);
 
-                      // 🔥 FIX: правильний виклик
+    
                       fetchRecipes("all", "new")
                         .then(setRecipes)
                         .catch(console.error);
@@ -116,7 +111,6 @@ export default function App() {
               </div>
             )}
 
-            {/* FORGOT PASSWORD */}
             <ForgotPassword />
           </>
         }

@@ -9,7 +9,6 @@ const recipeImageSrc = (image) => {
   return `${BASE_URL}/images/${image}`;
 };
 
-// Функція перевірки системного адміністратора
 const isSystemAdmin = (name) => {
   if (!name) return true;
   const lower = name.toLowerCase().trim();
@@ -118,7 +117,7 @@ export default function Favorites({ onOpenRecipe, onOpenAuthorProfile }) {
   if (loading)
     return <p style={{ padding: "20px" }}>Завантаження обраних рецептів...</p>;
 
-  // Дизайн як у сповіщеннях, коли порожньо
+
   if (recipes.length === 0)
     return (
       <div

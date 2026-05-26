@@ -9,7 +9,6 @@ dotenv.config({ path: path.resolve(__dirname, ".env") });
 
 const JWT_SECRET = process.env.JWT_SECRET || "secret_key";
 
-// Сувора та безпечна перевірка авторизації (як у вашому profile.cjs) [4]
 function auth(req, res, next) {
   const token = req.headers.authorization?.split(" ")[1];
 
